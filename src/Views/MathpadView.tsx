@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { debounce, moment, TFile } from "obsidian";
-import { ItemView, WorkspaceLeaf } from "obsidian";
+import {  finishRenderMath, ItemView, WorkspaceLeaf } from "obsidian";
 import * as React from "react";
 import { createRoot, Root } from "react-dom/client";
 
 import { MathpadContainer } from "./MathpadContainer";
 
-export const MATHPAD_VIEW = "mathpad-view";
 
+import { loadMathJax } from "obsidian";
+export const MATHPAD_VIEW = "mathpad-view";
 
 export const MathpadContext = React.createContext<any>({});
 
@@ -55,9 +55,16 @@ export class MathpadView extends ItemView {
 		const { contentEl } = this;
 		// contentEl.setText('Woah!');
 		// this.titleEl.setText("Obsidian Janitor")	
-		this.root = createRoot(contentEl/*.children[1]*/);
-		this.render();
 
+		this.root = createRoot(contentEl/*.children[1]*/);
+        await loadMathJax();
+        await finishRenderMath();
+		this.render();
+        // const e = nerdamer('x^2+2*(cos(x)+x*x)');
+        // const latex = e.toTeX();
+        // console.log(latex);
+        // const mathEl = renderMath(latex, true);
+        // contentEl.appendChild(mathEl);
 	}
 
 	async onClose() {
