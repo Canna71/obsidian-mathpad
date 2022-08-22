@@ -2,6 +2,7 @@
 import * as React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+
 import nerdamer  from "nerdamer/all.min"
 
 
@@ -14,7 +15,7 @@ export interface MathpadContainerProps {
 	nothing: string
 }
 
-window.nerdamer = nerdamer;
+(global as any).nerdamer = nerdamer;
 
 const Latex = ({latex}:{latex: string}) => {
     const divRef = useRef<HTMLDivElement>(null);
