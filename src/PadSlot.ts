@@ -1,6 +1,6 @@
 import nerdamer from "nerdamer";
 
-export class PadSlot {
+export default class PadSlot {
 
     private _input: string;
     public get input(): string {
@@ -23,11 +23,21 @@ export class PadSlot {
     /**
      *
      */
-    constructor(input: string, context = {}) {
+    constructor(input: string, context = {}, evaluate=false) {
         this._input = input;
         this._expression = nerdamer(input, context);
+        if(evaluate){
+            this._expression = this._expression.evaluate();
+            
+        }
         console.log(this.expression);
-        this._resultTex = this.expression.toTeX();
+        if(this._expression.isNumber() && evaluate) {
+            this._resultTex = this.expression.toDecimal();
+        } else {
+            this._resultTex = this.expression.toTeX();
+        }
+        // if(this._expression.isNumber())
+        //     this._expression = this._expression.toDecimal();
     }
 
 }

@@ -3,14 +3,25 @@
 .mathpad-container {
     display: flex;
     flex-direction: column;
+
+    .toolbar {
+
+        padding: 8px;
+
+        button {
+            padding: 4px 8px;
+        }
+    }
+
+    .mathpad-input {
+        // line-height: 1em;
+        // height: 1em;
+        font-size: 16px;
+        line-height: 36px;
+        height: 40px;
+        padding: 4px;
+    }
 }
 
-.mathpad-input {
-    // line-height: 1em;
-    // height: 1em;
-    font-size: 16px;
-    line-height: 36px;
-    height: 40px;
-    padding: 4px;
-}
+
 

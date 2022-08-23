@@ -14,8 +14,9 @@ require("nerdamer/Solve");
 // import Algebra from "nerdamer/Algebra";
 // import Calculus from "nerdamer/Calculus";
 
-import Latex from "./Latex";
-import { PadSlot } from "src/PadSlot";
+// import Latex from "./Latex";
+import PadSlotView from "./PadSlotView";
+import PadSlot  from "src/PadSlot";
 // import { registerHelper } from "codemirror";
 // import codemirror from "codemirror";
 // window.codemirror = codemirror;
@@ -30,7 +31,9 @@ export interface MathpadContainerProps {
 (global as any).nerdamer = nerdamer;
 
 
-
+interface MathPadOptions {
+    evaluate: boolean;
+}
 
 
 export const MathpadContainer = () => { 
@@ -38,9 +41,12 @@ export const MathpadContainer = () => {
     const [input, setInput] = useState("");
     const [history, setHistory] = useState<PadSlot[]>([])
     const edRef = useRef<HTMLTextAreaElement>(null);
+    const [options, setOptions] = useState<MathPadOptions>({
+        evaluate: true
+    });
 
-    const processInput = (input:string) => {
-        const pad = new PadSlot(input,{});
+    const processInput = (input:string, evaluate=false) => {
+        const pad = new PadSlot(input,{},evaluate);
         setHistory([...history, pad]);
         setInput("");
     }
@@ -48,13 +54,17 @@ export const MathpadContainer = () => {
     const onKeyDown = useCallback((e:React.KeyboardEvent)=>{
         if(e.code === "Enter") {
             e.preventDefault();
-            processInput(input);
+            processInput(input, options.evaluate);
         }
-    },[input]);
+    },[input, options.evaluate]);
 
     const onChange = useCallback((e:React.ChangeEvent<HTMLTextAreaElement>)=>{
         setInput(e.target.value)
     },[setInput])
+
+    const onToggleEvaluate = useCallback(()=>{
+        setOptions({...options,evaluate:!options.evaluate});
+    },[setOptions, options])
 
     useEffect(()=>{
         
@@ -62,12 +72,12 @@ export const MathpadContainer = () => {
 
 	return (
 		<div className="mathpad-container">
+            <div className="toolbar">
+                <button onClick={onToggleEvaluate}>{options.evaluate?"Num":"Sym"}</button>
+            </div>
 			{
                 history.map((ms,i)=>(
-                    <div key={i}>
-                        <div>{ms.input}</div>
-                        <Latex latex={ms.laTeX} />
-                    </div>
+                    <PadSlotView key={i} padSlot={ms} />
                 ))
             }
             {/* <input type="text" onKeyDown={onKeyDown}  value={input} onChange={onChange} /> */}
