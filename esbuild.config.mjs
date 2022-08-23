@@ -1,6 +1,7 @@
 import esbuild from "esbuild";
 import process from "process";
 import builtins from 'builtin-modules'
+import {sassPlugin} from 'esbuild-sass-plugin'
 
 const banner =
 `/*
@@ -40,4 +41,11 @@ esbuild.build({
 	sourcemap: prod ? false : 'inline',
 	treeShaking: true,
 	outfile: 'main.js',
+
+}).catch(() => process.exit(1));
+
+esbuild.build({
+	entryPoints: ['styles.scss'],
+    outfile: "styles.css",
+    plugins: [sassPlugin()]
 }).catch(() => process.exit(1));
