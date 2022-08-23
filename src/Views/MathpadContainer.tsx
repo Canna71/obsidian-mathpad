@@ -16,10 +16,13 @@ require("nerdamer/Solve");
 
 import Latex from "./Latex";
 import { PadSlot } from "src/PadSlot";
-// import * as codemirror from "codemirror";
+// import { registerHelper } from "codemirror";
+// import codemirror from "codemirror";
+// window.codemirror = codemirror;
 // import CodeMirror from "codemirror";
 
-
+// const codemirror = require("codemirror")
+// window.codemirror = codemirror;
 export interface MathpadContainerProps {
 	nothing: string
 }
@@ -44,24 +47,17 @@ export const MathpadContainer = () => {
 	
     const onKeyDown = useCallback((e:React.KeyboardEvent)=>{
         if(e.code === "Enter") {
+            e.preventDefault();
             processInput(input);
         }
     },[input]);
 
-    const onChange = useCallback((e:React.ChangeEvent<HTMLInputElement>)=>{
+    const onChange = useCallback((e:React.ChangeEvent<HTMLTextAreaElement>)=>{
         setInput(e.target.value)
     },[setInput])
 
     useEffect(()=>{
-        if(edRef.current){
-            CodeMirror.fromTextArea(edRef.current,
-                {
-                    matchBrackets: true,
-                    autoCloseBrackets: true,
-                    theme: 'neat'
-                }
-                )
-        }
+        
     })
 
 	return (
@@ -76,7 +72,9 @@ export const MathpadContainer = () => {
             }
             {/* <input type="text" onKeyDown={onKeyDown}  value={input} onChange={onChange} /> */}
             {/* <div ref={divRef}  ></div> */}
-            <textarea  ref={edRef}>
+            <textarea rows={1} 
+                className="mathpad-input"
+            wrap="off" onKeyDown={onKeyDown}  value={input} onChange={onChange}  ref={edRef}>
 
             </textarea>
 		</div>
