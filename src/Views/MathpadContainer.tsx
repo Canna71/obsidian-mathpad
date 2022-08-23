@@ -16,9 +16,9 @@ require("nerdamer/Solve");
 
 import Latex from "./Latex";
 import { PadSlot } from "src/PadSlot";
+// import * as codemirror from "codemirror";
+// import CodeMirror from "codemirror";
 
-import Guppy from "../../node_modules/guppy-js/guppy";
-import styles from "../../styles.scss";
 
 export interface MathpadContainerProps {
 	nothing: string
@@ -34,7 +34,7 @@ export const MathpadContainer = () => {
 
     const [input, setInput] = useState("");
     const [history, setHistory] = useState<PadSlot[]>([])
-    const divRef = useRef<HTMLDivElement>(null);
+    const edRef = useRef<HTMLTextAreaElement>(null);
 
     const processInput = (input:string) => {
         const pad = new PadSlot(input,{});
@@ -53,9 +53,14 @@ export const MathpadContainer = () => {
     },[setInput])
 
     useEffect(()=>{
-        if(divRef.current) {
-            const guppy = new Guppy("guppydiv");
-            console.log(guppy); 
+        if(edRef.current){
+            CodeMirror.fromTextArea(edRef.current,
+                {
+                    matchBrackets: true,
+                    autoCloseBrackets: true,
+                    theme: 'neat'
+                }
+                )
         }
     })
 
@@ -70,7 +75,10 @@ export const MathpadContainer = () => {
                 ))
             }
             {/* <input type="text" onKeyDown={onKeyDown}  value={input} onChange={onChange} /> */}
-            <div ref={divRef} id="guppydiv" style={{width:"400px"}} ></div>
+            {/* <div ref={divRef}  ></div> */}
+            <textarea  ref={edRef}>
+
+            </textarea>
 		</div>
 	)
 }
