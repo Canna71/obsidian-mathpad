@@ -1,5 +1,7 @@
 import nerdamer from "nerdamer";
+import { isGeneratorFunction } from "util/types";
 const funRegex = /^([a-z_][a-z\d_]*)\(([a-z_,\s]*)\)\s*:=\s*(.+)$/gi;
+const varRegex = /^([a-z_][a-z\d_]*)\s*:=\s*(.+)$/gi;
 export default class PadSlot {
 
     private _input: string;
@@ -35,6 +37,8 @@ export default class PadSlot {
     }
 
     process(scope={},evaluate=false): PadSlot {
+        
+        
         const fnDec = funRegex.exec(this.input);
         if(fnDec){
             const name = fnDec[1];
@@ -42,8 +46,19 @@ export default class PadSlot {
             const def = fnDec[3];
             console.log(name, params, def);
             nerdamer.setFunction(name, params, def);
+            this._resultTex = name+"("+params.map(param=>nerdamer(param).toTeX()).join(",")+
+                ") := " + nerdamer(def).toTeX();
             return this;
         }
+        const varDec = varRegex.exec(this.input);
+        if(varDec){
+            const name = varDec[1];
+            const def = varDec[2];
+            nerdamer.setVar(name, def);
+            this._resultTex = name + " := " + nerdamer(def).toTeX();
+            return this;
+        }
+
         this._inputLatex = nerdamer(this.input).toTeX();
         try{
             this._expression = nerdamer(`simplify(${this.input})`, scope);
