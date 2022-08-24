@@ -42,11 +42,11 @@ export const MathpadContainer = () => {
     const [history, setHistory] = useState<PadSlot[]>([])
     const edRef = useRef<HTMLTextAreaElement>(null);
     const [options, setOptions] = useState<MathPadOptions>({
-        evaluate: true
+        evaluate: true 
     });
 
     const processInput = (input:string, evaluate=false) => {
-        const pad = new PadSlot(input,{},evaluate);
+        const pad = new PadSlot(input).process({},evaluate);
         setHistory([...history, pad]);
         setInput("");
     }
