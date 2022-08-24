@@ -30,41 +30,65 @@ export interface MathpadContainerProps {
 
 (global as any).nerdamer = nerdamer;
 
+const NERDAMER_INITIAL_FUNCS = Object.keys(nerdamer.getCore().PARSER.functions);
 
 interface MathPadOptions {
     evaluate: boolean;
 }
 
+interface MathPadState {
+    input: string;
+    stack: PadSlot[];
+    options: MathPadOptions;
+}
+
+const DEFAULTSTATE : MathPadState = {
+    input: "",
+    stack: [],
+    options: {
+        evaluate: true
+    }
+}
+
 
 export const MathpadContainer = () => { 
 
-    const [input, setInput] = useState("");
-    const [history, setHistory] = useState<PadSlot[]>([])
-    const edRef = useRef<HTMLTextAreaElement>(null);
-    const [options, setOptions] = useState<MathPadOptions>({
-        evaluate: true 
-    });
+    const [state, setState] = useState(DEFAULTSTATE);
 
-    const processInput = (input:string, evaluate=false) => {
+    const {input,stack,  options:{evaluate}} = state;
+    // const [input, setInput] = useState("");
+    // const [history, setHistory] = useState<PadSlot[]>([])
+    const edRef = useRef<HTMLTextAreaElement>(null);
+    // const [options, setOptions] = useState<MathPadOptions>({
+    //     evaluate: true 
+    // });
+
+    const processInput = useCallback( () => {
         const pad = new PadSlot(input).process({},evaluate);
-        setHistory([...history, pad]);
-        setInput("");
-    }
+        setState({...state,
+            stack:[...state.stack, pad],
+            input: ""
+        })
+    },[state, setState, input, evaluate]);
 	
     const onKeyDown = useCallback((e:React.KeyboardEvent)=>{
         if(e.code === "Enter") {
             e.preventDefault();
-            processInput(input, options.evaluate);
+            processInput();
         }
-    },[input, options.evaluate]);
+    },[processInput]);
 
     const onChange = useCallback((e:React.ChangeEvent<HTMLTextAreaElement>)=>{
-        setInput(e.target.value)
-    },[setInput])
+        setState({...state, input: e.target.value});
+    },[state, setState])
 
-    const onToggleEvaluate = useCallback(()=>{
-        setOptions({...options,evaluate:!options.evaluate});
-    },[setOptions, options])
+    const onToggleEvaluate = useCallback( ()=>{
+        setState({
+            ...state, 
+            options: {...state.options, 
+                        evaluate:!evaluate}
+                });
+    },[setState, evaluate,setState])
 
     useEffect(()=>{
         
@@ -73,10 +97,10 @@ export const MathpadContainer = () => {
 	return (
 		<div className="mathpad-container">
             <div className="toolbar">
-                <button onClick={onToggleEvaluate}>{options.evaluate?"Num":"Sym"}</button>
+                <button onClick={onToggleEvaluate}>{evaluate?"Num":"Sym"}</button>
             </div>
 			{
-                history.map((ms,i)=>(
+                stack.map((ms,i)=>(
                     <PadSlotView key={i} padSlot={ms} />
                 ))
             }
