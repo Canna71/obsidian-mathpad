@@ -63,13 +63,22 @@ export const MathpadContainer = () => {
     //     evaluate: true 
     // });
 
+    const findNextId = useCallback(()=>{
+        if(!stack.length) return "1";
+        const maxId = Math.max(...stack.map(slot=>parseInt(slot.id)));
+        console.log(maxId);
+        return `${maxId+1}`;
+    },[stack])
+
     const processInput = useCallback( () => {
-        const pad = new PadSlot(input).process({},evaluate);
+        
+       
+        const pad = new PadSlot(findNextId(),input).process({},evaluate);
         setState({...state,
             stack:[...state.stack, pad],
             input: ""
         })
-    },[state, setState, input, evaluate]);
+    },[state, setState, input, evaluate, findNextId]);
 	
     const onKeyDown = useCallback((e:React.KeyboardEvent)=>{
         if(e.code === "Enter") {
@@ -88,11 +97,23 @@ export const MathpadContainer = () => {
             options: {...state.options, 
                         evaluate:!evaluate}
                 });
-    },[setState, evaluate,setState])
+    },[setState, evaluate,setState]);
 
-    useEffect(()=>{
+    const onSlotChanged = 
+        useCallback((changedId:string, value:string)=>{
+
+        const newStack = stack.map(
+            (ms,i)=>ms.id===changedId ? 
+            new PadSlot(ms.id,value):ms).map(slot=>slot.process({},evaluate));
         
-    })
+
+        setState({
+            ...state,
+            stack: newStack
+        })
+    },[stack, state, setState]);
+
+
 
 	return (
 		<div className="mathpad-container">
@@ -101,7 +122,7 @@ export const MathpadContainer = () => {
             </div>
 			{
                 stack.map((ms,i)=>(
-                    <PadSlotView key={i} padSlot={ms} />
+                    <PadSlotView key={i} padSlot={ms} onChanged={onSlotChanged} />
                 ))
             }
             {/* <input type="text" onKeyDown={onKeyDown}  value={input} onChange={onChange} /> */}

@@ -1,11 +1,16 @@
 import nerdamer from "nerdamer";
-import { isGeneratorFunction } from "util/types";
 const funRegex = /^([a-z_][a-z\d_]*)\(([a-z_,\s]*)\)\s*:=\s*(.+)$/gi;
 const varRegex = /^([a-z_][a-z\d_]*)\s*:=\s*(.+)$/gi;
 export default class PadSlot {
 
     private _input: string;
     private _inputLatex: string;
+    private _id: string;
+ 
+    public get id(): string {
+        return this._id;
+    }
+ 
 
     public get inputLaTeX(): string {
         return this._inputLatex;
@@ -32,8 +37,9 @@ export default class PadSlot {
     /**
      *
      */
-    constructor(input: string) {
+    constructor(id:string, input: string) {
         this._input = input;
+        this._id = id;
     }
 
     process(scope={},evaluate=false): PadSlot {
@@ -66,6 +72,7 @@ export default class PadSlot {
             this._expression = nerdamer(this.input, scope);
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if(!(this._expression as any).isFraction()){
             // this will return the symbol itself, not the Expression
             // this._expression = (this._expression as any).simplify();
@@ -79,6 +86,7 @@ export default class PadSlot {
         //     // this._resultTex = this.expression.toTeX("decimal");
         //     this._resultTex = this.expression.toDecimal();
         // } else {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             this._resultTex = (this.expression as any).toTeX(evaluate?"decimal":undefined);
         // }
         // if(this._expression.isNumber())
