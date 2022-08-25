@@ -27,7 +27,8 @@ export default class PadSlot {
         return this._id;
     }
 
-    //TODO: make it configurable
+    //TODO: make it configurable 
+    // cfr: nerdamer.getCore().Settings.VALIDATION_REGEX
     public get name(): string {
         return `S${this._id}`;
     }
@@ -76,7 +77,9 @@ export default class PadSlot {
             this._expression = nerdamer(def);
             this._resultTex = name+"("+params.map(param=>nerdamer(param).toTeX()).join(",")+
                 ") := " + nerdamer(def).toTeX();
-            nerdamer.setVar(this.name, this._expression);
+            // nerdamer.setVar(this.name, this._expression);
+            (nerdamer as any).getVars("object")[this.name] = (this._expression as any).symbol.clone();
+
             return this;
         }
         const varDec = varRegex.exec(this.input);
@@ -87,9 +90,10 @@ export default class PadSlot {
             nerdamer.setVar(name, def);
             
             this._resultTex = name + " := " + nerdamer(def).toTeX();
-            nerdamer.setVar(this.name, this._expression);
+            // nerdamer.setVar(this.name, this._expression.symbol);
+            (nerdamer as any).getVars("object")[this.name] = (this._expression as any).symbol.clone();
 
-            return this;
+            return this; 
         }
         //TODO: determine when it's right to display the input as LaTeX
         // this._inputLatex = nerdamer(this.input).toTeX();
@@ -127,7 +131,8 @@ export default class PadSlot {
         this._error = e.toString();
         console.warn(e);
     }
-        nerdamer.setVar(this.name, this._expression);
+        // nerdamer.setVar(this.name, this._expression.symbol);
+        (nerdamer as any).getVars("object")[this.name] = (this._expression as any).symbol.clone();
         return this;
     }
 
