@@ -17,7 +17,7 @@ require("nerdamer/Solve");
 // import Latex from "./Latex";
 import PadSlotView from "./PadSlotView";
 import PadSlot from "src/Math/PadSlot";
-import { addSlot, getNewStack, resetContext, updatePad } from "src/Math/PadStack";
+import { addSlot, getNewStack, removePad, resetContext, updatePad } from "src/Math/PadStack";
 // import { registerHelper } from "codemirror";
 // import codemirror from "codemirror";
 // window.codemirror = codemirror;
@@ -65,7 +65,6 @@ export const MathpadContainer = () => {
     // console.log(stack);
 
     useEffect(()=>{
-        // console.log("TODO: reset context")
         resetContext();
     },[]);
 
@@ -109,7 +108,12 @@ export const MathpadContainer = () => {
             }))
         }, []);
 
-
+        const onSlotClosed =  useCallback((changedId: number) => {
+            setState(state => ({
+                ...state,
+                stack: removePad(state.stack, changedId, {}, { evaluate: state.options.evaluate })
+            }))
+        }, []);
 
     return (
 
@@ -121,7 +125,10 @@ export const MathpadContainer = () => {
                 <div className="mathpad-slots-container">
                     {
                         stack.map((ms) => (
-                            <PadSlotView key={ms.id} padSlot={ms} onChanged={onSlotChanged} />
+                            <PadSlotView key={ms.id} padSlot={ms} 
+                            onChanged={onSlotChanged} 
+                            onClosed={onSlotClosed}
+                            />
                         ))
                     }
                     {/* <input type="text" onKeyDown={onKeyDown}  value={input} onChange={onChange} /> */}
@@ -141,3 +148,5 @@ export const MathpadContainer = () => {
 
     )
 }
+
+

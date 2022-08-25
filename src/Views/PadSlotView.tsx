@@ -2,7 +2,7 @@ import * as React from "react";
 import Latex from "./Latex";
 import PadSlot from "../Math/PadSlot";
 import { useCallback, useEffect, useRef, useState } from "react";
-
+import Close  from "../icons/close.svg";
 interface PadSlotViewState {
     edit: boolean;
 }
@@ -11,10 +11,11 @@ const DEFAULT_SLOT_STATE: PadSlotViewState = {
     edit: false
 }
 
-const PadSlotView = ({ padSlot, onChanged }:
+const PadSlotView = ({ padSlot, onChanged, onClosed }:
     {
         padSlot: PadSlot,
-        onChanged: (id: number, value: string) => void
+        onChanged: (id: number, value: string) => void,
+        onClosed: (id: number) => void,
     }) => {
 
     const [state, setState] = useState(DEFAULT_SLOT_STATE);
@@ -50,6 +51,10 @@ const PadSlotView = ({ padSlot, onChanged }:
 
         finishEdit(e.currentTarget.value);
     }, [finishEdit]);
+
+    const onClose = useCallback((e:React.MouseEvent)=>{
+        onClosed(padSlot.id)
+    },[padSlot.id])
 
     useEffect(() => {
         if (txtRef.current) {
@@ -92,7 +97,9 @@ const PadSlotView = ({ padSlot, onChanged }:
                     }
                 </div>
             </div>
-
+            <a className="view-action mod-close-leaf" onClick={onClose}>
+                <Close />
+            </a>
         </div>
     );
 }

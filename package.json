@@ -20,6 +20,7 @@
 		"@typescript-eslint/parser": "5.29.0",
 		"builtin-modules": "3.3.0",
 		"esbuild": "0.14.47",
+		"esbuild-plugin-svgr": "^1.0.1",
 		"esbuild-sass-plugin": "^2.3.2",
 		"obsidian": "latest",
 		"tslib": "2.4.0",

@@ -49,7 +49,7 @@ export const addSlot = (stack:PadSlot[], input: string, scope={}, options:Proces
 }
 
 export const updatePad = (stack:PadSlot[], id:number, value: string, scope={}, options:ProcessOptions) => {
-    console.log(stack);
+    resetContext();
     const newStack = stack.map(
         (ms,i)=>ms.id===id ? 
         new PadSlot(ms.id,value):ms).map(slot=>slot.process(scope,options));
@@ -57,3 +57,9 @@ export const updatePad = (stack:PadSlot[], id:number, value: string, scope={}, o
     return newStack;
 }
  
+export const removePad = (stack:PadSlot[], id:number, scope={}, options:ProcessOptions) => {
+    resetContext();
+    const newStack = stack.filter(
+        (ms,i)=>ms.id!==id ).map(slot=>slot.process(scope,options));
+    return newStack;
+}
