@@ -6,9 +6,9 @@ export default class PadSlot {
 
     private _input: string;
     private _inputLatex: string;
-    private _id: string;
+    private _id: number;
  
-    public get id(): string {
+    public get id(): number {
         return this._id;
     }
  
@@ -38,14 +38,13 @@ export default class PadSlot {
     /**
      *
      */
-    constructor(id:string, input: string) {
+    constructor(id:number, input: string) {
         this._input = input;
         this._id = id;
     }
 
     process(scope={},opts:ProcessOptions): PadSlot {
         
-        console.log("PadSLot process " + this.input);
         const fnDec = funRegex.exec(this.input);
         if(fnDec){
             const name = fnDec[1];
@@ -65,8 +64,8 @@ export default class PadSlot {
             this._resultTex = name + " := " + nerdamer(def).toTeX();
             return this;
         }
-
-        this._inputLatex = nerdamer(this.input).toTeX();
+        //TODO: determine when it's right to display the input as LaTeX
+        // this._inputLatex = nerdamer(this.input).toTeX();
         this._expression = nerdamer(this.input, scope);
         // A martix will trow an exception if we try to simplify it
         if(opts.simplify){
@@ -87,7 +86,7 @@ export default class PadSlot {
             }
         }  
  
-        console.log(this.expression);
+        // console.log(this.expression);
         // if(this._expression.isNumber() && evaluate) {
         //     // this._resultTex = this.expression.toTeX("decimal");
         //     this._resultTex = this.expression.toDecimal();

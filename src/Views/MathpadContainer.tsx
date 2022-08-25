@@ -94,15 +94,15 @@ export const MathpadContainer = () => {
     }, []);
 
     const onSlotChanged =
-        useCallback((changedId: string, value: string) => {
+        useCallback((changedId: number, value: string) => {
 
 
 
-            setState({
+            setState(state => ({
                 ...state,
-                stack: updatePad(stack, changedId, value, {}, { evaluate })
-            })
-        }, [stack, state, setState]);
+                stack: updatePad(state.stack, changedId, value, {}, { evaluate: state.options.evaluate })
+            }))
+        }, []);
 
 
 
@@ -112,8 +112,8 @@ export const MathpadContainer = () => {
                 <button onClick={onToggleEvaluate}>{evaluate ? "Num" : "Sym"}</button>
             </div>
             {
-                stack.map((ms, i) => (
-                    <PadSlotView key={i} padSlot={ms} onChanged={onSlotChanged} />
+                stack.map((ms) => (
+                    <PadSlotView key={ms.id} padSlot={ms} onChanged={onSlotChanged} />
                 ))
             }
             {/* <input type="text" onKeyDown={onKeyDown}  value={input} onChange={onChange} /> */}

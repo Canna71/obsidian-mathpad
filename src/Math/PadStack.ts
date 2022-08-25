@@ -13,10 +13,10 @@ const DEFAULT_OPTS : ProcessOptions = {
 }
 
 const nextId = (stack:PadSlot[]) => {
-    if(!stack.length) return "$1";
-    const maxId = Math.max(...stack.map(slot=>parseInt(slot.id)));
-    console.log(maxId);
-    return `${maxId+1}`;
+    if(!stack.length) return 1;
+    const maxId = Math.max(...stack.map(slot=>slot.id));
+    // console.log(maxId);
+    return maxId+1;
 }
 
 export const addSlot = (stack:PadSlot[], input: string, scope={}, options:ProcessOptions={
@@ -28,10 +28,12 @@ export const addSlot = (stack:PadSlot[], input: string, scope={}, options:Proces
     return [...stack, pad];
 }
 
-export const updatePad = (stack:PadSlot[], id:string, value: string, scope={}, options:ProcessOptions) => {
+export const updatePad = (stack:PadSlot[], id:number, value: string, scope={}, options:ProcessOptions) => {
+    console.log(stack);
     const newStack = stack.map(
         (ms,i)=>ms.id===id ? 
         new PadSlot(ms.id,value):ms).map(slot=>slot.process(scope,options));
-    
+    console.log(newStack);
     return newStack;
 }
+ 

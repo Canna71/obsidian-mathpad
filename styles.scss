@@ -17,9 +17,27 @@
 
 
         .slot-input {
+            line-height: 12px;
+            // padding: 4px;
             mjx-container {
                 text-align: left;
             }
+
+            .plain-input {
+                padding: 5px;
+                line-height: 12px;
+                height: 24px;
+                font-size: 16px;
+                // line-height: 12px;
+                // margin: 1px;
+                font-family: monospace;
+
+                &:hover {
+                    background-color: var(--background-primary);
+                }
+            }
+
+
         }
     }
 
@@ -27,9 +45,11 @@
         // line-height: 1em;
         // height: 1em;
         font-size: 16px;
-        line-height: 36px;
-        height: 40px;
+        line-height: 12px;
+        height: 24px;
         padding: 4px;
+        width: 100%;
+        font-family: monospace;
     }
 }
 

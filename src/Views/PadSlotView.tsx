@@ -1,7 +1,7 @@
 import * as React from "react";
 import Latex from "./Latex";
 import PadSlot from "../Math/PadSlot";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface PadSlotViewState {
     edit: boolean;
@@ -13,40 +13,67 @@ const DEFAULT_SLOT_STATE: PadSlotViewState = {
 
 const PadSlotView = ({ padSlot, onChanged }: 
     { padSlot: PadSlot,
-        onChanged: (id:string, value:string)=>void
+        onChanged: (id:number, value:string)=>void
     }) => {
 
     const [state, setState] = useState(DEFAULT_SLOT_STATE);
     const {edit} = state;
-
+    const txtRef = useRef<HTMLTextAreaElement>(null);
     const onMouseDown = useCallback(
         (e: React.MouseEvent) => {
-            if(!edit){
-                setState({...state,edit:true});
-            }
+            setState(state=>{
+                console.log(state.edit);
+                return (state.edit ? state : {
+                ...state,edit:true
+                });
+            });
         },
-        [setState,edit],
+        [],
     )
+
+    const finishEdit = useCallback((value:string)=>{
+        setState(state=>({...state,edit:false}))
+        onChanged(padSlot.id, value);
+    },[padSlot.id,onChanged]);
 
     const onKeyDown = useCallback((e:React.KeyboardEvent<HTMLTextAreaElement>)=>{
         if(e.code === "Enter") {
-            console.log("enter:", e);
+            
             e.preventDefault();
-            setState({...state,edit:false})
-            onChanged(padSlot.id, e.currentTarget.value);
+            finishEdit(e.currentTarget.value);
         }
-    },[padSlot.id, onChanged, setState, state]);
+    },[]);
+
+    const onBlur = useCallback((e:React.FocusEvent<HTMLTextAreaElement>)=>{
+        // console.log("blur")
+
+        finishEdit(e.currentTarget.value);
+    },[finishEdit]);
+
+    useEffect(()=>{
+        if(txtRef.current){
+            txtRef.current.setSelectionRange(txtRef.current.value.length, txtRef.current.value.length);
+            setTimeout(()=>{txtRef.current?.focus()},0);
+        }
+    })
 
     return (
         <div className="slot-container">
             <div className="slot-input" onMouseDown={onMouseDown}>
                 {edit?
-                    <textarea className="mathpad-input" rows={1} wrap="off" defaultValue={padSlot.input} onKeyDown={onKeyDown} />
+                    <textarea 
+                        className="mathpad-input" 
+                        rows={1} wrap="off" 
+                        defaultValue={padSlot.input} 
+                        onKeyDown={onKeyDown} 
+                        onBlur={onBlur} 
+                        ref={txtRef}
+                        />
                 :
                     padSlot.inputLaTeX ?
                     <Latex latex={padSlot.inputLaTeX} />
                     :
-                    padSlot.input
+                    <div className="plain-input">{padSlot.input}</div>
                 }
                 
             </div>
