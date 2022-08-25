@@ -7,6 +7,16 @@ export default class PadSlot {
     private _input: string;
     private _inputLatex: string;
     private _id: number;
+    private _error?: string | undefined;
+    
+    public get error(): string | undefined {
+        return this._error;
+    }
+
+    
+
+
+
  
     public get id(): number {
         return this._id;
@@ -44,7 +54,9 @@ export default class PadSlot {
     }
 
     process(scope={},opts:ProcessOptions): PadSlot {
-        
+        try{
+
+        this._error=undefined;
         const fnDec = funRegex.exec(this.input);
         if(fnDec){
             const name = fnDec[1];
@@ -96,6 +108,10 @@ export default class PadSlot {
         // }
         // if(this._expression.isNumber())
         //     this._expression = this._expression.toDecimal();
+    } catch (e){
+        this._error = e.toString();
+        console.warn(e);
+    }
         return this;
     }
 

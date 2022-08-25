@@ -39,6 +39,14 @@
 
 
         }
+
+        .slot-result {
+
+            .slot-error {
+                font-size: 12px;
+                color: var(--text-error)
+            }
+        }
     }
 
     .mathpad-input {
