@@ -3,6 +3,7 @@ import Latex from "./Latex";
 import PadSlot from "../Math/PadSlot";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Close  from "../icons/close.svg";
+import Plot from "./Plot";
 interface PadSlotViewState {
     edit: boolean;
 }
@@ -63,6 +64,8 @@ const PadSlotView = ({ padSlot, onChanged, onClosed }:
         }
     })
 
+    
+
     return (
         <div className="slot-container">
             <div className="slot-anchor">
@@ -95,6 +98,18 @@ const PadSlotView = ({ padSlot, onChanged, onClosed }:
                             <Latex latex={padSlot.laTeX} />
 
                     }
+                </div>
+                <div>
+                <Plot options={{
+                        data:[
+                            {
+                                graphType: 'polyline',
+                                fn: (scope)=>padSlot.fn(scope.x),
+                                
+                            }
+                        ],
+                        target: "" // just to make tslint happy
+                    }} />
                 </div>
             </div>
             <a className="view-action mod-close-leaf" onClick={onClose}>

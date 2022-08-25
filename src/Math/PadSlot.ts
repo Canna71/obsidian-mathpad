@@ -13,6 +13,11 @@ export default class PadSlot {
     private _inputLatex: string;
     private _id: number;
     private _error?: string | undefined;
+    private _fn: (...args: number[]) => number;
+    public get fn(): (...args: number[]) => number {
+        return this._fn;
+    }
+
     
     public get error(): string | undefined {
         return this._error;
@@ -133,6 +138,7 @@ export default class PadSlot {
     }
         // nerdamer.setVar(this.name, this._expression.symbol);
         (nerdamer as any).getVars("object")[this.name] = (this._expression as any).symbol.clone();
+        this._fn = this.expression.buildFunction();
         return this;
     }
 
