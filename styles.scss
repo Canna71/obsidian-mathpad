@@ -1,6 +1,3 @@
-
-
-
 .mathpad-container {
     display: flex;
     flex-direction: column;
@@ -23,50 +20,65 @@
 
         .mathpad-slots-container {
             display: flex;
-            flex-direction: column;     
+            flex-direction: column;
 
             .slot-container {
+                display: flex;
 
                 border-top: 1px solid var(--background-modifier-border);
-        
-                .slot-input {
-                    line-height: 12px;
-                    // padding: 4px;
-                    mjx-container {
-                        text-align: left;
+
+                .slot-anchor {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    width: 2em;
+                    border-right: 1px solid var(--background-modifier-border);
+                    justify-content: center;
+
+                    .slot-name {
+                        width: 100%;
+                        text-align: center;
                     }
-        
-                    .plain-input {
-                        padding: 5px;
+                }
+
+                .slot-content {
+                    flex: 1;
+                    padding: 4px;
+                    display: flex;
+                    flex-direction: column;
+                    
+                    .slot-input {
+                        
                         line-height: 12px;
-                        height: 24px;
-                        font-size: 16px;
-                        // line-height: 12px;
-                        // margin: 1px;
-                        font-family: monospace;
-        
-                        &:hover {
-                            background-color: var(--background-primary);
+                        // padding: 4px;
+                        mjx-container {
+                            text-align: left;
+                        }
+
+                        .plain-input {
+                            padding: 5px;
+                            line-height: 12px;
+                            height: 24px;
+                            font-size: 16px;
+                            // line-height: 12px;
+                            // margin: 1px;
+                            font-family: monospace;
+
+                            &:hover {
+                                background-color: var(--background-primary);
+                            }
                         }
                     }
-        
-        
-                }
-        
-                .slot-result {
-        
-                    .slot-error {
-                        font-size: 12px;
-                        color: var(--text-error)
+
+                    .slot-result {
+                        .slot-error {
+                            font-size: 12px;
+                            color: var(--text-error);
+                        }
                     }
                 }
-
             }
-
-
         }
-
-
     }
 
     .current-input {
@@ -74,9 +86,6 @@
         padding-top: 16px;
         flex: 0;
     }
-
-
-
 
     .mathpad-input {
         // line-height: 1em;
@@ -89,6 +98,3 @@
         font-family: monospace;
     }
 }
-
-
-

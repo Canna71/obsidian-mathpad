@@ -1,6 +1,6 @@
 
 import * as React from "react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 
 // import nerdamer  from "nerdamer/all.min"
@@ -17,7 +17,7 @@ require("nerdamer/Solve");
 // import Latex from "./Latex";
 import PadSlotView from "./PadSlotView";
 import PadSlot from "src/Math/PadSlot";
-import { addSlot, updatePad } from "src/Math/PadStack";
+import { addSlot, getNewStack, resetContext, updatePad } from "src/Math/PadStack";
 // import { registerHelper } from "codemirror";
 // import codemirror from "codemirror";
 // window.codemirror = codemirror;
@@ -53,7 +53,7 @@ const DEFAULTSTATE: MathPadState = {
 
 export const MathpadContainer = () => {
 
-    const [state, setState] = useState(DEFAULTSTATE);
+    const [state, setState] = useState({...DEFAULTSTATE, stack:getNewStack()});
 
     const { input, stack, options: { evaluate } } = state;
     // const [input, setInput] = useState("");
@@ -63,6 +63,11 @@ export const MathpadContainer = () => {
     //     evaluate: true 
     // });
     // console.log(stack);
+
+    useEffect(()=>{
+        // console.log("TODO: reset context")
+        resetContext();
+    },[]);
 
     const processInput = useCallback(() => {
         setState(state => ({

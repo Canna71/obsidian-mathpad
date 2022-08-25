@@ -1,5 +1,10 @@
 import { ProcessOptions } from './PadStack';
 import nerdamer from "nerdamer";
+require("nerdamer/Algebra");
+require("nerdamer/Calculus");
+require("nerdamer/Extra");
+require("nerdamer/Solve");
+
 const funRegex = /^([a-z_][a-z\d_]*)\(([a-z_,\s]*)\)\s*:=\s*(.+)$/i;
 const varRegex = /^([a-z_][a-z\d_]*)\s*:=\s*(.+)$/i;
 export default class PadSlot {
@@ -20,6 +25,11 @@ export default class PadSlot {
  
     public get id(): number {
         return this._id;
+    }
+
+    //TODO: make it configurable
+    public get name(): string {
+        return `S${this._id}`;
     }
  
 
@@ -63,17 +73,22 @@ export default class PadSlot {
             const params = fnDec[2].split(",").map(p=>p.trim());
             const def = fnDec[3];
             console.log(name, params, def);
-            nerdamer.setFunction(name, params, def);
+            this._expression = nerdamer(def);
             this._resultTex = name+"("+params.map(param=>nerdamer(param).toTeX()).join(",")+
                 ") := " + nerdamer(def).toTeX();
+            nerdamer.setVar(this.name, this._expression);
             return this;
         }
         const varDec = varRegex.exec(this.input);
         if(varDec){
             const name = varDec[1];
             const def = varDec[2];
+            this._expression = nerdamer(def);
             nerdamer.setVar(name, def);
+            
             this._resultTex = name + " := " + nerdamer(def).toTeX();
+            nerdamer.setVar(this.name, this._expression);
+
             return this;
         }
         //TODO: determine when it's right to display the input as LaTeX
@@ -112,6 +127,7 @@ export default class PadSlot {
         this._error = e.toString();
         console.warn(e);
     }
+        nerdamer.setVar(this.name, this._expression);
         return this;
     }
 

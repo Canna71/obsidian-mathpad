@@ -1,6 +1,13 @@
+import nerdamer from "nerdamer";
+require("nerdamer/Algebra");
+require("nerdamer/Calculus");
+require("nerdamer/Extra");
+require("nerdamer/Solve");
+
 import  PadSlot from './PadSlot';
 
 // const NERDAMER_INITIAL_FUNCS = Object.keys(nerdamer.getCore().PARSER.functions);
+const NERDAMER_INITIAL_FUNCS = {...nerdamer.getCore().PARSER.functions};
 
 export interface ProcessOptions {
     evaluate?: boolean;
@@ -10,6 +17,19 @@ export interface ProcessOptions {
 const DEFAULT_OPTS : ProcessOptions = {
     evaluate: false,
     simplify: false
+}
+
+export const resetContext = () => {
+    nerdamer.clearVars();
+    for(const f in nerdamer.getCore().PARSER.functions){
+        if(!NERDAMER_INITIAL_FUNCS[f]){
+            delete nerdamer.getCore().PARSER.functions[f];
+        }
+    }
+}
+
+export const getNewStack = ()=>{
+    return [] as PadSlot[];
 }
 
 const nextId = (stack:PadSlot[]) => {

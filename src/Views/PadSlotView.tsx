@@ -60,33 +60,39 @@ const PadSlotView = ({ padSlot, onChanged }:
 
     return (
         <div className="slot-container">
-            <div className="slot-input" onMouseDown={onMouseDown}>
-                {edit ?
-                    <textarea
-                        className="mathpad-input"
-                        rows={1} wrap="off"
-                        defaultValue={padSlot.input}
-                        onKeyDown={onKeyDown}
-                        onBlur={onBlur}
-                        ref={txtRef}
-                    />
-                    :
-                    padSlot.inputLaTeX ?
-                        <Latex latex={padSlot.inputLaTeX} />
-                        :
-                        <div className="plain-input">{padSlot.input}</div>
-                }
-
+            <div className="slot-anchor">
+                <div className="slot-name">{padSlot.name}</div>
             </div>
-            <div className="slot-result">
-                {
-                    padSlot.error ?
-                        <div className="slot-error">{padSlot.error}</div>
+            <div className="slot-content">
+                <div className="slot-input" onMouseDown={onMouseDown}>
+                    {edit ?
+                        <textarea
+                            className="mathpad-input"
+                            rows={1} wrap="off"
+                            defaultValue={padSlot.input}
+                            onKeyDown={onKeyDown}
+                            onBlur={onBlur}
+                            ref={txtRef}
+                        />
                         :
-                        <Latex latex={padSlot.laTeX} />
+                        padSlot.inputLaTeX ?
+                            <Latex latex={padSlot.inputLaTeX} />
+                            :
+                            <div className="plain-input">{padSlot.input}</div>
+                    }
 
-                }
+                </div>
+                <div className="slot-result">
+                    {
+                        padSlot.error ?
+                            <div className="slot-error">{padSlot.error}</div>
+                            :
+                            <Latex latex={padSlot.laTeX} />
+
+                    }
+                </div>
             </div>
+
         </div>
     );
 }
