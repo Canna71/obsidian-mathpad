@@ -1,6 +1,7 @@
+import { ProcessOptions } from './PadStack';
 import nerdamer from "nerdamer";
-const funRegex = /^([a-z_][a-z\d_]*)\(([a-z_,\s]*)\)\s*:=\s*(.+)$/gi;
-const varRegex = /^([a-z_][a-z\d_]*)\s*:=\s*(.+)$/gi;
+const funRegex = /^([a-z_][a-z\d_]*)\(([a-z_,\s]*)\)\s*:=\s*(.+)$/i;
+const varRegex = /^([a-z_][a-z\d_]*)\s*:=\s*(.+)$/i;
 export default class PadSlot {
 
     private _input: string;
@@ -42,9 +43,9 @@ export default class PadSlot {
         this._id = id;
     }
 
-    process(scope={},evaluate=false): PadSlot {
+    process(scope={},opts:ProcessOptions): PadSlot {
         
-        
+        console.log("PadSLot process " + this.input);
         const fnDec = funRegex.exec(this.input);
         if(fnDec){
             const name = fnDec[1];
@@ -66,17 +67,22 @@ export default class PadSlot {
         }
 
         this._inputLatex = nerdamer(this.input).toTeX();
-        try{
-            this._expression = nerdamer(`simplify(${this.input})`, scope);
-        } catch(e){
-            this._expression = nerdamer(this.input, scope);
+        this._expression = nerdamer(this.input, scope);
+        // A martix will trow an exception if we try to simplify it
+        if(opts.simplify){
+            try{
+                this._expression = nerdamer(`simplify(${this.input})`, scope);
+            } catch(e){
+                //
+            }
         }
+
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if(!(this._expression as any).isFraction()){
             // this will return the symbol itself, not the Expression
             // this._expression = (this._expression as any).simplify();
-            if(evaluate){
+            if(opts.evaluate){
                 this._expression = this._expression.evaluate(); 
             }
         }  
@@ -87,7 +93,7 @@ export default class PadSlot {
         //     this._resultTex = this.expression.toDecimal();
         // } else {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            this._resultTex = (this.expression as any).toTeX(evaluate?"decimal":undefined);
+            this._resultTex = (this.expression as any).toTeX(opts.evaluate?"decimal":undefined);
         // }
         // if(this._expression.isNumber())
         //     this._expression = this._expression.toDecimal();

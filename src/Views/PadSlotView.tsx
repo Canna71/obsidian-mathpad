@@ -1,6 +1,6 @@
 import * as React from "react";
 import Latex from "./Latex";
-import PadSlot from "../PadSlot";
+import PadSlot from "../Math/PadSlot";
 import { useCallback, useState } from "react";
 
 interface PadSlotViewState {
@@ -41,7 +41,7 @@ const PadSlotView = ({ padSlot, onChanged }:
         <div className="slot-container">
             <div className="slot-input" onMouseDown={onMouseDown}>
                 {edit?
-                    <textarea defaultValue={padSlot.input} onKeyDown={onKeyDown} />
+                    <textarea className="mathpad-input" rows={1} wrap="off" defaultValue={padSlot.input} onKeyDown={onKeyDown} />
                 :
                     padSlot.inputLaTeX ?
                     <Latex latex={padSlot.inputLaTeX} />
