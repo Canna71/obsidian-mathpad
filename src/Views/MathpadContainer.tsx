@@ -107,22 +107,32 @@ export const MathpadContainer = () => {
 
 
     return (
+
         <div className="mathpad-container">
             <div className="toolbar">
                 <button onClick={onToggleEvaluate}>{evaluate ? "Num" : "Sym"}</button>
             </div>
-            {
-                stack.map((ms) => (
-                    <PadSlotView key={ms.id} padSlot={ms} onChanged={onSlotChanged} />
-                ))
-            }
-            {/* <input type="text" onKeyDown={onKeyDown}  value={input} onChange={onChange} /> */}
-            {/* <div ref={divRef}  ></div> */}
-            <textarea rows={1}
-                className="mathpad-input"
-                wrap="off" onKeyDown={onKeyDown} value={input} onChange={onChange} ref={edRef}>
+            <div className="mathpad-scroller">
+                <div className="mathpad-slots-container">
+                    {
+                        stack.map((ms) => (
+                            <PadSlotView key={ms.id} padSlot={ms} onChanged={onSlotChanged} />
+                        ))
+                    }
+                    {/* <input type="text" onKeyDown={onKeyDown}  value={input} onChange={onChange} /> */}
+                    {/* <div ref={divRef}  ></div> */}
 
-            </textarea>
+                </div>
+
+            </div>
+            <div className="current-input">
+                <textarea rows={1}
+                    className="mathpad-input"
+                    wrap="off" onKeyDown={onKeyDown} value={input} onChange={onChange} ref={edRef}>
+
+                </textarea>
+            </div>
         </div>
+
     )
 }
