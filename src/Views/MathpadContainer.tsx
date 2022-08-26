@@ -52,7 +52,8 @@ const DEFAULTSTATE: MathPadState = {
 }
 
 
-export const MathpadContainer = () => {
+export const MathpadContainer = ({onCopySlot}:
+    {onCopySlot:(slot:PadSlot)=>void}) => {
 
     const [state, setState] = useState({ ...DEFAULTSTATE, stack: getNewStack() });
 
@@ -118,7 +119,8 @@ export const MathpadContainer = () => {
     const onSlotCopied = useCallback((changedId: number) => {
         setState(state=>{
             const slot = getSlotById(state.stack, changedId);
-            console.log("TODO", slot);
+
+            slot && onCopySlot(slot);
             return state;
         })
 

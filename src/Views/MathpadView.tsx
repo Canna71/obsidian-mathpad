@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import {  debounce, finishRenderMath, ItemView, WorkspaceLeaf } from "obsidian";
+import {  debounce, Editor, finishRenderMath, ItemView, MarkdownEditView, MarkdownView, WorkspaceLeaf } from "obsidian";
 import * as React from "react";
 import { createRoot, Root } from "react-dom/client";
 
@@ -7,6 +7,7 @@ import { MathpadContainer } from "./MathpadContainer";
 
 
 import { loadMathJax } from "obsidian";
+import PadSlot from "src/Math/PadSlot";
 export const MATHPAD_VIEW = "mathpad-view";
 
 export const MathpadContext = React.createContext<any>({});
@@ -25,7 +26,8 @@ export class MathpadView extends ItemView {
 		this.state = {
 			
 		};
-        this.icon = "dice"
+        this.icon = "dice";
+        this.onCopySlot = this.onCopySlot.bind(this);
 	}
 
 	getViewType() {
@@ -45,6 +47,27 @@ export class MathpadView extends ItemView {
         this.render();
     },300);
 
+
+    onCopySlot(slot:PadSlot){
+        
+        const leaf = this.app.workspace.getMostRecentLeaf();
+        if(!leaf) return;
+        if (leaf.view instanceof MarkdownView) {
+            const editor = leaf.view.editor;
+            if(editor){
+                editor.replaceSelection(`
+\`\`\`mathpad
+${slot.input}
+\`\`\``)
+            }
+        } else {
+        console.warn('Mathpad: Unable to determine current editor.');
+        return;
+        }
+        
+
+    }
+
 	render() {
         
 		this.root.render(
@@ -52,7 +75,7 @@ export class MathpadView extends ItemView {
 				<MathpadContext.Provider value={{
                     width: this.contentEl.innerWidth
                 }}>
-					<MathpadContainer  {...this.state} />
+					<MathpadContainer  {...this.state} onCopySlot={this.onCopySlot} />
 				</MathpadContext.Provider>
 			</React.StrictMode>
 		);

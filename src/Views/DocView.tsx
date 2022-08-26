@@ -11,11 +11,9 @@ import { createRoot } from "react-dom/client";
 
 
 export function processCodeBlock(source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) {
-    console.log(source);
-    console.log(el);
-    console.log(ctx);
+
     const pad = createSlot(1,source,{});
-    console.log(pad);
+
     const root = createRoot(el);
     root.render( 
         <React.StrictMode>
