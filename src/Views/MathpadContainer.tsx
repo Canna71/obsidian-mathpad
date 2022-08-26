@@ -1,6 +1,7 @@
+import { Input } from './Input';
 
 import * as React from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 
 // import nerdamer  from "nerdamer/all.min"
@@ -58,7 +59,6 @@ export const MathpadContainer = () => {
     const { input, stack, options: { evaluate } } = state;
     // const [input, setInput] = useState("");
     // const [history, setHistory] = useState<PadSlot[]>([])
-    const edRef = useRef<HTMLTextAreaElement>(null);
     // const [options, setOptions] = useState<MathPadOptions>({
     //     evaluate: true 
     // });
@@ -137,13 +137,7 @@ export const MathpadContainer = () => {
                 </div>
 
             </div>
-            <div className="current-input">
-                <textarea rows={1}
-                    className="mathpad-input"
-                    wrap="off" onKeyDown={onKeyDown} value={input} onChange={onChange} ref={edRef}>
-
-                </textarea>
-            </div>
+            <Input onKeyDown={onKeyDown} input={input} onChange={onChange}   />
         </div>
 
     )

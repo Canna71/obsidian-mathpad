@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import {  finishRenderMath, ItemView, WorkspaceLeaf } from "obsidian";
+import {  debounce, finishRenderMath, ItemView, WorkspaceLeaf } from "obsidian";
 import * as React from "react";
 import { createRoot, Root } from "react-dom/client";
 
@@ -36,13 +36,23 @@ export class MathpadView extends ItemView {
 		return "Mathpad";
 	}
 
+    override onResize(): void {
+        super.onResize();
+        this.handleResize();
+    }
 
+    handleResize = debounce(()=>{
+        console.log(this.contentEl.innerWidth);
+        this.render();
+    },300);
 
 	render() {
         
 		this.root.render(
 			<React.StrictMode>
-				<MathpadContext.Provider value={{}}>
+				<MathpadContext.Provider value={{
+                    width: this.contentEl.innerWidth
+                }}>
 					<MathpadContainer  {...this.state} />
 				</MathpadContext.Provider>
 			</React.StrictMode>

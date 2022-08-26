@@ -2,8 +2,10 @@ import * as React from "react";
 import Latex from "./Latex";
 import PadSlot from "../Math/PadSlot";
 import { useCallback, useEffect, useRef, useState } from "react";
-import Close  from "../icons/close.svg";
+import Close from "../icons/close.svg";
 import Plot from "./Plot";
+import { MathpadContext } from "./MathpadView";
+// import { FunctionPlotOptions } from "function-plot/dist/types";
 interface PadSlotViewState {
     edit: boolean;
 }
@@ -22,6 +24,9 @@ const PadSlotView = ({ padSlot, onChanged, onClosed }:
     const [state, setState] = useState(DEFAULT_SLOT_STATE);
     const { edit } = state;
     const txtRef = useRef<HTMLTextAreaElement>(null);
+
+    const cxt = React.useContext(MathpadContext);
+
     const onMouseDown = useCallback(
         (e: React.MouseEvent) => {
             setState(state => {
@@ -53,9 +58,9 @@ const PadSlotView = ({ padSlot, onChanged, onClosed }:
         finishEdit(e.currentTarget.value);
     }, [finishEdit]);
 
-    const onClose = useCallback((e:React.MouseEvent)=>{
+    const onClose = useCallback((e: React.MouseEvent) => {
         onClosed(padSlot.id)
-    },[padSlot.id])
+    }, [padSlot.id])
 
     useEffect(() => {
         if (txtRef.current) {
@@ -64,7 +69,6 @@ const PadSlotView = ({ padSlot, onChanged, onClosed }:
         }
     })
 
-    
 
     return (
         <div className="slot-container">
@@ -100,12 +104,13 @@ const PadSlotView = ({ padSlot, onChanged, onClosed }:
                     }
                 </div>
                 <div>
-                <Plot options={{
-                        data:[
+                    <Plot options={{
+                        width: cxt.width-20,
+                        data: [
                             {
                                 graphType: 'polyline',
-                                fn: (scope)=>padSlot.fn(scope.x),
-                                
+                                fn: (scope: any) => padSlot.fn(scope.x),
+
                             }
                         ],
                         target: "" // just to make tslint happy
