@@ -60,7 +60,8 @@ export class MathpadView extends ItemView {
             if(editor){
                 editor.replaceSelection(`
 \`\`\`mathpad
-${str}
+input: ${slot.input}
+expr: ${str}
 \`\`\`
 `)
             }

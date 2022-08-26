@@ -18,7 +18,7 @@ require("nerdamer/Solve");
 // import Latex from "./Latex";
 import PadSlotView from "./PadSlotView";
 import PadSlot from "src/Math/PadSlot";
-import { addSlot, getNewStack, getSlotById, removeSlot, resetContext, updateSlot } from "src/Math/PadStack";
+import { addSlot, getNewStack,  removeSlot, resetContext, updateSlot } from "src/Math/PadStack";
 // import { registerHelper } from "codemirror";
 // import codemirror from "codemirror";
 // window.codemirror = codemirror;
@@ -116,15 +116,9 @@ export const MathpadContainer = ({onCopySlot}:
         }))
     }, []);
 
-    const onSlotCopied = useCallback((changedId: number) => {
-        setState(state=>{
-            const slot = getSlotById(state.stack, changedId);
-
-            slot && onCopySlot(slot);
-            return state;
-        })
-
-    }, []);
+    const onSlotCopied = useCallback((slot: PadSlot) => {
+        slot && setTimeout(()=>onCopySlot(slot),0);
+    }, [onCopySlot]);
 
     return (
 

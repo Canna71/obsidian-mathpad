@@ -8,11 +8,32 @@ import { MarkdownPostProcessorContext } from "obsidian";
 import { createSlot } from "src/Math/PadStack";
 import { createRoot } from "react-dom/client";
 
+const codeBlockRegex = /^\s*(\w*):\s?(.*)\s*$/gm;
 
+function parseSource(source: string){
+    let m:RegExpExecArray|null;
+    const ob:any = {};
+    codeBlockRegex.lastIndex=0;
+    while ((m = codeBlockRegex.exec(source)) !== null) {
+        // This is necessary to avoid infinite loops with zero-width matches
+        if (m.index === codeBlockRegex.lastIndex) {
+            codeBlockRegex.lastIndex++;
+        }
+        
+        // The result can be accessed through the `m`-variable.
+    
+            ob[m[1]] = m[2];
+
+    }
+    return ob;
+}
 
 export function processCodeBlock(source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) {
 
-    const pad = createSlot(1,source,{});
+    const {input, expr} = parseSource(source);
+
+    const slot = createSlot(1,expr,{});
+    slot._input = input;
 
     const root = createRoot(el);
     root.render( 
@@ -20,7 +41,7 @@ export function processCodeBlock(source: string, el: HTMLElement, ctx: MarkdownP
             <MathpadContext.Provider value={{
                 width: 600
             }}>
-                <DocView padSlot={pad} />
+                <DocView padSlot={slot} />
             </MathpadContext.Provider>
         </React.StrictMode>
     );

@@ -22,7 +22,7 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
         padSlot: PadSlot,
         onChanged: (id: number, value: string) => void,
         onClosed: (id: number) => void,
-        onCopied: (id: number) => void,
+        onCopied: (slot: PadSlot) => void,
 
     }) => {
 
@@ -67,8 +67,8 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
 
 
     const onCopy = useCallback((e: React.MouseEvent) => {
-        onCopied(padSlot.id)
-    }, [padSlot.id])
+        onCopied(padSlot)
+    }, [padSlot])
 
 
     return (
