@@ -103,19 +103,19 @@ const PadSlotView = ({ padSlot, onChanged, onClosed }:
 
                     }
                 </div>
-                <div>
-                    <Plot options={{
-                        width: cxt.width-20,
-                        data: [
-                            {
+                {padSlot.plot &&
+                    <div>
+                        <Plot options={{
+                            width: cxt.width - 20,
+                            data: padSlot.fn.map(fn=>({
                                 graphType: 'polyline',
-                                fn: (scope: any) => padSlot.fn(scope.x),
+                                fn: (scope: any) => fn(scope.x)
+                            })) ,
+                            target: "" // just to make tslint happy
+                        }} />
+                    </div>
+                }
 
-                            }
-                        ],
-                        target: "" // just to make tslint happy
-                    }} />
-                </div>
             </div>
             <a className="view-action mod-close-leaf" onClick={onClose}>
                 <Close />

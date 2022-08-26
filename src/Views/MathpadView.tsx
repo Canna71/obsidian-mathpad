@@ -42,7 +42,6 @@ export class MathpadView extends ItemView {
     }
 
     handleResize = debounce(()=>{
-        console.log(this.contentEl.innerWidth);
         this.render();
     },300);
 

@@ -4,6 +4,19 @@ require("nerdamer/Calculus");
 require("nerdamer/Extra");
 require("nerdamer/Solve");
 
+function f(a:any){
+    console.log(a);
+    a._plotme=true;
+    return a;
+}
+
+nerdamer.register({
+    name: "plot",
+    numargs: -1, 
+    visible: true,
+    build: ()=>f
+})
+
 import  PadSlot from './PadSlot';
 
 // const NERDAMER_INITIAL_FUNCS = Object.keys(nerdamer.getCore().PARSER.functions);
