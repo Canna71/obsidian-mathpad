@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { MathpadView, MATHPAD_VIEW } from './src/Views/MathpadView';
+import { MathpadView, MATHPAD_VIEW } from './Views/MathpadView';
 import { App, Modal, Plugin } from 'obsidian';
 import { MathpadSettingsTab } from 'src/MathpadSettingTab';
+import { processCodeBlock } from './Views/DocView';
 
 // Remember to rename these classes and interfaces!
 
@@ -31,9 +32,11 @@ export default class MathpadPlugin extends Plugin {
         // Perform additional things with the ribbon
         ribbonIconEl.addClass('my-plugin-ribbon-class');
 
-        this.app.workspace.onLayoutReady(()=>{
+        this.app.workspace.onLayoutReady(() => {
             this.activateView();
         })
+
+        this.registerCodeBlock();
 
         // if (this.app.workspace.layoutReady) {
         //     this.activateView();
@@ -75,7 +78,16 @@ export default class MathpadPlugin extends Plugin {
             this.app.workspace.getLeavesOfType(MATHPAD_VIEW)[0]
         );
     }
+
+    async registerCodeBlock() {
+        this.registerMarkdownCodeBlockProcessor("mathpad", (source, el, ctx) => {
+
+            processCodeBlock(source,el,ctx);
+        });
+    }
 }
+
+
 
 
 

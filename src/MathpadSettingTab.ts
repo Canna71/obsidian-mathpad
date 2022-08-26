@@ -1,4 +1,4 @@
-import MathpadPlugin from "main";
+import MathpadPlugin from "src/main";
 import { App, PluginSettingTab, Setting } from "obsidian";
 
 export class MathpadSettingsTab extends PluginSettingTab {

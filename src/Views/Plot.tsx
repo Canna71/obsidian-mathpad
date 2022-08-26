@@ -20,7 +20,6 @@ export const Plot: React.FC<FunctionPlotProps> =
                 Object.assign(state, options);
                 state.target = rootEl.current;
                 // functionPlot({...options, target: rootEl.current });
-                console.log("Updating Plot")
                 functionPlot(state);
             }
         } catch (e) { 

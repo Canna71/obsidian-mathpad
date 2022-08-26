@@ -41,6 +41,7 @@ export default class PadSlot {
     //TODO: make it configurable 
     // cfr: nerdamer.getCore().Settings.VALIDATION_REGEX
     public get name(): string {
+        
         return `S${this._id}`;
     }
 
@@ -143,7 +144,7 @@ export default class PadSlot {
             //     this._expression = this._expression.toDecimal();
 
             // nerdamer.setVar(this.name, this._expression.symbol);
-            //TODO: this won't work for collections!!
+            // this won't work for collections!!
             // try{
             //     (nerdamer as any).getVars("object")[this.name] = (this._expression as any).symbol.clone();
             // } catch {
@@ -152,14 +153,17 @@ export default class PadSlot {
             nerdamer.setVar(this.name, this.expression.valueOf());
             // this.expression.valueOf()
             try {
+                this._fn = [this.expression.buildFunction()];
+                
+            } catch(ex){
+                // probably it's a collection:
                 const tmp:((...args: number[]) => number)[] = [];
                 (this.expression as any).each((element:any)=>{
                     tmp.push(nerdamer(element).buildFunction());
                 });
-                // this._fn = this.expression.buildFunction();
+                // 
                 this._fn =  tmp;
-            } catch(ex){
-                console.error(ex);
+                
             }
         } catch (e) {
             this._error = e.toString();

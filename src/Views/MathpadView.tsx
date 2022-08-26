@@ -25,7 +25,7 @@ export class MathpadView extends ItemView {
 		this.state = {
 			
 		};
-
+        this.icon = "dice"
 	}
 
 	getViewType() {

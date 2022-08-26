@@ -1,10 +1,13 @@
 import * as React from "react";
 import Latex from "./Latex";
 import PadSlot from "../Math/PadSlot";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import Close from "../icons/close.svg";
 import Plot from "./Plot";
 import { MathpadContext } from "./MathpadView";
+import SlotInput from "./SlotInput";
+import Copy from "../icons/edit.svg";
+
 // import { FunctionPlotOptions } from "function-plot/dist/types";
 interface PadSlotViewState {
     edit: boolean;
@@ -14,23 +17,23 @@ const DEFAULT_SLOT_STATE: PadSlotViewState = {
     edit: false
 }
 
-const PadSlotView = ({ padSlot, onChanged, onClosed }:
+const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
     {
         padSlot: PadSlot,
         onChanged: (id: number, value: string) => void,
         onClosed: (id: number) => void,
+        onCopied: (id: number) => void,
+
     }) => {
 
     const [state, setState] = useState(DEFAULT_SLOT_STATE);
     const { edit } = state;
-    const txtRef = useRef<HTMLTextAreaElement>(null);
 
     const cxt = React.useContext(MathpadContext);
 
     const onMouseDown = useCallback(
         (e: React.MouseEvent) => {
             setState(state => {
-                console.log(state.edit);
                 return (state.edit ? state : {
                     ...state, edit: true
                 });
@@ -62,12 +65,10 @@ const PadSlotView = ({ padSlot, onChanged, onClosed }:
         onClosed(padSlot.id)
     }, [padSlot.id])
 
-    useEffect(() => {
-        if (txtRef.current) {
-            txtRef.current.setSelectionRange(txtRef.current.value.length, txtRef.current.value.length);
-            setTimeout(() => { txtRef.current?.focus() }, 0);
-        }
-    })
+
+    const onCopy = useCallback((e: React.MouseEvent) => {
+        onCopied(padSlot.id)
+    }, [padSlot.id])
 
 
     return (
@@ -76,24 +77,10 @@ const PadSlotView = ({ padSlot, onChanged, onClosed }:
                 <div className="slot-name">{padSlot.name}</div>
             </div>
             <div className="slot-content">
-                <div className="slot-input" onMouseDown={onMouseDown}>
-                    {edit ?
-                        <textarea
-                            className="mathpad-input"
-                            rows={1} wrap="off"
-                            defaultValue={padSlot.input}
-                            onKeyDown={onKeyDown}
-                            onBlur={onBlur}
-                            ref={txtRef}
-                        />
-                        :
-                        padSlot.inputLaTeX ?
-                            <Latex latex={padSlot.inputLaTeX} />
-                            :
-                            <div className="plain-input">{padSlot.input}</div>
-                    }
-
-                </div>
+                <SlotInput onMouseDown={onMouseDown} edit={edit} 
+                onKeyDown={onKeyDown} onBlur={onBlur} 
+                input={padSlot.input} inputLaTeX={padSlot.inputLaTeX}
+                />
                 <div className="slot-result">
                     {
                         padSlot.error ?
@@ -120,8 +107,12 @@ const PadSlotView = ({ padSlot, onChanged, onClosed }:
             <a className="view-action mod-close-leaf" onClick={onClose}>
                 <Close />
             </a>
+            <a className="view-action mod-close-leaf" onClick={onCopy}>
+                <Copy />
+            </a>
         </div>
     );
 }
 
 export default PadSlotView
+
