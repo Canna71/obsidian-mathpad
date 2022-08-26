@@ -4,17 +4,33 @@ require("nerdamer/Calculus");
 require("nerdamer/Extra");
 require("nerdamer/Solve");
 
-function f(a:any){
-    console.log(a);
-    a._plotme=true;
-    return a;
+function markAsToPlot(exprOrList:any){
+    // console.log(a);
+    exprOrList._plotme=true;
+    return exprOrList;
+}
+
+function solve(expr:any, variable?:any):any{
+    // console.log(a);
+    const vars = nerdamer(expr).variables();
+    if(!variable && vars.length===1){
+        variable = vars[0];
+    }
+    return nerdamer.getCore().Solve.solve(expr, variable);
 }
 
 nerdamer.register({
     name: "plot",
     numargs: -1, 
     visible: true,
-    build: ()=>f
+    build: ()=>markAsToPlot
+})
+
+nerdamer.register({
+    name: "solve",
+    numargs: [1,2], 
+    visible: true,
+    build: ()=>solve
 })
 
 import  PadSlot from './PadSlot';
