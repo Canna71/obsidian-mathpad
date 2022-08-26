@@ -77,9 +77,9 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
                 <div className="slot-name">{padSlot.name}</div>
             </div>
             <div className="slot-content">
-                <SlotInput onMouseDown={onMouseDown} edit={edit} 
-                onKeyDown={onKeyDown} onBlur={onBlur} 
-                input={padSlot.input} inputLaTeX={padSlot.inputLaTeX}
+                <SlotInput onMouseDown={onMouseDown} edit={edit}
+                    onKeyDown={onKeyDown} onBlur={onBlur}
+                    input={padSlot.input} inputLaTeX={padSlot.inputLaTeX}
                 />
                 <div className="slot-result">
                     {
@@ -94,22 +94,25 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
                     <div>
                         <Plot options={{
                             width: cxt.width - 20,
-                            data: padSlot.fn.map(fn=>({
+                            data: padSlot.fn.map(fn => ({
                                 graphType: 'polyline',
                                 fn: (scope: any) => fn(scope.x)
-                            })) ,
+                            })),
                             target: "" // just to make tslint happy
                         }} />
                     </div>
                 }
 
             </div>
-            <a className="view-action mod-close-leaf" onClick={onClose}>
-                <Close />
-            </a>
-            <a className="view-action mod-close-leaf" onClick={onCopy}>
-                <Copy />
-            </a>
+            <div className="slot-actions">
+                <a className="view-action mod-close-leaf" onClick={onClose}>
+                    <Close />
+                </a>
+                <a className="view-action mod-close-leaf" onClick={onCopy}>
+                    <Copy />
+                </a>
+            </div>
+
         </div>
     );
 }

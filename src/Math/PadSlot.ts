@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ProcessOptions } from './PadStack';
 import nerdamer from "nerdamer";
 require("nerdamer/Algebra");
@@ -90,7 +91,9 @@ export default class PadSlot {
                 this._resultTex = name + "(" + params.map(param => nerdamer(param).toTeX()).join(",") +
                     ") := " + nerdamer(def).toTeX();
                 // nerdamer.setVar(this.name, this._expression);
-                (nerdamer as any).getVars("object")[this.name] = (this._expression as any).symbol.clone();
+                // (nerdamer as any).getVars("object")[this.name] = (this._expression as any).symbol.clone();
+                nerdamer.setFunction(name,params,def);
+                nerdamer.setVar(this.name, this.expression.valueOf());
 
                 return this;
             }

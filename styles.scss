@@ -24,6 +24,7 @@
 
             .slot-container {
                 display: flex;
+                position: relative;
 
                 border-top: 1px solid var(--background-modifier-border);
 
@@ -77,6 +78,12 @@
                         }
                     }
                 }
+            }
+
+            .slot-actions {
+                position: absolute;
+                top: 0px;
+                right: 0px;
             }
         }
     }

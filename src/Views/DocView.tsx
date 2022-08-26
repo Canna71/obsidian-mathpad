@@ -59,6 +59,7 @@ const DocView = ({ padSlot }:
                             width: cxt.width - 20,
                             data: padSlot.fn.map(fn=>({
                                 graphType: 'polyline',
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 fn: (scope: any) => fn(scope.x)
                             })) ,
                             target: "" // just to make tslint happy

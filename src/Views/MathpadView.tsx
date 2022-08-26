@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import {  debounce, Editor, finishRenderMath, ItemView, MarkdownEditView, MarkdownView, WorkspaceLeaf } from "obsidian";
+import {  debounce,  finishRenderMath, ItemView,  MarkdownView, WorkspaceLeaf } from "obsidian";
 import * as React from "react";
 import { createRoot, Root } from "react-dom/client";
 
@@ -49,7 +49,10 @@ export class MathpadView extends ItemView {
 
 
     onCopySlot(slot:PadSlot){
-        
+        let str = slot.expression.text();
+        if(slot.plot){
+            str = `plot(${str})`;
+        }
         const leaf = this.app.workspace.getMostRecentLeaf();
         if(!leaf) return;
         if (leaf.view instanceof MarkdownView) {
@@ -57,8 +60,9 @@ export class MathpadView extends ItemView {
             if(editor){
                 editor.replaceSelection(`
 \`\`\`mathpad
-${slot.input}
-\`\`\``)
+${str}
+\`\`\`
+`)
             }
         } else {
         console.warn('Mathpad: Unable to determine current editor.');

@@ -65,7 +65,7 @@ export const MathpadContainer = ({onCopySlot}:
     // });
     // console.log(stack);
 
-    useEffect(() => {
+    useEffect(() => { 
         resetContext();
     }, []);
 
