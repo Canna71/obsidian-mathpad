@@ -5,8 +5,9 @@ import PadSlot from "../Math/PadSlot";
 import Plot from "./Plot";
 import { MathpadContext } from "./MathpadView";
 import { MarkdownPostProcessorContext } from "obsidian";
-import { createSlot } from "src/Math/PadStack";
+// import { createSlot } from "src/Math/PadStack";
 import { createRoot } from "react-dom/client";
+import { createEngine } from "src/Math/Engine";
 
 const codeBlockRegex = /^\s*(\w*):\s?(.*)\s*$/gm;
 
@@ -32,8 +33,15 @@ export function processCodeBlock(source: string, el: HTMLElement, ctx: MarkdownP
 
     const {input, expr} = parseSource(source);
 
-    const slot = createSlot(1,expr,{});
-    slot._input = input;
+    // const slot = createSlot(1,expr,{});
+    // TODO: take processing options from source
+    // const slot = new PadSlot(1, expr).process(createEngine(),{});
+    const slot = PadSlot.createSlot(createEngine(), 1, input);
+
+    //TODO: determine what to store in the codeblock
+    // we should store the input and the variable declarations needed, ideally
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (slot as any)._input= input;
 
     const root = createRoot(el);
     root.render( 

@@ -4,12 +4,7 @@ import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
 
 
-// import nerdamer  from "nerdamer/all.min"
-import nerdamer from "nerdamer";
-require("nerdamer/Algebra");
-require("nerdamer/Calculus");
-require("nerdamer/Extra");
-require("nerdamer/Solve");
+
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // import Algebra from "nerdamer/Algebra";
@@ -18,7 +13,7 @@ require("nerdamer/Solve");
 // import Latex from "./Latex";
 import PadSlotView from "./PadSlotView";
 import PadSlot from "src/Math/PadSlot";
-import { addSlot, getNewStack,  removeSlot, resetContext, updateSlot } from "src/Math/PadStack";
+import {  getNewStack, SlotStack,  } from "src/Math/PadStack";
 // import { registerHelper } from "codemirror";
 // import codemirror from "codemirror";
 // window.codemirror = codemirror;
@@ -30,7 +25,7 @@ export interface MathpadContainerProps {
     nothing: string
 }
 
-(global as any).nerdamer = nerdamer;
+
 
 
 interface MathPadOptions {
@@ -39,13 +34,13 @@ interface MathPadOptions {
 
 interface MathPadState {
     input: string;
-    stack: PadSlot[];
+    stack?: SlotStack;
     options: MathPadOptions;
 }
 
 const DEFAULTSTATE: MathPadState = {
     input: "",
-    stack: [],
+    // stack: null,
     options: {
         evaluate: true
     }
@@ -55,7 +50,7 @@ const DEFAULTSTATE: MathPadState = {
 export const MathpadContainer = ({onCopySlot}:
     {onCopySlot:(slot:PadSlot)=>void}) => {
 
-    const [state, setState] = useState({ ...DEFAULTSTATE, stack: getNewStack() });
+    const [state, setState] = useState({ ...DEFAULTSTATE });
 
     const { input, stack, options: { evaluate } } = state;
     // const [input, setInput] = useState("");
@@ -66,13 +61,14 @@ export const MathpadContainer = ({onCopySlot}:
     // console.log(stack);
 
     useEffect(() => { 
-        resetContext();
+        // resetContext();
+        setState(state=>({...state, stack: getNewStack()}))
     }, []);
 
     const processInput = useCallback(() => {
         setState(state => ({
             ...state,
-            stack: addSlot(state.stack, state.input, {}, { evaluate: state.options.evaluate }),
+            stack: state.stack?.addSlot(state.input, {}, { evaluate: state.options.evaluate }),
             input: ""
         }))
     }, []);
@@ -105,14 +101,14 @@ export const MathpadContainer = ({onCopySlot}:
 
             setState(state => ({
                 ...state,
-                stack: updateSlot(state.stack, changedId, value, {}, { evaluate: state.options.evaluate })
+                stack: state.stack?.updateSlot(changedId, value, {}, { evaluate: state.options.evaluate })
             }))
         }, []);
 
     const onSlotClosed = useCallback((changedId: number) => {
         setState(state => ({
             ...state,
-            stack: removeSlot(state.stack, changedId, {}, { evaluate: state.options.evaluate })
+            stack: state.stack?.removeSlot(changedId, {}, { evaluate: state.options.evaluate })
         }))
     }, []);
 
@@ -129,7 +125,7 @@ export const MathpadContainer = ({onCopySlot}:
             <div className="mathpad-scroller">
                 <div className="mathpad-slots-container">
                     {
-                        stack.map((ms) => (
+                        stack?.items.map((ms) => (
                             <PadSlotView key={ms.id} padSlot={ms}
                                 onChanged={onSlotChanged}
                                 onClosed={onSlotClosed}

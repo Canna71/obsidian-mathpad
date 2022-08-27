@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Engine } from './Engine';
 import { ProcessOptions } from './PadStack';
-import nerdamer from "nerdamer";
-require("nerdamer/Algebra");
-require("nerdamer/Calculus");
-require("nerdamer/Extra");
-require("nerdamer/Solve");
+
 
 const funRegex = /^([a-z_][a-z\d_]*)\(([a-z_,\s]*)\)\s*:=\s*(.+)$/i;
 const varRegex = /^([a-z_][a-z\d_]*)\s*:=\s*(.+)$/i;
@@ -77,7 +74,14 @@ export default class PadSlot {
         this._id = id;
     }
 
-    process(scope = {}, opts: ProcessOptions): PadSlot {
+    static createSlot(engine:Engine, id: number, input: string, scope:any={}, options:ProcessOptions= {
+        evaluate: false,
+        simplify: false
+    }) {
+        return new PadSlot(id, input).process(engine,scope, options);
+    }
+
+    process(engine: Engine, scope = {}, opts: ProcessOptions): PadSlot {
         try {
 
             this._error = undefined;
@@ -87,13 +91,13 @@ export default class PadSlot {
                 const params = fnDec[2].split(",").map(p => p.trim());
                 const def = fnDec[3];
                 console.log(name, params, def);
-                this._expression = nerdamer(def);
-                this._resultTex = name + "(" + params.map(param => nerdamer(param).toTeX()).join(",") +
-                    ") := " + nerdamer(def).toTeX();
+                this._expression = engine.parse(def);
+                this._resultTex = name + "(" + params.map(param => engine.parse(param).toTeX()).join(",") +
+                    ") := " + engine.parse(def).toTeX();
                 // nerdamer.setVar(this.name, this._expression);
                 // (nerdamer as any).getVars("object")[this.name] = (this._expression as any).symbol.clone();
-                nerdamer.setFunction(name,params,def);
-                nerdamer.setVar(this.name, this.expression.valueOf());
+                engine.setFunction(name,params,def);
+                engine.setVar(this.name, this.expression.valueOf());
 
                 return this;
             }
@@ -101,25 +105,26 @@ export default class PadSlot {
             if (varDec) {
                 const name = varDec[1];
                 const def = varDec[2];
-                this._expression = nerdamer(def);
-                nerdamer.setVar(name, def);
+                this._expression = engine.parse(def);
+                engine.setVar(name, def);
 
-                this._resultTex = name + " := " + nerdamer(def).toTeX();
+                this._resultTex = name + " := " + engine.parse(def).toTeX();
                 // nerdamer.setVar(this.name, this._expression.symbol);
-                (nerdamer as any).getVars("object")[this.name] = (this._expression as any).symbol.clone();
+                // (nerdamer as any).getVars("object")[this.name] = (this._expression as any).symbol.clone();
+                engine.setVar(this.name, this.expression.valueOf());
 
                 return this;
             }
             //TODO: determine when it's right to display the input as LaTeX
             // this._inputLatex = nerdamer(this.input).toTeX();
-            this._expression = nerdamer(this.input, scope);
+            this._expression = engine.parse(this.input, scope);
             if ((this._expression as any).symbol?._plotme) {
                 this._plot = true;
             }
             // A martix will trow an exception if we try to simplify it
             if (opts.simplify) {
                 try {
-                    this._expression = nerdamer(`simplify(${this.input})`, scope);
+                    this._expression = engine.parse(`simplify(${this.input})`, scope);
                 } catch (e) {
                     //
                 }
@@ -153,7 +158,7 @@ export default class PadSlot {
             // } catch {
             //     (nerdamer as any).getVars("object")[this.name] = (this._expression as any).symbol;
             // }
-            nerdamer.setVar(this.name, this.expression.valueOf());
+            engine.setVar(this.name, this.expression.valueOf());
             // this.expression.valueOf()
             try {
                 this._fn = [this.expression.buildFunction()];
@@ -162,7 +167,7 @@ export default class PadSlot {
                 // probably it's a collection:
                 const tmp:((...args: number[]) => number)[] = [];
                 (this.expression as any).each((element:any)=>{
-                    tmp.push(nerdamer(element).buildFunction());
+                    tmp.push(engine.parse(element).buildFunction());
                 });
                 // 
                 this._fn =  tmp;
