@@ -77,27 +77,32 @@ export interface Engine {
     setVar: (name: string, value: string | number) => void
 }
 
+export class NerdamerWrapper implements Engine {
 
-export function createEngine(){
-    console.log("creating engine...")
-    resetContext();
+    /**
+     *
+     */
+    constructor() {
+        resetContext();
+    }
 
-    return (
-        {
-            parse: (expression: nerdamer.ExpressionParam,
-                subs?: { [name: string]: string },
-                option?: keyof nerdamer.Options | (keyof nerdamer.Options)[],
-                location?: nerdamer.int) => nerdamer(expression, subs, option, location),
-            
-            setFunction: (function_name: string, param_array: string[], function_body: string) => {
-                nerdamer.setFunction(function_name, param_array,function_body)
-                return this;
-            },
-                
-            setVar: (name: string, value: string | number) => {
-                nerdamer.setVar(name, value);
-            }
-         }
-    )
+    parse = (expression: nerdamer.ExpressionParam,
+        subs?: { [name: string]: string },
+        option?: keyof nerdamer.Options | (keyof nerdamer.Options)[],
+        location?: nerdamer.int) => nerdamer(expression, subs, option, location)
+    
+    setFunction = (function_name: string, param_array: string[], function_body: string) => {
+        nerdamer.setFunction(function_name, param_array,function_body)
+        return this;
+    }
+        
+    setVar = (name: string, value: string | number) => {
+        nerdamer.setVar(name, value);
+    }
+}
+
+
+export function createEngine():Engine{
+    return new NerdamerWrapper();
 }
 

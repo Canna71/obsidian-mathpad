@@ -31,7 +31,7 @@ function parseSource(source: string){
 
 export function processCodeBlock(source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) {
 
-    const {input, expr} = parseSource(source);
+    const {input/*, expr*/} = parseSource(source);
 
     // const slot = createSlot(1,expr,{});
     // TODO: take processing options from source
