@@ -93,7 +93,9 @@ const DocView = ({ padSlot }:
                                 fn: (scope: any) => fn(scope.x)
                             })) ,
                             target: "" // just to make tslint happy
-                        }} />
+                        }} 
+                        
+                        />
                     </div>
                 }
 

@@ -8,6 +8,7 @@ import { MathpadContext } from "./MathpadView";
 import SlotInput from "./SlotInput";
 import Copy from "../icons/edit.svg";
 import { SlotStack } from "src/Math/PadStack";
+import { FunctionPlotOptions } from "function-plot/dist/types";
 
 // import { FunctionPlotOptions } from "function-plot/dist/types";
 interface PadSlotViewState {
@@ -71,6 +72,9 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
         onCopied(padSlot)
     }, [padSlot])
 
+    const handlePlotScaleChanhed = useCallback((opts: FunctionPlotOptions)=>{
+        console.log(opts);
+    },[]);
 
     return (
         <div className="slot-container">
@@ -100,7 +104,9 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
                                 fn: (scope: any) => fn(scope.x)
                             })),
                             target: "" // just to make tslint happy
-                        }} />
+                        }} 
+                        onScaleChanged={handlePlotScaleChanhed}
+                        />
                     </div>
                 }
 
