@@ -9,6 +9,7 @@ require("nerdamer/Solve");
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (global as any).nerdamer = nerdamer;
 
+
 // const NERDAMER_INITIAL_FUNCS = Object.keys(nerdamer.getCore().PARSER.functions);
 
 const MY_VALIDATION_REGEX = /^[a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*$/i;
@@ -25,10 +26,47 @@ function solve(expr: any, variable?: any): any {
     return nerdamer.getCore().Solve.solve(expr, variable);
 }
 
-function markAsToPlot(exprOrList: any) {
+function markAsToPlot(...args:any[]) {
     // console.log(a);
-    exprOrList._plotme = true;
-    return exprOrList;
+    let fns = [];
+    let i = 0;
+    let ret;
+    let xDomain=undefined;
+    let yDomain=undefined; 
+    
+    const utils = nerdamer.getCore().Utils;
+    if(utils.isVector(args[i])) {
+        // we have an array of functions to plot as first parameter
+        fns = args[i];
+    } else {
+        while(args[i] && !utils.isVector(args[i])){
+            fns.push(args[i]);
+            i++;
+        }
+        fns = utils.convertToVector(fns);
+    }
+    
+    if(utils.isVector(args[i])){
+        // user provided xrange
+        xDomain = args[i].elements.map((s:any)=>s.valueOf());
+        i++;
+        if(utils.isVector(args[i])){
+            // user provided yrange
+            yDomain = args[i].elements.map((s:any)=>s.valueOf());
+        }
+    }
+
+    if(fns.dimensions()===1){
+        ret = fns.elements[0];
+    } else {
+        ret = fns;
+    }
+    ret._plotme = {
+        xDomain,
+        yDomain
+    };
+    console.log(args);
+    return ret;
 }
 
 nerdamer.register({
