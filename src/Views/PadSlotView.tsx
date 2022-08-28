@@ -7,6 +7,7 @@ import Plot from "./Plot";
 import { MathpadContext } from "./MathpadView";
 import SlotInput from "./SlotInput";
 import Copy from "../icons/edit.svg";
+import { SlotStack } from "src/Math/PadStack";
 
 // import { FunctionPlotOptions } from "function-plot/dist/types";
 interface PadSlotViewState {
@@ -74,7 +75,7 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
     return (
         <div className="slot-container">
             <div className="slot-anchor">
-                <div className="slot-name">{padSlot.name}</div>
+                <div className="slot-name">{SlotStack.getSlotVariableName(padSlot.id)}</div>
             </div>
             <div className="slot-content">
                 <SlotInput onMouseDown={onMouseDown} edit={edit}

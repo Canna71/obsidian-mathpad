@@ -49,10 +49,7 @@ export class MathpadView extends ItemView {
 
 
     onCopySlot(slot:PadSlot){
-        let str = slot.expression.text();
-        if(slot.plot){
-            str = `plot(${str})`;
-        }
+        const str = slot.getCodeBlock();
         const leaf = this.app.workspace.getMostRecentLeaf();
         if(!leaf) return;
         if (leaf.view instanceof MarkdownView) {
@@ -60,8 +57,7 @@ export class MathpadView extends ItemView {
             if(editor){
                 editor.replaceSelection(`
 \`\`\`mathpad
-input: ${slot.input}
-expr: ${str}
+${str}
 \`\`\`
 `)
             }

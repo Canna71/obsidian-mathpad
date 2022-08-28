@@ -6,13 +6,16 @@ require("nerdamer/Extra");
 require("nerdamer/Solve");
 
 // for debugging purposes
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (global as any).nerdamer = nerdamer;
 
 // const NERDAMER_INITIAL_FUNCS = Object.keys(nerdamer.getCore().PARSER.functions);
-const NERDAMER_INITIAL_FUNCS = { ...nerdamer.getCore().PARSER.functions };
 
+const MY_VALIDATION_REGEX = /^[a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*$/i;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(nerdamer as any).set("VALIDATION_REGEX",MY_VALIDATION_REGEX);
 
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function solve(expr: any, variable?: any): any {
     // console.log(a);
     const vars = nerdamer(expr).variables();
@@ -60,6 +63,8 @@ nerdamer.register({
     },
 });
 
+const NERDAMER_INITIAL_FUNCS = { ...nerdamer.getCore().PARSER.functions };
+
 export interface Engine {
     parse: (
         expression: nerdamer.ExpressionParam,
@@ -75,6 +80,15 @@ export interface Engine {
     ) => Engine;
 
     setVar: (name: string, value: string | number) => void;
+
+    getScope: () => {
+        vars: {
+            [x: string]: string;
+        };
+        funcs: {
+            [x: string]: any;
+        };
+    };
 }
 
 export interface Scope {

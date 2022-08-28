@@ -13,7 +13,7 @@ export const Input: React.FC<InputProps> = ({
 }) => {
     const edRef = useRef<HTMLTextAreaElement>(null);
 
-
+ 
     return <div className="current-input">
         <textarea rows={1} className="mathpad-input" wrap="off" onKeyDown={onKeyDown} value={input} onChange={onChange} ref={edRef}>
 

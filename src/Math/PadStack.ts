@@ -46,7 +46,7 @@ export class SlotStack  {
         const slot = PadSlot.createSlot(this.engine, this.nextId(),input,scope, opts);
         // const pad = new PadSlot(nextId(stack), input).process(scope, opts);
         // this.stack = [...this.stack, slot];
-        this.engine.setVar(slot.name, slot.expression.valueOf());
+        this.engine.setVar(SlotStack.getSlotVariableName(slot.id), slot.expression.valueOf());
 
         return new SlotStack(this.engine, [...this.items, slot]);
     }
@@ -60,7 +60,7 @@ export class SlotStack  {
                 slot = new PadSlot(slot.id, value);
             }
             slot.process(newEngine,scope,options);
-            newEngine.setVar(slot.name, slot.expression.valueOf());
+            newEngine.setVar(SlotStack.getSlotVariableName(slot.id), slot.expression.valueOf());
             newStack.push(slot);
         })
         
@@ -74,7 +74,7 @@ export class SlotStack  {
         this.items.forEach(slot =>{
             if(slot.id !== id) {
                 slot.process(newEngine,scope,options);
-                newEngine.setVar(slot.name, slot.expression.valueOf());
+                newEngine.setVar(SlotStack.getSlotVariableName(slot.id), slot.expression.valueOf());
                 newStack.push(slot);
             }
         })
@@ -83,6 +83,10 @@ export class SlotStack  {
 
     getSlotById(id: number) {
         return this.items.find((slot) => slot.id === id);
+    }
+
+    static getSlotVariableName(id: number) {
+        return `$${id}`;
     }
 
     static create(){
@@ -103,34 +107,3 @@ export const getNewStack = () => {
     return SlotStack.create();
 }
 
-
-
-// export const createSlot = (id: number, input: string, scope:any={}, options:ProcessOptions= {
-//     evaluate: false,
-//     simplify: false
-// }) => {
-//     return new PadSlot(id, input).process(scope, options);
-// }
-
-// export const addSlot = (stack: PadSlot[], input: string, scope = {}, options: ProcessOptions = {
-//     evaluate: false,
-//     simplify: false
-// }) => {
-//     const opts = { ...DEFAULT_OPTS, ...options };
-//     const pad = createSlot(nextId(stack),input,scope, opts);
-//     // const pad = new PadSlot(nextId(stack), input).process(scope, opts);
-//     return [...stack, pad];
-// }
-
-
-
-// export const removeSlot = (stack: PadSlot[], id: number, scope = {}, options: ProcessOptions) => {
-//     resetContext();
-//     const newStack = stack.filter(
-//         (ms, i) => ms.id !== id).map(slot => slot.process(scope, options));
-//     return newStack;
-// }
-
-// export const getSlotById = (stack: PadSlot[], id: number) => {
-//     return stack.find((slot) => slot.id === id);
-// }

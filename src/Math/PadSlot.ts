@@ -1,10 +1,11 @@
+import { createEngine } from 'src/Math/Engine';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Engine } from './Engine';
 import { ProcessOptions } from './PadStack';
 
 
-const funRegex = /^([a-z_][a-z\d_]*)\(([a-z_,\s]*)\)\s*:=\s*(.+)$/i;
-const varRegex = /^([a-z_][a-z\d_]*)\s*:=\s*(.+)$/i;
+const funRegex = /^([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\(([a-z_,\s]*)\)\s*:=\s*(.+)$/i;
+const varRegex = /^([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\s*:=\s*(.+)$/i;
 export default class PadSlot {
 
     private _input: string;
@@ -13,7 +14,25 @@ export default class PadSlot {
     private _error?: string | undefined;
     private _plot = false;
     private _fn:  ((...args: number[]) => number)[];
-
+    private _scope: { vars: { [x: string]: string; }; funcs: { [x: string]: any; }; };
+    
+    
+    private _opts: ProcessOptions;
+    
+    
+    private _subs: any;
+    public get subs(): any {
+        return this._subs;
+    }
+    
+    public get opts(): ProcessOptions {
+        return this._opts;
+    }
+    
+    public get scope(): { vars: { [x: string]: string; }; funcs: { [x: string]: any; }; } {
+        return this._scope;
+    }
+    
     public get plot() {
         return this._plot;
     }
@@ -38,10 +57,9 @@ export default class PadSlot {
 
     //TODO: make it configurable 
     // cfr: nerdamer.getCore().Settings.VALIDATION_REGEX
-    public get name(): string {
-        
-        return `S${this._id}`;
-    }
+    // public get name(): string {
+    //     return `S${this._id}`;
+    // }
 
 
     public get inputLaTeX(): string {
@@ -81,8 +99,12 @@ export default class PadSlot {
         return new PadSlot(id, input).process(engine,scope, options);
     }
 
-    process(engine: Engine, scope = {}, opts: ProcessOptions): PadSlot {
+    process(engine: Engine, subs = {}, opts: ProcessOptions): PadSlot {
         try {
+            // save processing options and scope
+            this._scope = engine.getScope();
+            this._opts = opts;
+            this._subs = subs;
 
             this._error = undefined;
             const fnDec = funRegex.exec(this.input);
@@ -90,7 +112,7 @@ export default class PadSlot {
                 const name = fnDec[1];
                 const params = fnDec[2].split(",").map(p => p.trim());
                 const def = fnDec[3];
-                console.log(name, params, def);
+                // TODO: should we pass scope and opts here?
                 this._expression = engine.parse(def);
                 this._resultTex = name + "(" + params.map(param => engine.parse(param).toTeX()).join(",") +
                     ") := " + engine.parse(def).toTeX();
@@ -117,14 +139,14 @@ export default class PadSlot {
             }
             //TODO: determine when it's right to display the input as LaTeX
             // this._inputLatex = nerdamer(this.input).toTeX();
-            this._expression = engine.parse(this.input, scope);
+            this._expression = engine.parse(this.input, subs);
             if ((this._expression as any).symbol?._plotme) {
                 this._plot = true;
             }
             // A martix will trow an exception if we try to simplify it
             if (opts.simplify) {
                 try {
-                    this._expression = engine.parse(`simplify(${this.input})`, scope);
+                    this._expression = engine.parse(`simplify(${this.input})`, subs);
                 } catch (e) {
                     //
                 }
@@ -177,8 +199,49 @@ export default class PadSlot {
             this._error = e.toString();
             console.warn(e);
         }
+
+        
+
         return this;
 
     }
+
+    getCodeBlock() {
+        const lines : string[] = [];
+        for(const v in this.scope.vars){
+            lines.push(`${v}:=${this.scope.vars[v]}`);
+        }
+        for(const f in this.scope.funcs){
+            // console.log(f,this.scope.funcs[f])
+            const def = this.scope.funcs[f][2];
+            lines.push(`${def.name}(${def.params.join(",")}):=${def.body}`);
+        }
+        const str = this.input;
+        // if(this.plot){
+        //     str = `plot(${str})`;
+        // }
+        lines.push(
+           `${this.opts.evaluate ? "=":"~"}${str}`
+        )
+        return lines.join("\n");
+    }
+
+    static parseCodeBlock(source: string) : PadSlot | undefined {
+        const lines = source.split("\n");
+        const engine = createEngine();
+        let ret: PadSlot | undefined = undefined;
+        lines.forEach(line=>{
+            if(line.startsWith("=")||line.startsWith("~")){
+                // process the input
+                ret = new PadSlot(1,line.substring(1)).process(engine,{},{
+                    evaluate: line.startsWith("=")
+                })
+            } else {
+                new PadSlot(-1,line).process(engine,{},{})
+            }
+        })
+
+        return ret;
+    }     
 
 }

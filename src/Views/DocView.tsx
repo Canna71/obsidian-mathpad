@@ -7,9 +7,9 @@ import { MathpadContext } from "./MathpadView";
 import { MarkdownPostProcessorContext } from "obsidian";
 // import { createSlot } from "src/Math/PadStack";
 import { createRoot } from "react-dom/client";
-import { createEngine } from "src/Math/Engine";
+// import { createEngine } from "src/Math/Engine";
 
-const codeBlockRegex = /^\s*(\w*):\s?(.*)\s*$/gm;
+/* const codeBlockRegex = /^\s*(\w*):\s?(.*)\s*$/gm;
 
 function parseSource(source: string){
     let m:RegExpExecArray|null;
@@ -27,21 +27,22 @@ function parseSource(source: string){
 
     }
     return ob;
-}
+} */
 
 export function processCodeBlock(source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) {
 
-    const {input/*, expr*/} = parseSource(source);
+    // const {input/*, expr*/} = parseSource(source);
 
     // const slot = createSlot(1,expr,{});
     // TODO: take processing options from source
     // const slot = new PadSlot(1, expr).process(createEngine(),{});
-    const slot = PadSlot.createSlot(createEngine(), 1, input);
+    const slot = PadSlot.parseCodeBlock(source);
+
 
     //TODO: determine what to store in the codeblock
     // we should store the input and the variable declarations needed, ideally
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (slot as any)._input= input;
+    // (slot as any)._input= input;
 
     const root = createRoot(el);
     root.render( 
@@ -49,7 +50,7 @@ export function processCodeBlock(source: string, el: HTMLElement, ctx: MarkdownP
             <MathpadContext.Provider value={{
                 width: 600
             }}>
-                <DocView padSlot={slot} />
+                {slot && <DocView padSlot={slot} />}
             </MathpadContext.Provider>
         </React.StrictMode>
     );
