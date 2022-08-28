@@ -97,7 +97,7 @@ export default class PadSlot {
                 // nerdamer.setVar(this.name, this._expression);
                 // (nerdamer as any).getVars("object")[this.name] = (this._expression as any).symbol.clone();
                 engine.setFunction(name,params,def);
-                engine.setVar(this.name, this.expression.valueOf());
+                // engine.setVar(this.name, this.expression.valueOf());
 
                 return this;
             }
@@ -111,7 +111,7 @@ export default class PadSlot {
                 this._resultTex = name + " := " + engine.parse(def).toTeX();
                 // nerdamer.setVar(this.name, this._expression.symbol);
                 // (nerdamer as any).getVars("object")[this.name] = (this._expression as any).symbol.clone();
-                engine.setVar(this.name, this.expression.valueOf());
+                // engine.setVar(this.name, this.expression.valueOf());
 
                 return this;
             }
@@ -158,7 +158,7 @@ export default class PadSlot {
             // } catch {
             //     (nerdamer as any).getVars("object")[this.name] = (this._expression as any).symbol;
             // }
-            engine.setVar(this.name, this.expression.valueOf());
+            // engine.setVar(this.name, this.expression.valueOf());
             // this.expression.valueOf()
             try {
                 this._fn = [this.expression.buildFunction()];

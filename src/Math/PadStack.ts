@@ -46,25 +46,39 @@ export class SlotStack  {
         const slot = PadSlot.createSlot(this.engine, this.nextId(),input,scope, opts);
         // const pad = new PadSlot(nextId(stack), input).process(scope, opts);
         // this.stack = [...this.stack, slot];
+        this.engine.setVar(slot.name, slot.expression.valueOf());
+
         return new SlotStack(this.engine, [...this.items, slot]);
     }
 
     updateSlot (id: number, value: string, scope = {}, options: ProcessOptions)  {
         // resetContext();
         const newEngine = createEngine();
-        const newStack = this.items.map(
-            (ms, i) => ms.id === id ?
-                new PadSlot(ms.id, value) : ms).map(slot => slot.process(this.engine, scope, options));
+        const newStack:PadSlot[] = [];
+        this.items.forEach(slot =>{
+            if(slot.id == id) {
+                slot = new PadSlot(slot.id, value);
+            }
+            slot.process(newEngine,scope,options);
+            newEngine.setVar(slot.name, slot.expression.valueOf());
+            newStack.push(slot);
+        })
+        
         return new SlotStack(newEngine, newStack);
 
     }
     removeSlot(id: number, scope = {}, options: ProcessOptions) {
         // resetContext();
         const newEngine = createEngine();
-        const newStack = this.items.filter(
-            (ms, i) => ms.id !== id).map(slot => slot.process(this.engine, scope, options));
+        const newStack:PadSlot[] = [];
+        this.items.forEach(slot =>{
+            if(slot.id !== id) {
+                slot.process(newEngine,scope,options);
+                newEngine.setVar(slot.name, slot.expression.valueOf());
+                newStack.push(slot);
+            }
+        })
         return new SlotStack(newEngine, newStack);
-
     }
 
     getSlotById(id: number) {

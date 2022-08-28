@@ -1,3 +1,4 @@
+
 import nerdamer from "nerdamer";
 require("nerdamer/Algebra");
 require("nerdamer/Calculus");
@@ -10,14 +11,7 @@ require("nerdamer/Solve");
 // const NERDAMER_INITIAL_FUNCS = Object.keys(nerdamer.getCore().PARSER.functions);
 const NERDAMER_INITIAL_FUNCS = { ...nerdamer.getCore().PARSER.functions };
 
-export const resetContext = () => {
-    nerdamer.clearVars();
-    for (const f in nerdamer.getCore().PARSER.functions) {
-        if (!NERDAMER_INITIAL_FUNCS[f]) {
-            delete nerdamer.getCore().PARSER.functions[f];
-        }
-    }
-}
+
 
 function solve(expr: any, variable?: any): any {
     // console.log(a);
@@ -28,41 +22,42 @@ function solve(expr: any, variable?: any): any {
     return nerdamer.getCore().Solve.solve(expr, variable);
 }
 
-
 function markAsToPlot(exprOrList: any) {
     // console.log(a);
     exprOrList._plotme = true;
     return exprOrList;
 }
 
-
-
 nerdamer.register({
     name: "solve",
     numargs: [1, 2],
     visible: true,
-    build: () => solve
+    build: () => solve,
 });
 
 nerdamer.register({
     name: "plot",
     numargs: -1,
     visible: true,
-    build: () => markAsToPlot
+    build: () => markAsToPlot,
 });
 
 nerdamer.register({
-    name: 'D',
+    name: "D",
     visible: true,
     numargs: [1, 3],
-    build: function () { return nerdamer.getCore().Calculus.diff; }
+    build: function () {
+        return nerdamer.getCore().Calculus.diff;
+    },
 });
 
 nerdamer.register({
-    name: 'derivate',
+    name: "derivate",
     visible: true,
     numargs: [1, 3],
-    build: function () { return nerdamer.getCore().Calculus.diff; }
+    build: function () {
+        return nerdamer.getCore().Calculus.diff;
+    },
 });
 
 export interface Engine {
@@ -70,39 +65,109 @@ export interface Engine {
         expression: nerdamer.ExpressionParam,
         subs?: { [name: string]: string },
         option?: keyof nerdamer.Options | (keyof nerdamer.Options)[],
-        location?: nerdamer.int)=> nerdamer.Expression
-    
-    setFunction: (function_name: string, param_array: string[], function_body: string) => Engine
+        location?: nerdamer.int
+    ) => nerdamer.Expression;
 
-    setVar: (name: string, value: string | number) => void
+    setFunction: (
+        function_name: string,
+        param_array: string[],
+        function_body: string
+    ) => Engine;
+
+    setVar: (name: string, value: string | number) => void;
+}
+
+export interface Scope {
+    vars: { [name: string]: string };
+    funcs: { [name: string]: any };
 }
 
 export class NerdamerWrapper implements Engine {
+    scope: Scope = {
+        vars: {},
+        funcs: {},
+    };
 
     /**
      *
      */
     constructor() {
-        resetContext();
+        this.resetContext();
     }
 
-    parse = (expression: nerdamer.ExpressionParam,
+    resetContext = () => {
+        nerdamer.clearVars();
+        for (const f in nerdamer.getCore().PARSER.functions) {
+            if (!NERDAMER_INITIAL_FUNCS[f]) {
+                delete nerdamer.getCore().PARSER.functions[f];
+            }
+        }
+    };
+
+    parse = (
+        expression: nerdamer.ExpressionParam,
         subs?: { [name: string]: string },
         option?: keyof nerdamer.Options | (keyof nerdamer.Options)[],
-        location?: nerdamer.int) => nerdamer(expression, subs, option, location)
-    
-    setFunction = (function_name: string, param_array: string[], function_body: string) => {
-        nerdamer.setFunction(function_name, param_array,function_body)
+        location?: nerdamer.int
+    ) => {
+        // removes any variable or functions from the global objects that could
+        // have been left around
+        this.restoreScope();
+
+        const expr = nerdamer(expression, subs, option, location);
+
+        // Save the scope
+        this.saveScope();
+
+        return expr;
+    };
+
+    setFunction = (
+        function_name: string,
+        param_array: string[],
+        function_body: string
+    ) => {
+        this.restoreScope();
+        nerdamer.setFunction(function_name, param_array, function_body);
+        this.saveScope();
         return this;
-    }
-        
+    };
+
     setVar = (name: string, value: string | number) => {
+        this.restoreScope();
         nerdamer.setVar(name, value);
+        this.saveScope();
+    };
+
+    getScope = ()=>{
+        return {
+            vars: {...this.scope.vars},
+            funcs: {...this.scope.funcs}
+        }
+    }
+
+    private saveScope() {
+        this.scope.vars = (nerdamer as any).getVars("object");
+        nerdamer.clearVars();
+        for (const f in nerdamer.getCore().PARSER.functions) {
+            if (!NERDAMER_INITIAL_FUNCS[f]) {
+                this.scope.funcs[f] = nerdamer.getCore().PARSER.functions[f];
+                delete nerdamer.getCore().PARSER.functions[f];
+            }
+        }
+    }
+
+    private restoreScope() {
+        this.resetContext();
+        // re-hydrate the ones in this scope
+        Object.assign((nerdamer as any).getVars("object"), this.scope.vars);
+        Object.assign(nerdamer.getCore().PARSER.functions, this.scope.funcs);
     }
 }
 
-
-export function createEngine():Engine{
+export function createEngine(): Engine {
     return new NerdamerWrapper();
 }
+
+(window as any).createEngine = createEngine;
 
