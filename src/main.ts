@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { MathpadView, MATHPAD_VIEW } from './Views/MathpadView';
-import { App, Modal, Plugin } from 'obsidian';
+import { App, finishRenderMath, loadMathJax, Modal, Plugin } from 'obsidian';
 import { MathpadSettingsTab } from 'src/MathpadSettingTab';
 import { processCodeBlock } from './Views/DocView';
 
@@ -78,8 +78,10 @@ export default class MathpadPlugin extends Plugin {
             this.app.workspace.getLeavesOfType(MATHPAD_VIEW)[0]
         );
     }
-
+ 
     async registerCodeBlock() {
+        await loadMathJax();
+        await finishRenderMath();
         this.registerMarkdownCodeBlockProcessor("mathpad", (source, el, ctx) => {
 
             processCodeBlock(source,el,ctx);

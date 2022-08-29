@@ -1,3 +1,4 @@
+import { match } from 'assert';
 import { createEngine } from 'src/Math/Engine';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Engine } from './Engine';
@@ -12,7 +13,7 @@ export default class PadSlot {
     private _inputLatex: string;
     private _id: number;
     private _error?: string | undefined;
-    private _plot = false;
+    private _plot:any = undefined;
     private _fn:  ((...args: number[]) => number)[];
     private _scope: { vars: { [x: string]: string; }; funcs: { [x: string]: any; }; };
     
@@ -141,7 +142,7 @@ export default class PadSlot {
             // this._inputLatex = nerdamer(this.input).toTeX();
             this._expression = engine.parse(this.input, subs);
             if ((this._expression as any).symbol?._plotme) {
-                this._plot = true;
+                this._plot = (this._expression as any).symbol?._plotme;
             }
             // A martix will trow an exception if we try to simplify it
             if (opts.simplify) {
@@ -206,6 +207,9 @@ export default class PadSlot {
 
     }
 
+    plotParse = /plot\((.*)\)/m
+    paramsRefex = / *(\[[^\]].*\])| *([^[,]+) */mg
+
     getCodeBlock() {
         const lines : string[] = [];
         for(const v in this.scope.vars){
@@ -216,10 +220,42 @@ export default class PadSlot {
             const def = this.scope.funcs[f][2];
             lines.push(`${def.name}(${def.params.join(",")}):=${def.body}`);
         }
-        const str = this.input;
-        // if(this.plot){
-        //     str = `plot(${str})`;
-        // }
+        let str = this.input;
+
+        
+
+        if(this.plot){
+            // str = `plot(${str})`;
+            //TODO: we shold inject the actual xDomain and yDomain
+            // this will be easier to do when we'll have written a custom
+            // plot function
+            let m;
+            if ((m = this.plotParse.exec(this.input)) !== null) {
+                const parList = m[1];
+                let params=[];
+                while (( m = this.paramsRefex.exec(parList)) !== null) {
+                    // This is necessary to avoid infinite loops with zero-width matches
+                    if (m.index === this.paramsRefex.lastIndex) {
+                        this.paramsRefex.lastIndex++;
+                    }
+                    // m[1] is array
+                    // m[2] is not array
+                    params.push(m[1] || m[2]);
+                }
+                console.log(params);
+                if(params[0].startsWith("[")){
+                    params = [params[0]];
+                } else {
+                    params = params.filter(p=>!p.startsWith("["));
+                }
+                params.push(`[${this.plot.xDomain?.toString()}]`);
+                params.push(`[${this.plot.yDomain?.toString()}]`);
+
+                str = `plot(${params.join(", ")})`;
+            }
+
+            
+        }
         lines.push(
            `${this.opts.evaluate ? "=":"~"}${str}`
         )

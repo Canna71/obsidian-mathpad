@@ -74,6 +74,10 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
 
     const handlePlotScaleChanhed = useCallback((opts: FunctionPlotOptions)=>{
         console.log(opts);
+        
+        padSlot.plot.xDomain = opts.xAxis?.domain?.map(n=>n.toPrecision(3));
+        padSlot.plot.yDomain = opts.yAxis?.domain?.map(n=>n.toPrecision(3));
+        console.log(padSlot.plot);
     },[]);
 
     return (
@@ -103,6 +107,9 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
                                 graphType: 'polyline',
                                 fn: (scope: any) => fn(scope.x)
                             })),
+                            xAxis: padSlot.plot.xDomain && padSlot.plot.xDomain.length==2 && {domain: padSlot.plot.xDomain},
+                            yAxis: padSlot.plot.yDomain && padSlot.plot.yDomain.length==2 && {domain: padSlot.plot.yDomain},
+
                             target: "" // just to make tslint happy
                         }} 
                         onScaleChanged={handlePlotScaleChanhed}
