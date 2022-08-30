@@ -73,7 +73,6 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
     }, [padSlot])
 
     const handlePlotScaleChanhed = useCallback((opts: FunctionPlotOptions)=>{
-        
         padSlot.plot.xDomain = opts.xAxis?.domain?.map(n=>n.toPrecision(3));
         padSlot.plot.yDomain = opts.yAxis?.domain?.map(n=>n.toPrecision(3));
     },[]);

@@ -13,6 +13,7 @@
 	"author": "",
 	"license": "MIT",
 	"devDependencies": {
+		"@codemirror/language": "^6.2.1",
 		"@types/node": "^16.11.6",
 		"@types/react": "^18.0.17",
 		"@types/react-dom": "^18.0.6",

@@ -1,3 +1,4 @@
+import { resultField } from './ResultField';
 import { MathResult } from './ResultMarkdownChild';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { MathpadView, MATHPAD_VIEW } from './Views/MathpadView';
@@ -39,6 +40,7 @@ export default class MathpadPlugin extends Plugin {
 
         this.registerCodeBlock();
         // this.registerPostProcessor();
+        this.registerEditorExtensions();
 
         // if (this.app.workspace.layoutReady) {
         //     this.activateView();
@@ -107,6 +109,10 @@ export default class MathpadPlugin extends Plugin {
               }
             }
           });
+    }
+
+    async registerEditorExtensions() {
+        this.registerEditorExtension(resultField);
     }
 }
 
