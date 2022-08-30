@@ -4,8 +4,8 @@ import { Engine } from './Engine';
 import { ProcessOptions } from './PadStack';
 
 
-const funRegex = /^([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\(([a-z_,\s]*)\)\s*:=\s*(.+)$/i;
-const varRegex = /^([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\s*:=\s*(.+)$/i;
+// const funRegex = /^([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\(([a-z_,\s]*)\)\s*:=\s*(.+)$/i;
+// const varRegex = /^([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\s*:=\s*(.+)$/i;
 export default class PadSlot {
 
     private _input: string;
@@ -107,33 +107,22 @@ export default class PadSlot {
             this._subs = subs;
 
             this._error = undefined;
-            const fnDec = funRegex.exec(this.input);
-            if (fnDec) {
-                const name = fnDec[1];
-                const params = fnDec[2].split(",").map(p => p.trim());
-                const def = fnDec[3];
-                // TODO: should we pass scope and opts here?
+            const fnDec = engine.tryParseFunc(this.input)
+            if(fnDec){
+                const {name,params,def} = fnDec;
                 this._expression = engine.parse(def);
                 this._resultTex = name + "(" + params.map(param => engine.parse(param).toTeX()).join(",") +
                     ") := " + engine.parse(def).toTeX();
-                // nerdamer.setVar(this.name, this._expression);
-                // (nerdamer as any).getVars("object")[this.name] = (this._expression as any).symbol.clone();
-                engine.setFunction(name,params,def);
-                // engine.setVar(this.name, this.expression.valueOf());
-
                 return this;
             }
-            const varDec = varRegex.exec(this.input);
+
+            const varDec = engine.tryParseVar(this.input);
             if (varDec) {
-                const name = varDec[1];
-                const def = varDec[2];
+                const {name,def} = varDec;
+
                 this._expression = engine.parse(def);
-                engine.setVar(name, def);
 
                 this._resultTex = name + " := " + engine.parse(def).toTeX();
-                // nerdamer.setVar(this.name, this._expression.symbol);
-                // (nerdamer as any).getVars("object")[this.name] = (this._expression as any).symbol.clone();
-                // engine.setVar(this.name, this.expression.valueOf());
 
                 return this;
             }

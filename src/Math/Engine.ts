@@ -1,4 +1,3 @@
-
 import nerdamer from "nerdamer";
 require("nerdamer/Algebra");
 require("nerdamer/Calculus");
@@ -9,12 +8,18 @@ require("nerdamer/Solve");
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (global as any).nerdamer = nerdamer;
 
-
 // const NERDAMER_INITIAL_FUNCS = Object.keys(nerdamer.getCore().PARSER.functions);
 
-const MY_VALIDATION_REGEX = /^[a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*$/i;
+const MY_VALIDATION_REGEX =
+    /^[a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*$/i;
+
+const funRegex =
+    /^([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\(([a-z_,\s]*)\)\s*:=\s*(.+)$/i;
+const varRegex =
+    /^([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\s*:=\s*(.+)$/i;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-(nerdamer as any).set("VALIDATION_REGEX",MY_VALIDATION_REGEX);
+(nerdamer as any).set("VALIDATION_REGEX", MY_VALIDATION_REGEX);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function solve(expr: any, variable?: any): any {
@@ -26,44 +31,44 @@ function solve(expr: any, variable?: any): any {
     return nerdamer.getCore().Solve.solve(expr, variable);
 }
 
-function markAsToPlot(...args:any[]) {
+function markAsToPlot(...args: any[]) {
     // console.log(a);
     let fns = [];
     let i = 0;
     let ret;
-    let xDomain=undefined;
-    let yDomain=undefined; 
-    
+    let xDomain = undefined;
+    let yDomain = undefined;
+
     const utils = nerdamer.getCore().Utils;
-    if(utils.isVector(args[i])) {
+    if (utils.isVector(args[i])) {
         // we have an array of functions to plot as first parameter
         fns = args[i];
     } else {
-        while(args[i] && !utils.isVector(args[i])){
+        while (args[i] && !utils.isVector(args[i])) {
             fns.push(args[i]);
             i++;
         }
         fns = utils.convertToVector(fns);
     }
-    
-    if(utils.isVector(args[i])){
+
+    if (utils.isVector(args[i])) {
         // user provided xrange
-        xDomain = args[i].elements.map((s:any)=>s.valueOf());
+        xDomain = args[i].elements.map((s: any) => s.valueOf());
         i++;
-        if(utils.isVector(args[i])){
+        if (utils.isVector(args[i])) {
             // user provided yrange
-            yDomain = args[i].elements.map((s:any)=>s.valueOf());
+            yDomain = args[i].elements.map((s: any) => s.valueOf());
         }
     }
 
-    if(fns.dimensions()===1){
+    if (fns.dimensions() === 1) {
         ret = fns.elements[0];
     } else {
         ret = fns;
     }
     ret._plotme = {
         xDomain,
-        yDomain
+        yDomain,
     };
     return ret;
 }
@@ -126,6 +131,17 @@ export interface Engine {
             [x: string]: any;
         };
     };
+
+    tryParseFunc: (text: string) => {
+        name: string;
+        params: string[];
+        def: string;
+    } | undefined;
+
+    tryParseVar: (text: string) => {
+        name: string;
+        def: string;
+    } | undefined;
 }
 
 export interface Scope {
@@ -190,12 +206,12 @@ export class NerdamerWrapper implements Engine {
         this.saveScope();
     };
 
-    getScope = ()=>{
+    getScope = () => {
         return {
-            vars: {...this.scope.vars},
-            funcs: {...this.scope.funcs}
-        }
-    }
+            vars: { ...this.scope.vars },
+            funcs: { ...this.scope.funcs },
+        };
+    };
 
     private saveScope() {
         this.scope.vars = (nerdamer as any).getVars("object");
@@ -214,6 +230,31 @@ export class NerdamerWrapper implements Engine {
         Object.assign((nerdamer as any).getVars("object"), this.scope.vars);
         Object.assign(nerdamer.getCore().PARSER.functions, this.scope.funcs);
     }
+
+    tryParseFunc = (text: string) => {
+        const fnDec = funRegex.exec(text);
+        if (fnDec) {
+            const name = fnDec[1];
+            const params = fnDec[2].split(",").map((p) => p.trim());
+            const def = fnDec[3];
+            
+            this.setFunction(name, params, def);
+
+            return { name, params, def };
+        }
+    };
+
+    tryParseVar = (text:string) => {
+        const varDec = varRegex.exec(text);
+        if (varDec) {
+            const name = varDec[1];
+            const def = varDec[2];
+            this.setVar(name, def);
+           
+
+            return {name,def};
+        }
+    }
 }
 
 export function createEngine(): Engine {
@@ -221,4 +262,3 @@ export function createEngine(): Engine {
 }
 
 (window as any).createEngine = createEngine;
-
