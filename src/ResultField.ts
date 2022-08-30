@@ -41,22 +41,25 @@ export const resultField = StateField.define<DecorationSet>({
                     if(!fnDec) engine.tryParseVar(line.text);
                 } catch(e){
                     console.log(e);
+                    console.log(line.text);
                 }
             }
 
-            if (line.text.endsWith("=>")) {
+            if (line.text.endsWith("=?")) {
                 try{
                     const res = engine.parse(line.text.slice(0,-2))
 
                     builder.add(
+                        line.to-1,
                         line.to,
-                        line.to,
-                        Decoration.widget({
+                        Decoration.replace({
                             widget: new ResultWidget(res.text()),
                         })
                     );
                 } catch(e){
                     console.log(e);
+                    console.log(line.text);
+
                 }
 
             }
