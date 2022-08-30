@@ -1,4 +1,3 @@
-import { match } from 'assert';
 import { createEngine } from 'src/Math/Engine';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Engine } from './Engine';
@@ -242,7 +241,6 @@ export default class PadSlot {
                     // m[2] is not array
                     params.push(m[1] || m[2]);
                 }
-                console.log(params);
                 if(params[0].startsWith("[")){
                     params = [params[0]];
                 } else {

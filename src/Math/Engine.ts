@@ -65,7 +65,6 @@ function markAsToPlot(...args:any[]) {
         xDomain,
         yDomain
     };
-    console.log(args);
     return ret;
 }
 

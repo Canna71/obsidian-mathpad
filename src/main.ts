@@ -1,3 +1,4 @@
+import { MathResult } from './ResultMarkdownChild';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { MathpadView, MATHPAD_VIEW } from './Views/MathpadView';
 import { App, finishRenderMath, loadMathJax, Modal, Plugin } from 'obsidian';
@@ -37,6 +38,7 @@ export default class MathpadPlugin extends Plugin {
         })
 
         this.registerCodeBlock();
+        // this.registerPostProcessor();
 
         // if (this.app.workspace.layoutReady) {
         //     this.activateView();
@@ -86,6 +88,25 @@ export default class MathpadPlugin extends Plugin {
 
             processCodeBlock(source,el,ctx);
         });
+    }
+
+
+    async registerPostProcessor() {
+        console.log("registerPostProcessor")
+        // await loadMathJax();
+        // await finishRenderMath();
+        this.registerMarkdownPostProcessor((element, context) => {
+            console.log("running processor...", element)
+            const lines = element.querySelectorAll("div");
+      
+            for (let index = 0; index < lines.length; index++) {
+              const line = lines.item(index);
+              const text = line.innerText.trim();
+              if(text.endsWith("=")){
+                context.addChild(new MathResult(line, "42"));
+              }
+            }
+          });
     }
 }
 
