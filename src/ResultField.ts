@@ -57,7 +57,6 @@ export const resultField = StateField.define<DecorationSet>({
                         evaluate: true
                     });
                     // const res = engine.parse(line.text.slice(0,-2))
-
                     builder.add(
                         line.from,
                         line.to,

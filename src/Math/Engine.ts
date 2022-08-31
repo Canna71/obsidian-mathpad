@@ -132,19 +132,23 @@ export interface Engine {
         };
     };
 
-    tryParseFunc: (text: string) => {
-        name: string;
-        params: string[];
-        def: string;
-    } | undefined;
+    tryParseFunc: (text: string) =>
+        | {
+              name: string;
+              params: string[];
+              def: string;
+          }
+        | undefined;
 
-    tryParseVar: (text: string) => {
-        name: string;
-        def: string;
-    } | undefined;
+    tryParseVar: (text: string) =>
+        | {
+              name: string;
+              def: string;
+          }
+        | undefined;
 
     toLatex: (expr: string) => string;
-    clone: ()=>Engine
+    clone: () => Engine;
 }
 
 export interface Scope {
@@ -240,40 +244,40 @@ export class NerdamerWrapper implements Engine {
             const name = fnDec[1];
             const params = fnDec[2].split(",").map((p) => p.trim());
             const def = fnDec[3];
-            
+
             this.setFunction(name, params, def);
 
             return { name, params, def };
         }
     };
 
-    tryParseVar = (text:string) => {
+    tryParseVar = (text: string) => {
         const varDec = varRegex.exec(text);
         if (varDec) {
             const name = varDec[1];
             const def = varDec[2];
             this.setVar(name, def);
-           
 
-            return {name,def};
+            return { name, def };
         }
-    }
+    };
 
-    toLatex = (expr:string) => {
-        return nerdamer.convertToLaTeX(expr);
-    }
+    toLatex = (expr: string) => {
+        const e = prepare_expression(expr);
+        return nerdamer.convertToLaTeX(e);
+    };
 
     clone = () => {
         const clone = new NerdamerWrapper();
         clone.scope = {
-            vars: {...this.scope.vars},
-            funcs: {...this.scope.funcs}
-        }
+            vars: { ...this.scope.vars },
+            funcs: { ...this.scope.funcs },
+        };
         // re-hydrate the ones in this scope
         Object.assign((nerdamer as any).getVars("object"), clone.scope.vars);
         Object.assign(nerdamer.getCore().PARSER.functions, clone.scope.funcs);
         return clone;
-    }
+    };
 }
 
 export function createEngine(): Engine {
@@ -281,3 +285,84 @@ export function createEngine(): Engine {
 }
 
 (window as any).createEngine = createEngine;
+
+const prepare_expression = function (e:string) {
+    /*
+     * Since variables cannot start with a number, the assumption is made that when this occurs the
+     * user intents for this to be a coefficient. The multiplication symbol in then added. The same goes for
+     * a side-by-side close and open parenthesis
+     */
+    e = String(e);
+    //apply preprocessors
+    // for(var i = 0; i <  preprocessors.actions.length; i++)
+    //     e = preprocessors.actions[i].call(this, e);
+
+    //e = e.split(' ').join('');//strip empty spaces
+    //replace multiple spaces with one space
+    e = e.replace(/\s+/g, " ");
+
+    //only even bother to check if the string contains e. This regex is painfully slow and might need a better solution. e.g. hangs on (0.06/3650))^(365)
+    if (/e/gi.test(e)) {
+        e = e.replace(/\-*\d+\.*\d*e\+?\-?\d+/gi, function (x) {
+            return nerdamer.getCore().Utils.scientificToDecimal(x);
+        });
+    }
+    //replace scientific numbers
+
+    //allow omission of multiplication after coefficients
+    e =
+        e
+            .replace(
+                nerdamer.getCore().Settings.IMPLIED_MULTIPLICATION_REGEX,
+                function (
+                    str: string,
+                    group1: string,
+                    group2: string,
+                    start: number
+                ) {
+                    // const str = arguments[4],
+                    //         group1 = arguments[1],
+                    //         group2 = arguments[2],
+                    //         start = arguments[3],
+                    const first = str.charAt(start);
+                    let before = "",
+                        d = "*";
+                    if (!first.match(/[\+\-\/\*]/))
+                        before = str.charAt(start - 1);
+                    if (before.match(/[a-z]/i)) d = "";
+                    return group1 + d + group2;
+                }
+            )
+            .replace(/([a-z0-9_]+)/gi, function (_match: any, a: string) {
+                if (
+                    nerdamer.getCore().Settings.USE_MULTICHARACTER_VARS ===
+                        false &&
+                    !(a in nerdamer.getCore().functions)
+                ) {
+                    if (!isNaN(a)) return a;
+                    return a.split("").join("*");
+                }
+                return a;
+            })
+            //allow omission of multiplication sign between brackets
+            .replace(/\)\(/g, ")*(") || "0";
+    //replace x(x+a) with x*(x+a)
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+        const e_org = e; //store the original
+        e = e.replace(
+            /([a-z0-9_]+)(\()|(\))([a-z0-9]+)/gi,
+            function (_match, a, b, c, d) {
+                const g1 = a || c,
+                    g2 = b || d;
+                if (g1 in nerdamer.getCore().functions)
+                    //create a passthrough for functions
+                    return g1 + g2;
+                return g1 + "*" + g2;
+            }
+        );
+        //if the original equals the replace we're done
+        if (e_org === e) break;
+    }
+    return e;
+};
