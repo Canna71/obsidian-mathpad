@@ -241,16 +241,16 @@ export default class PadScope {
         return lines.join("\n");
     }
 
-    static parseCodeBlock(source: string) : PadScope | undefined {
+    static parseCodeBlock(source: string) : PadScope[] | undefined {
         const lines = source.split("\n");
         const engine = createEngine();
-        let ret: PadScope | undefined = undefined;
+        const ret: PadScope[] = [];
         lines.forEach(line=>{
             if(line.startsWith("=")||line.startsWith("~")){
                 // process the input
-                ret = new PadScope(line.substring(1)).process(engine,{},{
-                    evaluate: line.startsWith("=")
-                })
+                ret.push(new PadScope(line.substring(1)).process(engine,{},{
+                    evaluate: line.startsWith("~")
+                }))
             } else {
                 new PadScope(line).process(engine,{},{})
             }

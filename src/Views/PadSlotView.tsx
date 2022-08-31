@@ -102,6 +102,7 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
                             width: cxt.width - 20,
                             data: padSlot.fn.map(fn => ({
                                 graphType: 'polyline',
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 fn: (scope: any) => fn(scope.x)
                             })),
                             xAxis: padSlot.plot.xDomain && padSlot.plot.xDomain.length==2 && {domain: padSlot.plot.xDomain},

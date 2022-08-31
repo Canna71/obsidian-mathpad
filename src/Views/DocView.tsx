@@ -7,6 +7,7 @@ import { MathpadContext } from "./MathpadView";
 import { MarkdownPostProcessorContext } from "obsidian";
 // import { createSlot } from "src/Math/PadStack";
 import { createRoot } from "react-dom/client";
+import PadScope from "src/Math/PadScope";
 // import { createEngine } from "src/Math/Engine";
 
 /* const codeBlockRegex = /^\s*(\w*):\s?(.*)\s*$/gm;
@@ -36,7 +37,7 @@ export function processCodeBlock(source: string, el: HTMLElement, ctx: MarkdownP
     // const slot = createSlot(1,expr,{});
     // TODO: take processing options from source
     // const slot = new PadSlot(1, expr).process(createEngine(),{});
-    const slot = PadSlot.parseCodeBlock(source);
+    const scopes = PadSlot.parseCodeBlock(source);
 
 
     //TODO: determine what to store in the codeblock
@@ -50,16 +51,16 @@ export function processCodeBlock(source: string, el: HTMLElement, ctx: MarkdownP
             <MathpadContext.Provider value={{
                 width: 600
             }}>
-                {slot && <DocView padSlot={slot} />}
+                {scopes?.map((padScope,i)=><DocView key={i} padScope={padScope} />) }
             </MathpadContext.Provider>
         </React.StrictMode>
     );
 }
 
 
-const DocView = ({ padSlot }:
+const DocView = ({ padScope }:
     {
-        padSlot: PadSlot
+        padScope: PadScope;
 
     }) => {
 
@@ -73,29 +74,29 @@ const DocView = ({ padSlot }:
 
             <div className="slot-content">
 
-                <Latex latex={padSlot.inputLaTeX + " = " + padSlot.laTeX} />
+                <Latex latex={padScope.inputLaTeX + " " + (padScope.opts.evaluate?"≅":"=") + " " + padScope.laTeX} />
          
                 
                 
 
                
                     {
-                        padSlot.error &&
-                            <div className="slot-error">{padSlot.error}</div>
+                        padScope.error &&
+                            <div className="slot-error">{padScope.error}</div>
                            
                     }
                 
-                {padSlot.plot &&
+                {padScope.plot &&
                     <div>
                         <Plot options={{
                             width: cxt.width - 20,
-                            data: padSlot.fn.map(fn=>({
+                            data: padScope.fn.map(fn=>({
                                 graphType: 'polyline',
                                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 fn: (scope: any) => fn(scope.x)
                             })) ,
-                            xAxis: padSlot.plot.xDomain && padSlot.plot.xDomain.length==2 && {domain: padSlot.plot.xDomain},
-                            yAxis: padSlot.plot.yDomain && padSlot.plot.yDomain.length==2 && {domain: padSlot.plot.yDomain},
+                            xAxis: padScope.plot.xDomain && padScope.plot.xDomain.length==2 && {domain: padScope.plot.xDomain},
+                            yAxis: padScope.plot.yDomain && padScope.plot.yDomain.length==2 && {domain: padScope.plot.yDomain},
                             target: "" // just to make tslint happy
                         }} 
                     

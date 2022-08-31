@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import nerdamer from "nerdamer";
 require("nerdamer/Algebra");
 require("nerdamer/Calculus");
@@ -31,6 +32,7 @@ function solve(expr: any, variable?: any): any {
     return nerdamer.getCore().Solve.solve(expr, variable);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function markAsToPlot(...args: any[]) {
     // console.log(a);
     let fns = [];
@@ -303,7 +305,7 @@ const prepare_expression = function (e:string) {
 
     //only even bother to check if the string contains e. This regex is painfully slow and might need a better solution. e.g. hangs on (0.06/3650))^(365)
     if (/e/gi.test(e)) {
-        e = e.replace(/\-*\d+\.*\d*e\+?\-?\d+/gi, function (x) {
+        e = e.replace(/-*\d+\.*\d*e\+?-?\d+/gi, function (x) {
             return nerdamer.getCore().Utils.scientificToDecimal(x);
         });
     }
@@ -327,7 +329,7 @@ const prepare_expression = function (e:string) {
                     const first = str.charAt(start);
                     let before = "",
                         d = "*";
-                    if (!first.match(/[\+\-\/\*]/))
+                    if (!first.match(/[+\-/*]/))
                         before = str.charAt(start - 1);
                     if (before.match(/[a-z]/i)) d = "";
                     return group1 + d + group2;
@@ -337,9 +339,9 @@ const prepare_expression = function (e:string) {
                 if (
                     nerdamer.getCore().Settings.USE_MULTICHARACTER_VARS ===
                         false &&
-                    !(a in nerdamer.getCore().functions)
+                    !(a in nerdamer.getCore().PARSER.functions)
                 ) {
-                    if (!isNaN(a)) return a;
+                    if (!isNaN(a as any)) return a;
                     return a.split("").join("*");
                 }
                 return a;
@@ -355,7 +357,7 @@ const prepare_expression = function (e:string) {
             function (_match, a, b, c, d) {
                 const g1 = a || c,
                     g2 = b || d;
-                if (g1 in nerdamer.getCore().functions)
+                if (g1 in nerdamer.getCore().PARSER.functions)
                     //create a passthrough for functions
                     return g1 + g2;
                 return g1 + "*" + g2;
