@@ -107,6 +107,8 @@ export default class PadSlot {
             this._subs = subs; 
 
             this._error = undefined;
+            this._inputLatex = engine.toLatex(this.input);
+
             const fnDec = engine.tryParseFunc(this.input)
             if(fnDec){
                 const {name,params,def} = fnDec;
@@ -127,7 +129,6 @@ export default class PadSlot {
                 return this;
             }
             //TODO: determine when it's right to display the input as LaTeX
-            this._inputLatex = engine.toLatex(this.input);
             this._expression = engine.parse(this.input, subs);
             if ((this._expression as any).symbol?._plotme) {
                 this._plot = (this._expression as any).symbol?._plotme;
