@@ -72,7 +72,11 @@ const DocView = ({ padSlot }:
         <div className="slot-container">
 
             <div className="slot-content">
-                {padSlot.input}
+                {padSlot.inputLaTeX ? <Latex latex={padSlot.inputLaTeX} />
+                :
+                <div className="plain-input">{padSlot.input}</div>}
+                
+                
 
                 <div className="slot-result">
                     {

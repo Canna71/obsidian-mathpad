@@ -47,14 +47,16 @@ export class SlotStack {
         );
         // const pad = new PadSlot(nextId(stack), input).process(scope, opts);
         // this.stack = [...this.stack, slot];
+        const newEngine = this.engine.clone();
+
         if (!slot.error && slot.expression) {
-            this.engine.setVar(
+            newEngine.setVar(
                 SlotStack.getSlotVariableName(slot.id),
                 slot.expression.valueOf()
             );
         }
 
-        return new SlotStack(this.engine, [...this.items, slot]);
+        return new SlotStack(newEngine, [...this.items, slot]);
     }
 
     updateSlot(id: number, value: string, scope = {}, options: ProcessOptions) {

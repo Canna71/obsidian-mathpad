@@ -142,6 +142,9 @@ export interface Engine {
         name: string;
         def: string;
     } | undefined;
+
+    toLatex: (expr: string) => string;
+    clone: ()=>Engine
 }
 
 export interface Scope {
@@ -254,6 +257,22 @@ export class NerdamerWrapper implements Engine {
 
             return {name,def};
         }
+    }
+
+    toLatex = (expr:string) => {
+        return nerdamer.convertToLaTeX(expr);
+    }
+
+    clone = () => {
+        const clone = new NerdamerWrapper();
+        clone.scope = {
+            vars: {...this.scope.vars},
+            funcs: {...this.scope.funcs}
+        }
+        // re-hydrate the ones in this scope
+        Object.assign((nerdamer as any).getVars("object"), clone.scope.vars);
+        Object.assign(nerdamer.getCore().PARSER.functions, clone.scope.funcs);
+        return clone;
     }
 }
 

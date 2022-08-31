@@ -104,7 +104,7 @@ export default class PadSlot {
             // save processing options and scope
             this._scope = engine.getScope();
             this._opts = opts;
-            this._subs = subs;
+            this._subs = subs; 
 
             this._error = undefined;
             const fnDec = engine.tryParseFunc(this.input)
@@ -127,7 +127,7 @@ export default class PadSlot {
                 return this;
             }
             //TODO: determine when it's right to display the input as LaTeX
-            // this._inputLatex = nerdamer(this.input).toTeX();
+            this._inputLatex = engine.toLatex(this.input);
             this._expression = engine.parse(this.input, subs);
             if ((this._expression as any).symbol?._plotme) {
                 this._plot = (this._expression as any).symbol?._plotme;
