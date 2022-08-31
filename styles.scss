@@ -1,3 +1,6 @@
+
+@import './node_modules/guppy-js/guppy-default.min.css';
+
 .mathpad-container {
     display: flex;
     flex-direction: column;
@@ -111,3 +114,4 @@
         font-family: monospace;
     }
 }
+

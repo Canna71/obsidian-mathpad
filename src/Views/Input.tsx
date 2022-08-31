@@ -1,4 +1,6 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
+import { newId } from "src/utils";
+import Guppy from "../../node_modules/guppy-js/guppy";
 
 export interface InputProps {
     onKeyDown:(e: React.KeyboardEvent) => void,
@@ -11,12 +13,21 @@ export const Input: React.FC<InputProps> = ({
     input,
     onChange
 }) => {
-    const edRef = useRef<HTMLTextAreaElement>(null);
+    const edRef = useRef<HTMLDivElement>(null);
 
+    const idRef = useRef<string>(newId());
+    useEffect(()=>{
+        
+        const  g1 = new Guppy(idRef.current);
+        g1.configure("buttons",[])
+    },[])
  
     return <div className="current-input">
-        <textarea rows={1} className="mathpad-input" wrap="off" onKeyDown={onKeyDown} value={input} onChange={onChange} ref={edRef}>
+        {/* <textarea rows={1} id={idRef.current} className="mathpad-input" wrap="off" onKeyDown={onKeyDown} value={input} onChange={onChange} ref={edRef}>
 
-        </textarea>
+        </textarea> */}
+        <div id={idRef.current} className="mathpad-input-2"  ref={edRef}>
+
+    </div>
     </div>;
 }

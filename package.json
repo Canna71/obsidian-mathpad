@@ -29,6 +29,7 @@
 	},
 	"dependencies": {
 		"function-plot": "^1.22.9-0",
+		"guppy-js": "^2.0.0-beta.3",
 		"nerdamer": "^1.1.13",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0"

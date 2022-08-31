@@ -32,3 +32,10 @@ export function debounce(func: ()=>any, timeout = 300){
       timer = setTimeout(() => { func.apply(this, args); }, timeout);
     };
   }
+
+let lastId = 0;
+
+export  function newId(prefix='id') {
+    lastId++;
+    return `${prefix}${lastId}`;
+}

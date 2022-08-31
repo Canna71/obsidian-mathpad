@@ -1,7 +1,7 @@
 import { createEngine } from 'src/Math/Engine';
 import { ResultWidget } from "./ResultWidget";
-import { syntaxTree } from "@codemirror/language";
-import { IterMode, SyntaxNodeRef } from "@lezer/common";
+// import { syntaxTree } from "@codemirror/language";
+// import { IterMode, SyntaxNodeRef } from "@lezer/common";
 
 import {
     Extension,
