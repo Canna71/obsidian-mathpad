@@ -1,7 +1,8 @@
+
 import { createEngine } from 'src/Math/Engine';
 import { ResultWidget } from "./ResultWidget";
-import { syntaxTree } from "@codemirror/language";
-import { IterMode, SyntaxNodeRef } from "@lezer/common";
+// import { syntaxTree } from "@codemirror/language";
+// import { IterMode, SyntaxNodeRef } from "@lezer/common";
 
 import {
     Extension,
@@ -10,6 +11,7 @@ import {
     Transaction,
 } from "@codemirror/state";
 import { Decoration, DecorationSet, EditorView } from "@codemirror/view";
+import PadScope from './Math/PadScope';
 
 // import { Text } from "@codemirror/state";
 
@@ -38,8 +40,30 @@ export const resultField = StateField.define<DecorationSet>({
             const line = doc.line(nl);
             if(line.text.contains(":=")){
                 try {
-                    const fnDec = engine.tryParseFunc(line.text);
-                    if(!fnDec) engine.tryParseVar(line.text);
+                    // const fnDec = engine.tryParseFunc(line.text);
+                    // if(fnDec){
+                    //     builder.add(
+                    //         line.from,
+                    //         line.to,
+                    //         Decoration.replace({
+                    //             widget: new ResultWidget(fnDec.name+" := "+engine.),
+                    //         })
+                    //     );
+                    // } else {
+                    //     const varDec = engine.tryParseVar(line.text);
+                    // }
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    const res = new PadScope(line.text).process(engine,{},{
+                        evaluate: true
+                    });
+                    // const res = engine.parse(line.text.slice(0,-2))
+
+                    builder.add(
+                        line.from,
+                        line.to,
+                        Decoration.mark({class: "mathpad-declaration"})
+                    );
+                    
                 } catch(e){
                     console.log(e);
                     console.log(line.text);
@@ -48,15 +72,26 @@ export const resultField = StateField.define<DecorationSet>({
 
             if (line.text.endsWith("=?")) {
                 try{
-                    const res = engine.parse(line.text.slice(0,-2))
+                    const res = new PadScope(line.text.slice(0,-2)).process(engine,{},{
+                        evaluate: true
+                    });
+                    // const res = engine.parse(line.text.slice(0,-2))
 
                     builder.add(
-                        line.to-1,
+                        line.from,
                         line.to,
                         Decoration.replace({
-                            widget: new ResultWidget(res.text()),
+                            widget: new ResultWidget(res.inputLaTeX+" = "+res.laTeX, true),
                         })
                     );
+
+                    // builder.add(
+                    //     line.to-1,
+                    //     line.to,
+                    //     Decoration.replace({
+                    //         widget: new ResultWidget(res.expression.text()),
+                    //     })
+                    // );
                 } catch(e){
                     console.log(e);
                     console.log(line.text);
