@@ -1,6 +1,7 @@
 import { createEngine } from 'src/Math/Engine';
 import { ResultWidget } from "./ResultWidget";
-// import { syntaxTree } from "@codemirror/language";
+import { syntaxTree } from "@codemirror/language";
+import { IterMode, SyntaxNodeRef } from "@lezer/common";
 
 import {
     Extension,
@@ -65,29 +66,29 @@ export const resultField = StateField.define<DecorationSet>({
             }
         }
         console.timeEnd("decorations");
-
         // syntaxTree(transaction.state).iterate({
-        //     enter(node: any) {
+        //     enter: (node: SyntaxNodeRef)=>{
 
-        // const text = transaction.state.doc.sliceString(node.from, node.to)
-        //   if (node.("list")) {
-        //     // Position of the '-' or the '*'.
-        //     const listCharFrom = node.from - 2;
-        //     builder.add(
-        //       listCharFrom,
-        //       listCharFrom + 1,
-        //       Decoration.replace({
-        //         widget: new ResultWidget("42"),
-        //       })
-        //     );
-        //   }
-        // console.log({...node});
-        // console.log(node.type.name);
-        // console.log(text);
-        // if(node.type.name === "Document"){
-        //     // console.log(JSON.stringify(node));
-        // }
+                // const text = transaction.state.doc.sliceString(node.from, node.to)
+                //   if (node.("list")) {
+                //     // Position of the '-' or the '*'.
+                //     const listCharFrom = node.from - 2;
+                //     builder.add(
+                //       listCharFrom,
+                //       listCharFrom + 1,
+                //       Decoration.replace({
+                //         widget: new ResultWidget("42"),
+                //       })
+                //     );
+                //   }
+                // console.log({...node});
+        // console.log(node.type.name, transaction.state.doc.sliceString(node.from, node.to));
+                // console.log(text);
+                // if(node.type.name === "Document"){
+                //     // console.log(JSON.stringify(node));
+                // }
         // },
+        // mode:IterMode.IncludeAnonymous
         // });
         // console.log("FINISH");
 
