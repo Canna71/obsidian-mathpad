@@ -1,8 +1,8 @@
 
 import { createEngine } from 'src/Math/Engine';
 import { ResultWidget } from "./ResultWidget";
-// import { syntaxTree } from "@codemirror/language";
-// import { IterMode, SyntaxNodeRef } from "@lezer/common";
+import { syntaxTree } from "@codemirror/language";
+import { IterMode, SyntaxNodeRef } from "@lezer/common";
 
 import {
     Extension,
@@ -11,7 +11,7 @@ import {
     Transaction,
 } from "@codemirror/state";
 import { Decoration, DecorationSet, EditorView } from "@codemirror/view";
-import PadScope from './Math/PadScope';
+import PadScope from '../Math/PadScope';
 
 // import { Text } from "@codemirror/state";
 
@@ -32,26 +32,20 @@ export const resultField = StateField.define<DecorationSet>({
         //     }
         // }));
         // if(!process) return oldState;
-        console.time("decorations");
+        console.time("decorations-lines");
         const builder = new RangeSetBuilder<Decoration>();
         const doc = transaction.state.doc;
         const engine = createEngine();
-        for (let nl = 1; nl <= doc.lines; nl++) {
+        const tree = syntaxTree(transaction.state);
+        // eslint-disable-next-line no-constant-condition
+        for (let nl = 1; false && nl <= doc.lines; nl++) {
             const line = doc.line(nl);
+            const node = tree.resolve(line.from,1);
+            if(node.parent !== null) continue;
+
             if(line.text.contains(":=")){
+
                 try {
-                    // const fnDec = engine.tryParseFunc(line.text);
-                    // if(fnDec){
-                    //     builder.add(
-                    //         line.from,
-                    //         line.to,
-                    //         Decoration.replace({
-                    //             widget: new ResultWidget(fnDec.name+" := "+engine.),
-                    //         })
-                    //     );
-                    // } else {
-                    //     const varDec = engine.tryParseVar(line.text);
-                    // }
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     const res = new PadScope(line.text).process(engine,{},{
                         evaluate: true
@@ -64,7 +58,7 @@ export const resultField = StateField.define<DecorationSet>({
                     );
                     
                 } catch(e){
-                    console.log(e);
+                    console.log("Excepyion in ResultField update:",e);
                     console.log(line.text);
                 }
             }
@@ -99,31 +93,67 @@ export const resultField = StateField.define<DecorationSet>({
 
             }
         }
-        console.timeEnd("decorations");
-        // syntaxTree(transaction.state).iterate({
-        //     enter: (node: SyntaxNodeRef)=>{
+        console.timeEnd("decorations-lines");
 
-                // const text = transaction.state.doc.sliceString(node.from, node.to)
-                //   if (node.("list")) {
-                //     // Position of the '-' or the '*'.
-                //     const listCharFrom = node.from - 2;
-                //     builder.add(
-                //       listCharFrom,
-                //       listCharFrom + 1,
-                //       Decoration.replace({
-                //         widget: new ResultWidget("42"),
-                //       })
-                //     );
-                //   }
-                // console.log({...node});
-        // console.log(node.type.name, transaction.state.doc.sliceString(node.from, node.to));
-                // console.log(text);
-                // if(node.type.name === "Document"){
-                //     // console.log(JSON.stringify(node));
-                // }
-        // },
-        // mode:IterMode.IncludeAnonymous
-        // });
+
+        syntaxTree(transaction.state).iterate({
+            enter: (node: SyntaxNodeRef)=>{
+                if(node.name === "inline-code"){
+                    const text = transaction.state.doc.sliceString(node.from, node.to)
+                    console.log(node.name, text);
+                    if(text.contains(":=")){
+
+                        try {
+                            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                            const res = new PadScope(text).process(engine,{},{
+                                evaluate: true
+                            });
+                            // const res = engine.parse(line.text.slice(0,-2))
+
+                            builder.add(
+                                node.from,
+                                node.to,
+                                Decoration.mark({class: "mathpad-declaration"})
+                            );
+
+                            // builder.add(
+                            //     node.from,
+                            //     node.to,
+                            //     Decoration.replace({
+                            //         widget: new ResultWidget(res.inputLaTeX+" = "+res.laTeX, true),
+                            //     })
+                            // );           
+                            
+                        } catch(e){
+                            console.log("Excepyion in ResultField update:",e);
+                            console.log(text);
+                        }
+                    } else if(text.endsWith("=?")) {
+                        try{
+                            const res = new PadScope(text.slice(0,-2)).process(engine,{},{
+                                evaluate: true
+                            });
+                            // const res = engine.parse(line.text.slice(0,-2))
+        
+                            builder.add(
+                                node.from,
+                                node.to,
+                                Decoration.replace({
+                                    widget: new ResultWidget(res.inputLaTeX+" = "+res.laTeX, true),
+                                })
+                            );
+        
+                        } catch(e){
+                            console.log(e);
+                            console.log(text);
+        
+                        }
+                    }
+                }
+
+        },
+        mode:IterMode.IncludeAnonymous
+        });
         // console.log("FINISH");
 
         return builder.finish();

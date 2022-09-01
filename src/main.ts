@@ -1,16 +1,20 @@
-import { resultField } from './ResultField';
-import { MathResult } from './ResultMarkdownChild';
+import { WorkspaceLeaf } from 'obsidian';
+// import { createEngine } from 'src/Math/Engine';
+import { resultField } from './Extensions/ResultField';
+// import { MathResult } from './Extensions/ResultMarkdownChild';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { MathpadView, MATHPAD_VIEW } from './Views/MathpadView';
 import { App, finishRenderMath, loadMathJax, Modal, Plugin } from 'obsidian';
 import { MathpadSettingsTab } from 'src/MathpadSettingTab';
 import { processCodeBlock } from './Views/DocView';
-
+import PadScope from './Math/PadScope';
+import postProcessor from './Extensions/PostProcessor';
+ 
 // Remember to rename these classes and interfaces!
 
 interface MathpadPluginSettings {
     mySetting: string;
-}
+}   
 
 const DEFAULT_SETTINGS: MathpadPluginSettings = {
     mySetting: 'default'
@@ -39,7 +43,7 @@ export default class MathpadPlugin extends Plugin {
         })
 
         this.registerCodeBlock();
-        // this.registerPostProcessor();
+        this.registerPostProcessor();
         this.registerEditorExtensions();
 
         // if (this.app.workspace.layoutReady) {
@@ -55,7 +59,7 @@ export default class MathpadPlugin extends Plugin {
         //     );
         // }
 
-
+        // this.app.workspace.on("active-leaf-change",console.log);
     }
 
     onunload() {
@@ -97,23 +101,14 @@ export default class MathpadPlugin extends Plugin {
         console.log("registerPostProcessor")
         // await loadMathJax();
         // await finishRenderMath();
-        this.registerMarkdownPostProcessor((element, context) => {
-            console.log("running processor...", element)
-            const lines = element.querySelectorAll("div");
-      
-            for (let index = 0; index < lines.length; index++) {
-              const line = lines.item(index);
-              const text = line.innerText.trim();
-              if(text.endsWith("=")){
-                context.addChild(new MathResult(line, "42"));
-              }
-            }
-          });
+        this.registerMarkdownPostProcessor(postProcessor);
     }
 
     async registerEditorExtensions() {
         this.registerEditorExtension(resultField);
     }
+
+   
 }
 
 

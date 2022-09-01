@@ -178,7 +178,8 @@ export default class PadScope {
             }
         } catch (e) {
             this._error = e.toString();
-            console.warn(e);
+            console.warn(e, this.input);
+            
         }
 
         
