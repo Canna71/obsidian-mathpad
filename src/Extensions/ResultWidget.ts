@@ -1,5 +1,5 @@
 // import { Input } from './../Views/Input';
-import  PadScope  from 'src/Math/PadScope';
+import PadScope from "src/Math/PadScope";
 import { EditorView, WidgetType } from "@codemirror/view";
 import { finishRenderMath, renderMath } from "obsidian";
 
@@ -11,7 +11,7 @@ export class ResultWidget extends WidgetType {
     /**
      *
      */
-    constructor(padScope: PadScope, isLatex=true) {
+    constructor(padScope: PadScope, isLatex = true) {
         super();
         this.padScope = padScope;
         this.isLatex = isLatex;
@@ -21,15 +21,18 @@ export class ResultWidget extends WidgetType {
         const div = document.createElement("div");
         // div.addClass("eh")
 
-        if(!this.isLatex){
-            div.innerText = this.padScope.input+" = "+this.padScope.expression.text();
+        if (!this.isLatex) {
+            div.innerText =
+                this.padScope.input + " = " + this.padScope.expression.text();
         } else {
-
             // determine if
 
-            const mathEl = renderMath(this.padScope.inputLaTeX+" = "+this.padScope.laTeX, true);
-            
-            
+            const mathEl = renderMath(
+                this.padScope.inputLaTeX +
+                    (this.padScope.ident ? "" : " = " + this.padScope.laTeX),
+                true
+            );
+
             div.appendChild(mathEl);
             finishRenderMath();
         }
