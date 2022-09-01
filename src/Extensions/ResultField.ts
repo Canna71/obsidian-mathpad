@@ -20,6 +20,7 @@ export const resultField = StateField.define<DecorationSet>({
         return Decoration.none;
     },
     update(oldState: DecorationSet, transaction: Transaction): DecorationSet {
+        // return oldState;
         // if (transaction.changes.empty) {
         //     return oldState;
         // }
@@ -37,6 +38,7 @@ export const resultField = StateField.define<DecorationSet>({
         const doc = transaction.state.doc;
         const engine = createEngine();
         const tree = syntaxTree(transaction.state);
+        const caretPos = transaction.state.selection.ranges[0].from;
         // eslint-disable-next-line no-constant-condition
         for (let nl = 1; false && nl <= doc.lines; nl++) {
             const line = doc.line(nl);
@@ -100,7 +102,8 @@ export const resultField = StateField.define<DecorationSet>({
             enter: (node: SyntaxNodeRef)=>{
                 if(node.name === "inline-code"){
                     const text = transaction.state.doc.sliceString(node.from, node.to)
-                    console.log(node.name, text);
+                    // console.log(node.name, text);
+                    if(node.from<caretPos && caretPos<=node.to) return;
                     if(text.contains(":=")){
 
                         try {
@@ -110,19 +113,19 @@ export const resultField = StateField.define<DecorationSet>({
                             });
                             // const res = engine.parse(line.text.slice(0,-2))
 
-                            builder.add(
-                                node.from,
-                                node.to,
-                                Decoration.mark({class: "mathpad-declaration"})
-                            );
-
                             // builder.add(
                             //     node.from,
                             //     node.to,
-                            //     Decoration.replace({
-                            //         widget: new ResultWidget(res.inputLaTeX+" = "+res.laTeX, true),
-                            //     })
-                            // );           
+                            //     Decoration.mark({class: "mathpad-declaration"})
+                            // );
+
+                            builder.add(
+                                node.from,
+                                node.to,
+                                Decoration.replace({
+                                    widget: new ResultWidget(res, true),
+                                })
+                            );           
                             
                         } catch(e){
                             console.log("Excepyion in ResultField update:",e);

@@ -22,7 +22,7 @@ export class MathResult extends MarkdownRenderChild {
                 this.padScope.inputLaTeX + " = " + this.padScope.laTeX,
                 true
             );
-            mathEl.dataset.input=this.padScope.input+"=?";
+            // mathEl.dataset.input=this.padScope.input+"=?";
             
             div.appendChild(mathEl);
             finishRenderMath();

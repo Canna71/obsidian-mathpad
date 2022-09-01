@@ -265,8 +265,10 @@ export class NerdamerWrapper implements Engine {
     };
 
     toLatex = (expr: string) => {
+        this.restoreScope();
         const e = prepare_expression(expr);
         return nerdamer.convertToLaTeX(e);
+        this.saveScope();
     };
 
     clone = () => {

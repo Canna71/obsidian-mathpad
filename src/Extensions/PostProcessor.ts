@@ -27,7 +27,7 @@ const postProcessor:MarkdownPostProcessor = debounce((element: HTMLElement, cont
                     evaluate: true,
                 }
             );
-            code.addClass("mathpad-declaration");
+            context.addChild(new MathResult(code, res));
         } else if (text.endsWith("=?")) {
             const res = new PadScope(text.slice(0, -2)).process(
                 engine,

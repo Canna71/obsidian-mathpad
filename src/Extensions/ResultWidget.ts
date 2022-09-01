@@ -19,11 +19,14 @@ export class ResultWidget extends WidgetType {
 
     toDOM(view: EditorView): HTMLElement {
         const div = document.createElement("div");
-        div.addClass("eh")
+        // div.addClass("eh")
 
         if(!this.isLatex){
-            div.innerText = this.padScope.expression.text();
+            div.innerText = this.padScope.input+" = "+this.padScope.expression.text();
         } else {
+
+            // determine if
+
             const mathEl = renderMath(this.padScope.inputLaTeX+" = "+this.padScope.laTeX, true);
             
             

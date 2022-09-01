@@ -98,24 +98,28 @@ export default class PadScope {
             this._subs = subs; 
 
             this._error = undefined;
-            this._inputLatex = engine.toLatex(this.input);
+            
 
-            const fnDec = engine.tryParseFunc(this.input)
+            const fnDec = engine.tryParseFunc(this.input);
+            this._inputLatex = engine.toLatex(this.input);
             if(fnDec){
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const {name,params,def} = fnDec;
                 this._expression = engine.parse(def);
-                this._resultTex = name + "(" + params.map(param => engine.parse(param).toTeX()).join(",") +
-                    ") := " + engine.parse(def).toTeX();
+                this._resultTex =  /*name + "(" + params.map(param => engine.parse(param).toTeX()).join(",") +
+                    ") := " + */engine.parse(def).toTeX();
                 return this;
             }
 
             const varDec = engine.tryParseVar(this.input);
+            this._inputLatex = engine.toLatex(this.input);
             if (varDec) {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const {name,def} = varDec;
 
                 this._expression = engine.parse(def);
 
-                this._resultTex = name + " := " + engine.parse(def).toTeX();
+                this._resultTex = /* name + " := " + */ engine.parse(def).toTeX();
 
                 return this;
             }
