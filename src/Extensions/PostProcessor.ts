@@ -7,11 +7,17 @@ import { MathResult } from "./ResultMarkdownChild";
 const postProcessor:MarkdownPostProcessor = debounce((element: HTMLElement, context: MarkdownPostProcessorContext) => {
     console.log("running processor...", element,context.docId);
     // todo: debounce and then use context.containerEl
-    const codes = (context as any).containerEl.querySelectorAll("p > code");
+    const codes = (context as any).containerEl.querySelectorAll("p > code, div[data-mathpad-input]"); 
     const engine = createEngine();
     for (let index = 0; index < codes.length; index++) {
         const code = codes.item(index) as HTMLElement;
-        const text = (code as any).innerText.trim();
+        let text;
+        if(code.nodeName==="CODE"){
+            text = (code as any).innerText.trim();
+        } else {
+            text = code.dataset.mathpadInput;
+        }
+        
         if (text.contains(":=")) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const res = new PadScope(text).process(

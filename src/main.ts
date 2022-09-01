@@ -1,4 +1,3 @@
-import { WorkspaceLeaf } from 'obsidian';
 // import { createEngine } from 'src/Math/Engine';
 import { resultField } from './Extensions/ResultField';
 // import { MathResult } from './Extensions/ResultMarkdownChild';

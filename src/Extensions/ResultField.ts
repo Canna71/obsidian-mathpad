@@ -74,7 +74,7 @@ export const resultField = StateField.define<DecorationSet>({
                         line.from,
                         line.to,
                         Decoration.replace({
-                            widget: new ResultWidget(res.inputLaTeX+" = "+res.laTeX, true),
+                            widget: new ResultWidget(res, true),
                         })
                     );
 
@@ -139,7 +139,7 @@ export const resultField = StateField.define<DecorationSet>({
                                 node.from,
                                 node.to,
                                 Decoration.replace({
-                                    widget: new ResultWidget(res.inputLaTeX+" = "+res.laTeX, true),
+                                    widget: new ResultWidget(res, true),
                                 })
                             );
         
