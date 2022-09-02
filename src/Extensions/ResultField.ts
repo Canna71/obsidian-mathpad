@@ -1,9 +1,10 @@
-import getSettings, { IMathpadSettings } from "src/MathpadSettings";
+import  { IMathpadSettings } from "src/MathpadSettings";
 
 import { createEngine, Engine } from "src/Math/Engine";
 import { ResultWidget } from "./ResultWidget";
 import { syntaxTree } from "@codemirror/language";
 import { IterMode, SyntaxNodeRef } from "@lezer/common";
+import { StateEffect, EditorState } from "@codemirror/state";
 
 import {
     Extension,
@@ -21,8 +22,7 @@ export const resultField = StateField.define<DecorationSet>({
         return Decoration.none;
     },
     update(oldState: DecorationSet, transaction: Transaction): DecorationSet {
-        
-        const settings = getSettings();
+        const settings = transaction.state.field(mathpadConfigField);
         const builder = new RangeSetBuilder<Decoration>();
         const doc = transaction.state.doc;
         const engine = createEngine();
@@ -71,7 +71,7 @@ export const resultField = StateField.define<DecorationSet>({
                         line.from,
                         line.to,
                         Decoration.replace({
-                            widget: new ResultWidget(res),
+                            widget: new ResultWidget(res, settings),
                         })
                     );
 
@@ -88,7 +88,7 @@ export const resultField = StateField.define<DecorationSet>({
                 }
             }
         }
-        
+
         console.time("decorations-code");
         syntaxTree(transaction.state).iterate({
             enter: (node: SyntaxNodeRef) => {
@@ -160,7 +160,7 @@ function addDecoration(
             node.to,
 
             Decoration.widget({
-                widget: new ResultWidget(res),
+                widget: new ResultWidget(res,settings),
                 block: true,
                 side: 1,
             })
@@ -171,10 +171,37 @@ function addDecoration(
                 node.from,
                 node.to,
                 Decoration.replace({
-                    widget: new ResultWidget(res),
+                    widget: new ResultWidget(res, settings),
                     block: false,
                     inclusive: true,
                 })
             );
     }
+}
+
+const setConfigEffect = StateEffect.define<IMathpadSettings>();
+
+export const mathpadConfigField = StateField.define<IMathpadSettings>({
+    create(state: EditorState): any {
+        return {
+            latex: true,
+        };
+    },
+    update(oldState: IMathpadSettings, transaction: Transaction): IMathpadSettings {
+        let newState = oldState;
+
+        for (const effect of transaction.effects) {
+            if (effect.is(setConfigEffect)) {
+                newState = { ...oldState, ...effect.value };
+            }
+        }
+
+        return newState;
+    },
+});
+
+export function setConfig(view: EditorView, config: IMathpadSettings) {
+    view.dispatch({
+        effects: [setConfigEffect.of(config)],
+    });
 }

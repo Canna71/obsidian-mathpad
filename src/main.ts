@@ -1,9 +1,10 @@
+import { MarkdownView } from 'obsidian';
 // import { createEngine } from 'src/Math/Engine';
-import { resultField } from './Extensions/ResultField';
+import { mathpadConfigField, resultField, setConfig } from './Extensions/ResultField';
 // import { MathResult } from './Extensions/ResultMarkdownChild';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { MathpadView, MATHPAD_VIEW } from './Views/MathpadView';
-import { App, finishRenderMath, loadMathJax, Modal, Plugin } from 'obsidian';
+import { App, finishRenderMath, loadMathJax, Modal, Plugin, WorkspaceLeaf } from 'obsidian';
 import { MathpadSettingsTab } from 'src/MathpadSettingTab';
 import { processCodeBlock } from './Views/DocView';
 import PadScope from './Math/PadScope';
@@ -58,7 +59,19 @@ export default class MathpadPlugin extends Plugin {
         //     );
         // }
 
-        // this.app.workspace.on("active-leaf-change",console.log);
+        this.app.workspace.on("active-leaf-change",(leaf: WorkspaceLeaf | null) =>{
+            // console.log("active-leaf-change", leaf);
+            if(leaf?.view instanceof MarkdownView){
+                console.log("dic view:", leaf);
+                // @ts-expect-error, not typed
+                const editorView = leaf.view.editor.cm as EditorView;
+                setConfig(editorView,{latex:true});
+            }
+        }, this);
+
+        this.app.workspace.on("codemirror",(cm: CodeMirror.Editor) =>{
+            console.log("codemirror", cm);
+        }, this)
     }
 
     onunload() {
@@ -104,7 +117,7 @@ export default class MathpadPlugin extends Plugin {
     }
 
     async registerEditorExtensions() {
-        this.registerEditorExtension(resultField);
+        this.registerEditorExtension([resultField, mathpadConfigField]);
     }
 
    

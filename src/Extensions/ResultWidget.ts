@@ -1,22 +1,22 @@
+import { IMathpadSettings } from './../MathpadSettings';
 // import { Input } from './../Views/Input';
 import PadScope from "src/Math/PadScope";
 import { EditorView, WidgetType } from "@codemirror/view";
 import { finishRenderMath, renderMath } from "obsidian";
-import getSettings from "src/MathpadSettings";
+// import getSettings from "src/MathpadSettings";
 
 export class ResultWidget extends WidgetType {
     // text: string;
     // isLatex: boolean;
     padScope: PadScope;
-    settings: import("/Users/gcannata/Documents/Obsidian Vault/Dev Vault/Dev/.obsidian/plugins/mathpad/src/MathpadSettings").IMathpadSettings;
-
+    settings: IMathpadSettings;
     /**
      *
      */
-    constructor(padScope: PadScope) {
+    constructor(padScope: PadScope, settings: IMathpadSettings) {
         super();
         this.padScope = padScope;
-        this.settings = getSettings();
+        this.settings = settings;
         // this.isLatex = isLatex;÷
     }
 

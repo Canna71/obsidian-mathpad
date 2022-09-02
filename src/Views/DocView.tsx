@@ -74,7 +74,7 @@ const DocView = ({ padScope }:
 
             <div className="slot-content">
 
-                <Latex latex={padScope.inputLaTeX + " " + (padScope.opts.evaluate?"≅":"=") + " " + padScope.laTeX} />
+                <Latex latex={padScope.inputLaTeX + " " + (padScope.opts.evaluate?"=":"=") + " " + padScope.laTeX} />
          
                 
                 
