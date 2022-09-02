@@ -1,3 +1,4 @@
+import { IMathpadSettings } from 'src/MathpadSettings';
 import { MarkdownView } from 'obsidian';
 // import { createEngine } from 'src/Math/Engine';
 import { mathpadConfigField, resultField, setConfig } from './Extensions/ResultField';
@@ -8,20 +9,18 @@ import { App, finishRenderMath, loadMathJax, Modal, Plugin, WorkspaceLeaf } from
 import { MathpadSettingsTab } from 'src/MathpadSettingTab';
 import { processCodeBlock } from './Views/DocView';
 import PadScope from './Math/PadScope';
-import postProcessor from './Extensions/PostProcessor';
+import { getPostPrcessor } from './Extensions/PostProcessor';
  
 // Remember to rename these classes and interfaces!
 
-interface MathpadPluginSettings {
-    mySetting: string;
-}   
 
-const DEFAULT_SETTINGS: MathpadPluginSettings = {
-    mySetting: 'default'
+
+const DEFAULT_SETTINGS: IMathpadSettings = {
+    latex: true
 }
 
 export default class MathpadPlugin extends Plugin {
-    settings: MathpadPluginSettings;
+    settings: IMathpadSettings;
 
     async onload() {
         await this.loadSettings();
@@ -62,21 +61,24 @@ export default class MathpadPlugin extends Plugin {
         this.app.workspace.on("active-leaf-change",(leaf: WorkspaceLeaf | null) =>{
             // console.log("active-leaf-change", leaf);
             if(leaf?.view instanceof MarkdownView){
-                console.log("dic view:", leaf);
                 // @ts-expect-error, not typed
                 const editorView = leaf.view.editor.cm as EditorView;
-                setConfig(editorView,{latex:true});
+                setConfig(editorView,this.settings);
             }
         }, this);
 
         this.app.workspace.on("codemirror",(cm: CodeMirror.Editor) =>{
             console.log("codemirror", cm);
         }, this)
+
+        this.app.scope
     }
 
     onunload() {
         this.app.workspace.detachLeavesOfType(MATHPAD_VIEW);
     }
+
+    
 
     async loadSettings() {
         this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
@@ -113,7 +115,7 @@ export default class MathpadPlugin extends Plugin {
         console.log("registerPostProcessor")
         // await loadMathJax();
         // await finishRenderMath();
-        this.registerMarkdownPostProcessor(postProcessor);
+        this.registerMarkdownPostProcessor(getPostPrcessor(this.settings));
     }
 
     async registerEditorExtensions() {

@@ -1,21 +1,35 @@
-import getSettings, { IMathpadSettings } from 'src/MathpadSettings';
+import { IMathpadSettings } from 'src/MathpadSettings';
 import { debounce, MarkdownPostProcessor, MarkdownPostProcessorContext } from "obsidian";
 import { createEngine, Engine } from "src/Math/Engine";
 import PadScope from "src/Math/PadScope";
 import { MathResult } from "./ResultMarkdownChild";
 
 
-const postProcessor:MarkdownPostProcessor = debounce((element: HTMLElement, context: MarkdownPostProcessorContext) => {
-    console.log("running processor...", element,context.docId);
-    // todo: debounce and then use context.containerEl
-    const codes = (context as any).containerEl.querySelectorAll("p > code, div[data-mathpad-input]"); 
-    const engine = createEngine();
-    const settings = getSettings();
-    for (let index = 0; index < codes.length; index++) {
-        const code = codes.item(index) as HTMLElement;
-        processCode(code, engine, context, settings);
-    }
-},100);
+export const getPostPrcessor = (settings: IMathpadSettings):MarkdownPostProcessor => {
+    return debounce((element: HTMLElement, context: MarkdownPostProcessorContext) => {
+        console.log("running processor...", element,context.docId);
+        // todo: debounce and then use context.containerEl
+        const codes = (context as any).containerEl.querySelectorAll("p > code, div[data-mathpad-input]"); 
+        const engine = createEngine();
+        // const settings = getSettings();
+        for (let index = 0; index < codes.length; index++) {
+            const code = codes.item(index) as HTMLElement;
+            processCode(code, engine, context, settings);
+        }
+    },100);
+}
+
+// const postProcessor:MarkdownPostProcessor = debounce((element: HTMLElement, context: MarkdownPostProcessorContext) => {
+//     console.log("running processor...", element,context.docId);
+//     // todo: debounce and then use context.containerEl
+//     const codes = (context as any).containerEl.querySelectorAll("p > code, div[data-mathpad-input]"); 
+//     const engine = createEngine();
+//     // const settings = getSettings();
+//     for (let index = 0; index < codes.length; index++) {
+//         const code = codes.item(index) as HTMLElement;
+//         processCode(code, engine, context, settings);
+//     }
+// },100);
 
 
 function processCode(code: HTMLElement, engine: Engine, context: MarkdownPostProcessorContext, settings: IMathpadSettings) {
@@ -45,4 +59,4 @@ function produceResult(text: any, engine: Engine, context: MarkdownPostProcessor
     context.addChild(new MathResult(code, res, settings.latex));
 }
 
-export default postProcessor;
+export default getPostPrcessor;
