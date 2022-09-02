@@ -71,7 +71,7 @@ export default class MathpadPlugin extends Plugin {
             console.log("codemirror", cm);
         }, this)
 
-        this.app.scope
+        //TODO: how to update settings?
     }
 
     onunload() {
