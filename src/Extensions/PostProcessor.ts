@@ -1,6 +1,6 @@
-import getSettings from 'src/MathpadSettings';
+import getSettings, { IMathpadSettings } from 'src/MathpadSettings';
 import { debounce, MarkdownPostProcessor, MarkdownPostProcessorContext } from "obsidian";
-import { createEngine } from "src/Math/Engine";
+import { createEngine, Engine } from "src/Math/Engine";
 import PadScope from "src/Math/PadScope";
 import { MathResult } from "./ResultMarkdownChild";
 
@@ -13,34 +13,36 @@ const postProcessor:MarkdownPostProcessor = debounce((element: HTMLElement, cont
     const settings = getSettings();
     for (let index = 0; index < codes.length; index++) {
         const code = codes.item(index) as HTMLElement;
-        let text;
-        if(code.nodeName==="CODE"){
-            text = (code as any).innerText.trim();
-        } else {
-            text = code.dataset.mathpadInput;
-        }
-        
-        if (text.contains(":=")) {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const res = new PadScope(text).process(
-                engine,
-                {},
-                {
-                    evaluate: true,
-                }
-            );
-            context.addChild(new MathResult(code, res, settings.latex));
-        } else if (text.endsWith("=?")) {
-            const res = new PadScope(text.slice(0, -2)).process(
-                engine,
-                {},
-                {
-                    evaluate: true,
-                }
-            );
-            context.addChild(new MathResult(code, res, settings.latex));
-        }
+        processCode(code, engine, context, settings);
     }
 },100);
+
+
+function processCode(code: HTMLElement, engine: Engine, context: MarkdownPostProcessorContext, settings: IMathpadSettings) {
+    let text;
+    if (code.nodeName === "CODE") {
+        text = (code as any).innerText.trim();
+    } else {
+        text = code.dataset.mathpadInput;
+    }
+
+    if (text.contains(":=")) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        produceResult(text, engine, context, code, settings);
+    } else if (text.endsWith("=?")) {
+        produceResult(text.slice(0, -2), engine, context, code, settings);
+    }
+}
+
+function produceResult(text: any, engine: Engine, context: MarkdownPostProcessorContext, code: HTMLElement, settings: IMathpadSettings) {
+    const res = new PadScope(text).process(
+        engine,
+        {},
+        {
+            evaluate: true,
+        }
+    );
+    context.addChild(new MathResult(code, res, settings.latex));
+}
 
 export default postProcessor;
