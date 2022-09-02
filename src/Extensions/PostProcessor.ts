@@ -1,3 +1,4 @@
+import getSettings from 'src/MathpadSettings';
 import { debounce, MarkdownPostProcessor, MarkdownPostProcessorContext } from "obsidian";
 import { createEngine } from "src/Math/Engine";
 import PadScope from "src/Math/PadScope";
@@ -9,6 +10,7 @@ const postProcessor:MarkdownPostProcessor = debounce((element: HTMLElement, cont
     // todo: debounce and then use context.containerEl
     const codes = (context as any).containerEl.querySelectorAll("p > code, div[data-mathpad-input]"); 
     const engine = createEngine();
+    const settings = getSettings();
     for (let index = 0; index < codes.length; index++) {
         const code = codes.item(index) as HTMLElement;
         let text;
@@ -27,7 +29,7 @@ const postProcessor:MarkdownPostProcessor = debounce((element: HTMLElement, cont
                     evaluate: true,
                 }
             );
-            context.addChild(new MathResult(code, res));
+            context.addChild(new MathResult(code, res, settings.latex));
         } else if (text.endsWith("=?")) {
             const res = new PadScope(text.slice(0, -2)).process(
                 engine,
@@ -36,7 +38,7 @@ const postProcessor:MarkdownPostProcessor = debounce((element: HTMLElement, cont
                     evaluate: true,
                 }
             );
-            context.addChild(new MathResult(code, res));
+            context.addChild(new MathResult(code, res, settings.latex));
         }
     }
 },100);

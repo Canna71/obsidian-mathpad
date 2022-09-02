@@ -12,12 +12,21 @@ export class MathResult extends MarkdownRenderChild {
     }
 
     onload() {
-        const div = this.containerEl.createDiv();
+        
 
         if (!this.isLatex) {
-            div.innerText =
-                this.padScope.input + " = " + this.padScope.expression.text();
+            const span = this.containerEl.createSpan()
+
+            span.innerText =
+                this.padScope.input +
+                (this.padScope.ident
+                    ? ""
+                    : " = " + this.padScope.expression?.text());
+            span.dataset.mathpadInput=this.padScope.input+"=?";  
+            this.containerEl.replaceWith(span);
+
         } else {
+            const div = this.containerEl.createDiv();
             const mathEl = renderMath(
                 this.padScope.inputLaTeX +
                     (this.padScope.ident ? "" : " = " + this.padScope.laTeX),
@@ -28,8 +37,10 @@ export class MathResult extends MarkdownRenderChild {
             
             div.appendChild(mathEl);
             finishRenderMath();
+            div.dataset.mathpadInput=this.padScope.input+"=?";
+            this.containerEl.replaceWith(div);
         }
-        div.dataset.mathpadInput=this.padScope.input+"=?";
-        this.containerEl.replaceWith(div);
+        
+        
     }
 }
