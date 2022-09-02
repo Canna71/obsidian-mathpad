@@ -3,6 +3,9 @@ import { createEngine } from "src/Math/Engine";
 import { Engine } from "./Engine";
 import { ProcessOptions } from "./PadStack";
 
+const PLOT_PARSE = /plot\((.*)\)/m;
+const PARAMS_RE = / *(\[[^\]].*\])| *([^[,]+) */gm;
+
 export default class PadScope {
     private _input: string;
     private _inputLatex: string;
@@ -96,7 +99,7 @@ export default class PadScope {
             this._error = undefined;
 
             const fnDec = engine.tryParseFunc(this.input);
-            this._inputLatex = engine.toLatex(this.input);
+            
             if (fnDec) {
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { name, params, def } = fnDec;
@@ -107,7 +110,7 @@ export default class PadScope {
                 // return this;
             } else {
                 const varDec = engine.tryParseVar(this.input);
-                this._inputLatex = engine.toLatex(this.input);
+                
                 if (varDec) {
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     const { name, def } = varDec;
@@ -165,7 +168,16 @@ export default class PadScope {
             this._error = e.toString();
             console.warn(e, this.input);
         }
- 
+        let inputText = this.input;
+        if(this.plot){
+            const m = PLOT_PARSE.exec(inputText);
+            if(m){
+                inputText = m[1];
+                this._inputLatex = "plot("+engine.toLatex(inputText)+")";
+            }
+        } else {
+            this._inputLatex = engine.toLatex(inputText);
+        }
         if (this.expression) {
             const expr = this.expression.text();
             const decl = this.input.indexOf(":=");
@@ -179,8 +191,7 @@ export default class PadScope {
         return this;
     }
 
-    plotParse = /plot\((.*)\)/m;
-    paramsRefex = / *(\[[^\]].*\])| *([^[,]+) */gm;
+
 
     getCodeBlock() {
         const lines: string[] = [];
@@ -200,13 +211,13 @@ export default class PadScope {
             // this will be easier to do when we'll have written a custom
             // plot function
             let m;
-            if ((m = this.plotParse.exec(this.input)) !== null) {
+            if ((m = PLOT_PARSE.exec(this.input)) !== null) {
                 const parList = m[1];
                 let params = [];
-                while ((m = this.paramsRefex.exec(parList)) !== null) {
+                while ((m = PARAMS_RE.exec(parList)) !== null) {
                     // This is necessary to avoid infinite loops with zero-width matches
-                    if (m.index === this.paramsRefex.lastIndex) {
-                        this.paramsRefex.lastIndex++;
+                    if (m.index === PARAMS_RE.lastIndex) {
+                        PARAMS_RE.lastIndex++;
                     }
                     // m[1] is array
                     // m[2] is not array

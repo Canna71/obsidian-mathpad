@@ -35,7 +35,7 @@ export default class MathpadPlugin extends Plugin {
             this.activateView();
         });
         // Perform additional things with the ribbon
-        ribbonIconEl.addClass('my-plugin-ribbon-class');
+        ribbonIconEl.addClass('mathpad-ribbon-class');
 
         this.app.workspace.onLayoutReady(() => {
             this.activateView();
@@ -45,18 +45,6 @@ export default class MathpadPlugin extends Plugin {
         this.registerPostProcessor();
         this.registerEditorExtensions();
 
-        // if (this.app.workspace.layoutReady) {
-        //     this.activateView();
-        // } else {
-        //     this.registerEvent(
-        //         this.app.workspace.on('something',
-        //             () => {
-        //                 console.log('something');
-        //                 this.activateView();
-        //             }
-        //         )
-        //     );
-        // }
 
         this.app.workspace.on("active-leaf-change",(leaf: WorkspaceLeaf | null) =>{
             // console.log("active-leaf-change", leaf);
