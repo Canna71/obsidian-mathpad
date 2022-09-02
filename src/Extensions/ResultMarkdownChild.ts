@@ -18,10 +18,12 @@ export class MathResult extends MarkdownRenderChild {
             div.innerText =
                 this.padScope.input + " = " + this.padScope.expression.text();
         } else {
-            const mathEl = renderMath( 
-                this.padScope.inputLaTeX + " = " + this.padScope.laTeX,
+            const mathEl = renderMath(
+                this.padScope.inputLaTeX +
+                    (this.padScope.ident ? "" : " = " + this.padScope.laTeX),
                 true
             );
+
             // mathEl.dataset.input=this.padScope.input+"=?";
             
             div.appendChild(mathEl);
