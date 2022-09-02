@@ -21,20 +21,7 @@ export const resultField = StateField.define<DecorationSet>({
         return Decoration.none;
     },
     update(oldState: DecorationSet, transaction: Transaction): DecorationSet {
-        // return oldState;
-        // if (transaction.changes.empty) {
-        //     return oldState;
-        // }
-        // let process = true;
-        // transaction.changes.iterChanges(((fromA: number, toA: number, fromB: number, toB: number, inserted: Text)=>{
-        //     console.log(fromA,toA,fromB, toB, inserted);
-
-        //     if(inserted.length && inserted.lines>1){
-        //         process = true;
-        //     }
-        // }));
-        // if(!process) return oldState;
-        console.time("decorations-lines");
+        
         const settings = getSettings();
         const builder = new RangeSetBuilder<Decoration>();
         const doc = transaction.state.doc;
@@ -101,8 +88,8 @@ export const resultField = StateField.define<DecorationSet>({
                 }
             }
         }
-        console.timeEnd("decorations-lines");
-
+        
+        console.time("decorations-code");
         syntaxTree(transaction.state).iterate({
             enter: (node: SyntaxNodeRef) => {
                 if (node.name === "inline-code") {
@@ -141,7 +128,7 @@ export const resultField = StateField.define<DecorationSet>({
             },
             mode: IterMode.IncludeAnonymous,
         });
-        // console.log("FINISH");
+        console.timeEnd("decorations-code");
 
         return builder.finish();
     },
