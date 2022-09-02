@@ -39,6 +39,6 @@ const postProcessor:MarkdownPostProcessor = debounce((element: HTMLElement, cont
             context.addChild(new MathResult(code, res));
         }
     }
-},10);
+},100);
 
 export default postProcessor;
