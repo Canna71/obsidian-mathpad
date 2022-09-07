@@ -28,6 +28,9 @@ export const resultField = StateField.define<DecorationSet>({
         const engine = createEngine();
         const tree = syntaxTree(transaction.state);
         const caretPos = transaction.state.selection.ranges[0].from;
+        if(transaction.changes.empty){
+            // return oldState;
+        }
         // eslint-disable-next-line no-constant-condition
         for (let nl = 1; false && nl <= doc.lines; nl++) {
             const line = doc.line(nl);
@@ -90,7 +93,7 @@ export const resultField = StateField.define<DecorationSet>({
         }
 
         console.time("decorations-code");
-        syntaxTree(transaction.state).iterate({
+        tree.iterate({
             enter: (node: SyntaxNodeRef) => {
                 if (node.name === "inline-code") {
                     let text = transaction.state.doc.sliceString(
@@ -100,7 +103,6 @@ export const resultField = StateField.define<DecorationSet>({
                     const caret = node.from <= caretPos && caretPos <= node.to;
                     try {
                         if (text.contains(":=")) {
-                            // eslint-disable-next-line @typescript-eslint/no-unused-vars
                             addDecoration(
                                 text,
                                 engine,
