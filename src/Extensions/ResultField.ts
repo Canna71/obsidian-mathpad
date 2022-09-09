@@ -1,4 +1,4 @@
-import  { IMathpadSettings } from "src/MathpadSettings";
+import { IMathpadSettings } from "src/MathpadSettings";
 
 import { createEngine, Engine } from "src/Math/Engine";
 import { ResultWidget } from "./ResultWidget";
@@ -22,10 +22,6 @@ export const resultField = StateField.define<DecorationSet>({
         return Decoration.none;
     },
 
-
-
-
-
     update(oldState: DecorationSet, transaction: Transaction): DecorationSet {
         const settings = transaction.state.field(mathpadConfigField);
         const builder = new RangeSetBuilder<Decoration>();
@@ -33,22 +29,30 @@ export const resultField = StateField.define<DecorationSet>({
         const engine = createEngine();
         const tree = syntaxTree(transaction.state);
         const caretPos = transaction.state.selection.ranges[0].from;
-        
-        const nodeA = tree.resolve(caretPos,1);
-        const nodeB = tree.resolve(caretPos,-1);
 
-        if(transaction.changes.empty){
-            console.log(oldState);
-            if((oldState as any).processed){
-                return oldState.map(transaction.changes);
-            }
-            (oldState as any).processed = false;
-           
+        const nodeA = tree.resolve(caretPos, 1);
+        const nodeB = tree.resolve(caretPos, -1);
+
+        if (transaction.changes.empty) {
+            console.log(transaction.state.selection.ranges[0]);
+            // if(transaction.selection){
+            //     return oldState;
+            // }
+            // if((transaction.state.selection.ranges[0].to!==0)
+            // || caretPos!==0
+            // ) {
+            //     return oldState;
+            // }
         }
-        
-        if(!transaction.changes.empty && nodeA.name !== "inline-code" && nodeB.name !== "inlide-code" ){
-            console.log(nodeA.name, nodeB.name);
-            return oldState;
+
+        console.log(nodeA.name, nodeB.name);
+        // !transaction.changes.empty &&
+        if (
+            nodeA.name !== "inline-code" &&
+            nodeB.name !== "inlide-code" &&
+            transaction.docChanged
+        ) {
+            return oldState.map(transaction.changes);
         }
         // eslint-disable-next-line no-constant-condition
         for (let nl = 1; false && nl <= doc.lines; nl++) {
@@ -181,7 +185,7 @@ function addDecoration(
             node.to,
 
             Decoration.widget({
-                widget: new ResultWidget(res,settings),
+                widget: new ResultWidget(res, settings),
                 block: true,
                 side: 1,
             })
@@ -208,7 +212,10 @@ export const mathpadConfigField = StateField.define<IMathpadSettings>({
             latex: true,
         };
     },
-    update(oldState: IMathpadSettings, transaction: Transaction): IMathpadSettings {
+    update(
+        oldState: IMathpadSettings,
+        transaction: Transaction
+    ): IMathpadSettings {
         let newState = oldState;
 
         for (const effect of transaction.effects) {
