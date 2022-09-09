@@ -21,6 +21,11 @@ export const resultField = StateField.define<DecorationSet>({
     create(state): DecorationSet {
         return Decoration.none;
     },
+
+
+
+
+
     update(oldState: DecorationSet, transaction: Transaction): DecorationSet {
         const settings = transaction.state.field(mathpadConfigField);
         const builder = new RangeSetBuilder<Decoration>();
@@ -28,8 +33,22 @@ export const resultField = StateField.define<DecorationSet>({
         const engine = createEngine();
         const tree = syntaxTree(transaction.state);
         const caretPos = transaction.state.selection.ranges[0].from;
+        
+        const nodeA = tree.resolve(caretPos,1);
+        const nodeB = tree.resolve(caretPos,-1);
+
         if(transaction.changes.empty){
-            // return oldState;
+            console.log(oldState);
+            if((oldState as any).processed){
+                return oldState.map(transaction.changes);
+            }
+            (oldState as any).processed = false;
+           
+        }
+        
+        if(!transaction.changes.empty && nodeA.name !== "inline-code" && nodeB.name !== "inlide-code" ){
+            console.log(nodeA.name, nodeB.name);
+            return oldState;
         }
         // eslint-disable-next-line no-constant-condition
         for (let nl = 1; false && nl <= doc.lines; nl++) {
