@@ -33,20 +33,8 @@ export const resultField = StateField.define<DecorationSet>({
         const nodeA = tree.resolve(caretPos, 1);
         const nodeB = tree.resolve(caretPos, -1);
 
-        if (transaction.changes.empty) {
-            console.log(transaction.state.selection.ranges[0]);
-            // if(transaction.selection){
-            //     return oldState;
-            // }
-            // if((transaction.state.selection.ranges[0].to!==0)
-            // || caretPos!==0
-            // ) {
-            //     return oldState;
-            // }
-        }
-
-        console.log(nodeA.name, nodeB.name);
-        // !transaction.changes.empty &&
+        
+        // we try to avoid recomputing if editing outside inline-code
         if (
             nodeA.name !== "inline-code" &&
             nodeB.name !== "inlide-code" &&
