@@ -72,14 +72,19 @@ export default class PadScope {
     }
 
     private _expression: nerdamer.Expression;
-    public get expression(): nerdamer.Expression {
-        return this._expression;
-    }
+    // public get expression(): nerdamer.Expression {
+    //     return this._expression;
+    // }
 
     private _resultTex = "";
 
     public get laTeX(): string {
         return this._resultTex;
+    }
+
+    private _text = "";
+    public get text(): string {
+        return this._text;
     }
 
     /**
@@ -147,16 +152,16 @@ export default class PadScope {
                         }
                     }
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    this._resultTex = (this.expression as any).toTeX(
+                    this._resultTex = (this._expression as any).toTeX(
                         opts.evaluate ? "decimal" : undefined
                     );
 
                     try {
-                        this._fn = [this.expression.buildFunction()];
+                        this._fn = [this._expression.buildFunction()];
                     } catch (ex) {
                         // probably it's a collection:
                         const tmp: ((...args: number[]) => number)[] = [];
-                        (this.expression as any).each((element: any) => {
+                        (this._expression as any).each((element: any) => {
                             tmp.push(engine.parse(element).buildFunction());
                         });
                         //
@@ -178,16 +183,17 @@ export default class PadScope {
         } else {
             this._inputLatex = engine.toLatex(inputText);
         }
-        if (this.expression) {
-            const expr = this.expression.text();
+        if (this._expression) {
+            const expr = this._expression.text(opts.evaluate?"decimals":"fractions");
             const decl = this.input.indexOf(":=");
             if (decl > 0) {
                 this._ident = this.input.substr(decl + 2) === expr;
             } else {
                 this._ident = expr === this.input;
             }
+            this._text = expr;
         }
-
+        
         return this;
     }
 

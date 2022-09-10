@@ -107,7 +107,7 @@ function addDecoration(
         engine,
         {},
         {
-            evaluate: true,
+            evaluate: settings.evaluate,
         }
     );
 
@@ -130,13 +130,13 @@ function addDecoration(
                 res
             })
         );
-    } else {
+    } else { // inline
         if (!caret)
             builder.add(
                 node.from,
                 node.to,
                 Decoration.replace({
-                    widget: new ResultWidget(res, settings, node.from),
+                    widget: new ResultWidget(res, settings, node.to-1),
                     block: false,
                     inclusive: true,
                     res

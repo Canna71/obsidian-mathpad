@@ -53,7 +53,7 @@ function produceResult(text: any, engine: Engine, context: MarkdownPostProcessor
         engine,
         {},
         {
-            evaluate: true,
+            evaluate: settings.evaluate,
         }
     );
     context.addChild(new MathResult(code, res, settings.latex));

@@ -21,7 +21,7 @@ export class MathResult extends MarkdownRenderChild {
                 this.padScope.input +
                 (this.padScope.ident
                     ? ""
-                    : " = " + this.padScope.expression?.text());
+                    : " = " + this.padScope.text);
             span.dataset.mathpadInput=this.padScope.input+"=?";  
             this.containerEl.replaceWith(span);
 

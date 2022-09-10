@@ -1,4 +1,4 @@
-import { IMathpadSettings } from 'src/MathpadSettings';
+import { DEFAULT_SETTINGS, IMathpadSettings } from 'src/MathpadSettings';
 import { MarkdownView } from 'obsidian';
 // import { createEngine } from 'src/Math/Engine';
 import { mathpadConfigField, resultField, setConfig } from './Extensions/ResultField';
@@ -15,9 +15,7 @@ import { getPostPrcessor } from './Extensions/PostProcessor';
 
 
 
-const DEFAULT_SETTINGS: IMathpadSettings = {
-    latex: true
-}
+
 
 export default class MathpadPlugin extends Plugin {
     settings: IMathpadSettings;
@@ -59,6 +57,7 @@ export default class MathpadPlugin extends Plugin {
             console.log("codemirror", cm);
         }, this)
 
+        this.addSettingTab(new MathpadSettingsTab(this.app, this));
         //TODO: how to update settings?
     }
 
@@ -82,7 +81,8 @@ export default class MathpadPlugin extends Plugin {
         await this.app.workspace.getRightLeaf(false).setViewState({
             type: MATHPAD_VIEW,
             active: true,
-        });
+        
+        },{settings:this.settings});
 
         this.app.workspace.revealLeaf(
             this.app.workspace.getLeavesOfType(MATHPAD_VIEW)[0]

@@ -32,7 +32,7 @@ export class ResultWidget extends WidgetType {
                 this.padScope.input +
                 (this.padScope.ident
                     ? ""
-                    : " = " + this.padScope.expression?.text());
+                    : " = " + this.padScope.text);
             el=span;
         } else {
             // determine if
@@ -51,7 +51,7 @@ export class ResultWidget extends WidgetType {
 
         if(isNumber(this.pos)){
             el.addEventListener("click",()=>{
-                view.dispatch({selection: {anchor: this.pos!}})
+                this.pos && view.dispatch({selection: {anchor: this.pos}})
                 console.log();
             });
         }
