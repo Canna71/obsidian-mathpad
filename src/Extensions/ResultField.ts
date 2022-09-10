@@ -25,7 +25,7 @@ export const resultField = StateField.define<DecorationSet>({
     update(oldState: DecorationSet, transaction: Transaction): DecorationSet {
         const settings = transaction.state.field(mathpadConfigField);
         const builder = new RangeSetBuilder<Decoration>();
-        const doc = transaction.state.doc;
+        // const doc = transaction.state.doc;
         const engine = createEngine();
         const tree = syntaxTree(transaction.state);
         const caretPos = transaction.state.selection.ranges[0].from;
@@ -42,66 +42,11 @@ export const resultField = StateField.define<DecorationSet>({
         ) {
             return oldState.map(transaction.changes);
         }
-        // eslint-disable-next-line no-constant-condition
-        for (let nl = 1; false && nl <= doc.lines; nl++) {
-            const line = doc.line(nl);
-            const node = tree.resolve(line.from, 1);
-            if (node.parent !== null) continue;
 
-            if (line.text.contains(":=")) {
-                try {
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    const res = new PadScope(line.text).process(
-                        engine,
-                        {},
-                        {
-                            evaluate: true,
-                        }
-                    );
-                    // const res = engine.parse(line.text.slice(0,-2))
-                    builder.add(
-                        line.from,
-                        line.to,
-                        Decoration.mark({ class: "mathpad-declaration" })
-                    );
-                } catch (e) {
-                    console.log("Excepyion in ResultField update:", e);
-                    console.log(line.text);
-                }
-            }
+        // if(!transaction.docChanged){
 
-            if (line.text.endsWith("=?")) {
-                try {
-                    const res = new PadScope(line.text.slice(0, -2)).process(
-                        engine,
-                        {},
-                        {
-                            evaluate: true,
-                        }
-                    );
-                    // const res = engine.parse(line.text.slice(0,-2))
-
-                    builder.add(
-                        line.from,
-                        line.to,
-                        Decoration.replace({
-                            widget: new ResultWidget(res, settings),
-                        })
-                    );
-
-                    // builder.add(
-                    //     line.to-1,
-                    //     line.to,
-                    //     Decoration.replace({
-                    //         widget: new ResultWidget(res.expression.text()),
-                    //     })
-                    // );
-                } catch (e) {
-                    console.log(e);
-                    console.log(line.text);
-                }
-            }
-        }
+        //     const mapDec = oldState.iter()
+        // }
 
         console.time("decorations-code");
         tree.iterate({
@@ -171,11 +116,18 @@ function addDecoration(
             caret ? node.to : node.from,
 
             node.to,
-
+            caret ? 
             Decoration.widget({
-                widget: new ResultWidget(res, settings),
+                widget: new ResultWidget(res, settings, node.to-1),
                 block: true,
                 side: 1,
+                res
+            }):
+            Decoration.replace({
+                widget: new ResultWidget(res, settings, node.to-1),
+                block: true,
+                inclusive: true,
+                res
             })
         );
     } else {
@@ -184,9 +136,10 @@ function addDecoration(
                 node.from,
                 node.to,
                 Decoration.replace({
-                    widget: new ResultWidget(res, settings),
+                    widget: new ResultWidget(res, settings, node.from),
                     block: false,
                     inclusive: true,
+                    res
                 })
             );
     }
