@@ -38,16 +38,19 @@ export const resultField = StateField.define<DecorationSet>({
         // we try to avoid recomputing if editing outside inline-code
         if (
             nodeA.name !== "inline-code" &&
-            nodeB.name !== "inlide-code" &&
+            nodeB.name !== "inline-code" &&
             transaction.docChanged
         ) {
             return oldState.map(transaction.changes);
         }
 
-        // if(!transaction.docChanged){
-
-        //     const mapDec = oldState.iter()
-        // }
+        let oldDec = undefined as any;
+        if(!transaction.docChanged){
+            // here we should simply toggle the "visibility" of the code 
+            // depending on the caret position
+            // const mapDec = oldState.iter()
+            oldDec = oldState.iter();
+        }
 
         console.time("decorations-code");
         tree.iterate({
@@ -58,16 +61,22 @@ export const resultField = StateField.define<DecorationSet>({
                         node.to
                     );
                     const caret = node.from-1 <= caretPos && caretPos <= node.to;
-
+                    let previousRes : PadScope | undefined;
+                    if(!transaction.docChanged){
+                        previousRes = oldDec?.value?.spec?.res
+                    } else {
+                        //  console.log("doc changed!")
+                    }
                     const parseResult = parse(text,settings);
                     if(parseResult.isValid) {
-                        try{
+                        try{ 
                             addDecoration(
                                 engine,
                                 parseResult,
                                 builder,
                                 caret,
-                                node
+                                node,
+                                previousRes
                             );
                         } catch (e) {
                             console.log(e);
@@ -75,6 +84,7 @@ export const resultField = StateField.define<DecorationSet>({
                         }
 
                     }
+                    oldDec && oldDec.next();
                 }
             },
             mode: IterMode.IncludeAnonymous,
@@ -94,9 +104,10 @@ function addDecoration(
     parseResult: ParseResult,
     builder: RangeSetBuilder<Decoration>,
     caret: boolean,
-    node: SyntaxNodeRef
+    node: SyntaxNodeRef,
+    previousRes?: PadScope
 ) {
-    const res = new PadScope().process(
+    const res = previousRes || new PadScope().process(
         engine,
         parseResult
     );
