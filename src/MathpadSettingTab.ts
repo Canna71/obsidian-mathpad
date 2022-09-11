@@ -35,6 +35,11 @@ export class MathpadSettingsTab extends PluginSettingTab {
             "Evaluates expressions in order to obtain a numeric result",
             "evaluate"
         );
+
+        this.createToggle(containerEl, "Plot Grid",
+            "Displays grid lines in plots",
+            "plotGrid"
+        );
 	}
 
     private createToggle(containerEl: HTMLElement, name: string, desc: string, prop: string) {

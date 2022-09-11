@@ -76,7 +76,8 @@ ${str}
 		this.root.render(
 			<React.StrictMode>
 				<MathpadContext.Provider value={{
-                    width: this.contentEl.innerWidth
+                    width: this.contentEl.innerWidth,
+                    settings: this.settings
                 }}>
 					<MathpadContainer  {...this.state} onCopySlot={this.onCopySlot} 
                     settings={this.settings}

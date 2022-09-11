@@ -11,6 +11,7 @@ export interface MathpadSettings {
     evaluateSymbolicStr: string;
     inlinePostfix: string;
     latexPostfix: string;
+    plotGrid: boolean;
 }   
 
 export const DEFAULT_SETTINGS: MathpadSettings = {
@@ -25,7 +26,8 @@ export const DEFAULT_SETTINGS: MathpadSettings = {
     evaluateNumericStr: "=~?",
     evaluateSymbolicStr: "==?",
     inlinePostfix:"-",
-    latexPostfix:"$"
+    latexPostfix:"$",
+    plotGrid: false
 }
 
 // export default function getSettings() : IMathpadSettings{

@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import functionPlot, { Chart } from 'function-plot'
 import { FunctionPlotOptions } from 'function-plot/dist/types';
 import { debounce } from 'obsidian';
+import PadScope from 'src/Math/PadScope';
+import { MathpadSettings } from 'src/MathpadSettings';
 
 //cfr: https://mauriciopoppe.github.io/function-plot/
 
@@ -47,3 +49,23 @@ export const Plot: React.FC<FunctionPlotProps> =
     }, () => false);
 
 export default Plot;
+
+export function makePlot(cxt: any, padScope: PadScope, settings: MathpadSettings, handlePlotScaleChanhed?: (opts: FunctionPlotOptions) => void): React.ReactNode {
+    return <div className="mathpad-plot">
+        <Plot options={{
+            width: cxt.width - 20,
+            grid: settings.plotGrid,
+            data: padScope.fn.map(fn => ({
+                graphType: 'polyline',
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                fn: (scope: any) => fn(scope.x)
+            })),
+            xAxis: padScope.plot.xDomain && padScope.plot.xDomain.length == 2 && { domain: padScope.plot.xDomain },
+            yAxis: padScope.plot.yDomain && padScope.plot.yDomain.length == 2 && { domain: padScope.plot.yDomain },
+            target: "", // just to make tslint happy
+            
+        }} 
+        onScaleChanged={handlePlotScaleChanhed}
+        />
+    </div>;
+}

@@ -113,7 +113,53 @@
         font-family: monospace;
     }
 }
- 
+
+.mathpad-plot {
+    .function-plot {
+        path.x.origin {
+             
+                stroke: var(--text-normal);
+            
+        }
+
+        path.y.origin {
+             
+                stroke: var(--text-normal);
+            
+        }
+
+        .x.axis {
+            stroke: var(--text-normal);
+            .tick {
+                line {
+                    stroke: var(--text-normal);
+                }
+                text {
+                    // x axis labels
+                }
+            }
+            path.domain {
+                // d attribute defines the graph bounds
+            }
+        }
+
+        .y.axis {
+            .tick {
+                line {
+                    // grid's horizontal lines
+                    stroke: var(--text-normal);
+                }
+                text {
+                    // y axis labels
+                }
+            }
+            path.domain {
+                // d attribute defines the graph bounds
+            }
+        }
+    }
+}
+
 .mathpad-declaration {
-    font-family: 'MathJax_Math'
+    font-family: "MathJax_Math";
 }

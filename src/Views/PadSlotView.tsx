@@ -3,7 +3,7 @@ import Latex from "./Latex";
 import PadSlot from "../Math/PadSlot";
 import { useCallback, useState } from "react";
 import Close from "../icons/close.svg";
-import Plot from "./Plot";
+import { makePlot } from "./Plot";
 import { MathpadContext } from "./MathpadView";
 import SlotInput from "./SlotInput";
 import Copy from "../icons/edit.svg";
@@ -96,23 +96,8 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
 
                     }
                 </div>
-                {padSlot.plot &&
-                    <div>
-                        <Plot options={{
-                            width: cxt.width - 20,
-                            data: padSlot.fn.map(fn => ({
-                                graphType: 'polyline',
-                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                fn: (scope: any) => fn(scope.x)
-                            })),
-                            xAxis: padSlot.plot.xDomain && padSlot.plot.xDomain.length==2 && {domain: padSlot.plot.xDomain},
-                            yAxis: padSlot.plot.yDomain && padSlot.plot.yDomain.length==2 && {domain: padSlot.plot.yDomain},
+                {padSlot.plot && makePlot(cxt, padSlot, cxt.settings, handlePlotScaleChanhed)
 
-                            target: "" // just to make tslint happy
-                        }} 
-                        onScaleChanged={handlePlotScaleChanhed}
-                        />
-                    </div>
                 }
 
             </div>

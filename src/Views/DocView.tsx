@@ -2,7 +2,7 @@ import * as React from "react";
 import Latex from "./Latex";
 import PadSlot from "../Math/PadSlot";
 
-import Plot from "./Plot";
+import { makePlot } from "./Plot";
 import { MathpadContext } from "./MathpadView";
 import { MarkdownPostProcessorContext } from "obsidian";
 // import { createSlot } from "src/Math/PadStack";
@@ -47,12 +47,13 @@ export function processCodeBlock(source: string, el: HTMLElement, settings: Math
     // (slot as any)._input= input;
 
     const root = createRoot(el);
-    root.render( 
+    root.render(
         <React.StrictMode>
             <MathpadContext.Provider value={{
-                width: 600
+                width: 600,
+                settings
             }}>
-                {scopes?.map((padScope,i)=><DocView key={i} padScope={padScope} />) }
+                {scopes?.map((padScope, i) => <DocView key={i} padScope={padScope} />)}
             </MathpadContext.Provider>
         </React.StrictMode>
     );
@@ -75,34 +76,21 @@ const DocView = ({ padScope }:
 
             <div className="slot-content">
 
-                <Latex latex={padScope.inputLaTeX + " " + (padScope.parseResult.evaluate?"=":"=") + " " + padScope.laTeX} />
-         
-                
-                
-
-               
-                    {
-                        padScope.error &&
-                            <div className="slot-error">{padScope.error}</div>
-                           
-                    }
-                
-                {padScope.plot &&
-                    <div>
-                        <Plot options={{
-                            width: cxt.width - 20,
-                            data: padScope.fn.map(fn=>({
-                                graphType: 'polyline',
-                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                fn: (scope: any) => fn(scope.x)
-                            })) ,
-                            xAxis: padScope.plot.xDomain && padScope.plot.xDomain.length==2 && {domain: padScope.plot.xDomain},
-                            yAxis: padScope.plot.yDomain && padScope.plot.yDomain.length==2 && {domain: padScope.plot.yDomain},
-                            target: "" // just to make tslint happy
-                        }} 
+                {
+                    padScope.error &&
+                    <div className="slot-error">{padScope.error}</div>
                     
-                        />
-                    </div>
+                }
+                {
+                    !padScope.plot &&
+                    <Latex latex={padScope.inputLaTeX + " " + (padScope.parseResult.evaluate ? "=" : "=") + " " + padScope.laTeX} />
+                }
+                  {
+                    padScope.plot &&
+                    <Latex latex={padScope.laTeX} />
+                }             
+                {padScope.plot &&
+                    makePlot(cxt, padScope, cxt.settings)
                 }
 
             </div>
@@ -111,4 +99,6 @@ const DocView = ({ padScope }:
 }
 
 export default DocView
+
+
 
