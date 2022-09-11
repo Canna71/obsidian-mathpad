@@ -67,10 +67,10 @@ export class SlotStack {
         const newStack: PadSlot[] = [];
         this.items.forEach((slot) => {
             if (slot.id == id) {
-                const pr = parse(value,settings);5
-                if(pr.isValid){
+                const pr = parse(value,settings);
+                // if(pr.isValid){
                     slot = new PadSlot(slot.id).process(newEngine,pr) as PadSlot;
-                }
+                // }
             } else {
                 slot.process(newEngine, slot.parseResult);
             }

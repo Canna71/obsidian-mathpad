@@ -50,7 +50,7 @@ export default class MathpadPlugin extends Plugin {
             name: "Show Mathpad Sidebar",
             callback: () => this.activateView(),
           });
-        
+         
 
         this.app.workspace.onLayoutReady(() => {
             if(this.settings.showAtStartup){
