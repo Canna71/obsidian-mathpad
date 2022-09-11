@@ -53,9 +53,10 @@
                     padding: 4px;
                     display: flex;
                     flex-direction: column;
+                    width: 100%;
 
                     .slot-input {
-                        
+                        overflow-x: auto;
                         line-height: 12px;
                         // padding: 4px;
                         mjx-container {

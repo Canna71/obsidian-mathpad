@@ -22,6 +22,11 @@ export class MathpadSettingsTab extends PluginSettingTab {
             "addRibbonIcon"
         );
 
+        this.createToggle(containerEl, "Show Mathpad Sidebar",
+        "Opens Mathpad sidebar at startup",
+        "showAtStartUp"
+    );
+
         this.createToggle(containerEl, "Default to LaTeX",
             "Inline expressions will be rendered in LaTeX blocks by default",
             "latex"

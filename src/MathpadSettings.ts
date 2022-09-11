@@ -1,5 +1,6 @@
 export interface MathpadSettings {
     addRibbonIcon: boolean;
+    showAtStartup: boolean;
     latex: boolean;
     evaluate: boolean;
     declarationStr: string;
@@ -14,6 +15,7 @@ export interface MathpadSettings {
 
 export const DEFAULT_SETTINGS: MathpadSettings = {
     addRibbonIcon: true,
+    showAtStartup: true,
     latex: true,
     evaluate: false,
     declarationStr: ":=",
