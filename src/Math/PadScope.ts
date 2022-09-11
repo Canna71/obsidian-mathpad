@@ -173,7 +173,11 @@ export default class PadScope {
                 this._inputLatex = "plot(" + engine.toLatex(inputText) + ")";
             }
         } else {
-            this._inputLatex = engine.toLatex(inputText);
+            try{
+                this._inputLatex = engine.toLatex(inputText);
+            } catch(ex){
+                // console.log()
+            }
         }
         if (this._expression) {
             const expr = this._expression.text(

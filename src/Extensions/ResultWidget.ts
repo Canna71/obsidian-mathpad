@@ -26,29 +26,36 @@ export class ResultWidget extends WidgetType {
     toDOM(view: EditorView): HTMLElement {
         // div.addClass("eh")
         let el: HTMLElement;
-        if (!this.parseResult.latex) {
-            const span = document.createElement("span");
-            span.innerText =
-                this.padScope.input +
-                (this.padScope.ident
-                    ? ""
-                    : " = " + this.padScope.text);
-            el=span;
+        if(this.padScope.isValid) {
+            if (!this.parseResult.latex) {
+                const span = document.createElement("span");
+                span.innerText =
+                    this.padScope.input +
+                    (this.padScope.ident
+                        ? ""
+                        : " = " + this.padScope.text);
+                el=span;
+            } else {
+                // determine if
+                const div = document.createElement("div");
+                
+                const mathEl = renderMath(
+                    this.padScope.inputLaTeX +
+                        (this.padScope.ident ? "" : " = " + this.padScope.laTeX),
+                    true
+                );
+    
+                div.appendChild(mathEl);
+                finishRenderMath();
+                el = div;
+            }
+    
         } else {
-            // determine if
             const div = document.createElement("div");
-            
-            const mathEl = renderMath(
-                this.padScope.inputLaTeX +
-                    (this.padScope.ident ? "" : " = " + this.padScope.laTeX),
-                true
-            );
-
-            div.appendChild(mathEl);
-            finishRenderMath();
+            div.setText(this.padScope.error||"");
             el = div;
         }
-
+        
         if(isNumber(this.pos)){
             el.addEventListener("click",()=>{
                 this.pos && view.dispatch({selection: {anchor: this.pos}})

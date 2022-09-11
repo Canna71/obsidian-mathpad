@@ -54,7 +54,9 @@ function produceResult(parseResult: ParseResult, engine: Engine, context: Markdo
         engine,
         parseResult
     );
-    context.addChild(new MathResult(code, res, parseResult.latex));
+    if(res.isValid){
+        context.addChild(new MathResult(code, res, parseResult.latex));
+    }
 }
 
 export default getPostPrcessor;

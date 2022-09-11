@@ -46,7 +46,7 @@ export class SlotStack {
             input,
             settings,
             opts
-        );
+        ); 
         // const pad = new PadSlot(nextId(stack), input).process(scope, opts);
         // this.stack = [...this.stack, slot];
         const newEngine = this.engine.clone();
