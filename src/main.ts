@@ -94,7 +94,7 @@ export default class MathpadPlugin extends Plugin {
         await finishRenderMath();
         this.registerMarkdownCodeBlockProcessor("mathpad", (source, el, ctx) => {
 
-            processCodeBlock(source,el,ctx);
+            processCodeBlock(source,el, this.settings, ctx);
         });
     }
 

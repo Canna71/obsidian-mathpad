@@ -51,7 +51,7 @@ export class MathpadView extends ItemView {
 
 
     onCopySlot(slot:PadSlot){
-        const str = slot.getCodeBlock();
+        const str = slot.getCodeBlock(this.settings);
         const leaf = this.app.workspace.getMostRecentLeaf();
         if(!leaf) return;
         if (leaf.view instanceof MarkdownView) {

@@ -76,7 +76,7 @@ export const MathpadContainer = ({onCopySlot, settings}:
     const processInput = useCallback(() => {
         setState(state => ({
             ...state,
-            stack: state.stack?.addSlot(state.input, {}, { evaluate: state.options.evaluate }),
+            stack: state.stack?.addSlot(state.input, settings, { evaluate: state.options.evaluate }),
             input: ""
         }))
     }, []);
@@ -109,7 +109,7 @@ export const MathpadContainer = ({onCopySlot, settings}:
 
             setState(state => ({
                 ...state,
-                stack: state.stack?.updateSlot(changedId, value, {}, { evaluate: state.options.evaluate })
+                stack: state.stack?.updateSlot(changedId, value, settings, { evaluate: state.options.evaluate })
             }))
         }, []);
 

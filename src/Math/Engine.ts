@@ -14,10 +14,10 @@ require("nerdamer/Solve");
 const MY_VALIDATION_REGEX =
     /^[a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*$/i;
 
-const funRegex =
-    /^([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\(([a-z_,\s]*)\)\s*:=\s*(.+)$/i;
-const varRegex =
-    /^([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\s*:=\s*(.+)$/i;
+// const funRegex =
+//     /^([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\(([a-z_,\s]*)\)\s*:=\s*(.+)$/i;
+// const varRegex =
+//     /^([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\s*:=\s*(.+)$/i;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (nerdamer as any).set("VALIDATION_REGEX", MY_VALIDATION_REGEX);
@@ -134,20 +134,20 @@ export interface Engine {
         };
     };
 
-    tryParseFunc: (text: string) =>
-        | {
-              name: string;
-              params: string[];
-              def: string;
-          }
-        | undefined;
+    // tryParseFunc: (text: string) =>
+    //     | {
+    //           name: string;
+    //           params: string[];
+    //           def: string;
+    //       }
+    //     | undefined;
 
-    tryParseVar: (text: string) =>
-        | {
-              name: string;
-              def: string;
-          }
-        | undefined;
+    // tryParseVar: (text: string) =>
+    //     | {
+    //           name: string;
+    //           def: string;
+    //       }
+    //     | undefined;
 
     toLatex: (expr: string) => string;
     clone: () => Engine;
@@ -240,29 +240,29 @@ export class NerdamerWrapper implements Engine {
         Object.assign(nerdamer.getCore().PARSER.functions, this.scope.funcs);
     }
 
-    tryParseFunc = (text: string) => {
-        const fnDec = funRegex.exec(text);
-        if (fnDec) {
-            const name = fnDec[1];
-            const params = fnDec[2].split(",").map((p) => p.trim());
-            const def = fnDec[3];
+    // tryParseFunc = (text: string) => {
+    //     const fnDec = funRegex.exec(text);
+    //     if (fnDec) {
+    //         const name = fnDec[1];
+    //         const params = fnDec[2].split(",").map((p) => p.trim());
+    //         const def = fnDec[3];
 
-            this.setFunction(name, params, def);
+    //         this.setFunction(name, params, def);
 
-            return { name, params, def };
-        }
-    };
+    //         return { name, params, def };
+    //     }
+    // };
 
-    tryParseVar = (text: string) => {
-        const varDec = varRegex.exec(text);
-        if (varDec) {
-            const name = varDec[1];
-            const def = varDec[2];
-            this.setVar(name, def);
+    // tryParseVar = (text: string) => {
+    //     const varDec = varRegex.exec(text);
+    //     if (varDec) {
+    //         const name = varDec[1];
+    //         const def = varDec[2];
+    //         this.setVar(name, def);
 
-            return { name, def };
-        }
-    };
+    //         return { name, def };
+    //     }
+    // };
 
     toLatex = (expr: string) => {
         this.restoreScope();

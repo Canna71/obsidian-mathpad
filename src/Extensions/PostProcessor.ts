@@ -1,8 +1,10 @@
+import { ParseResult } from './../Math/Parsing';
 import { IMathpadSettings } from 'src/MathpadSettings';
 import { debounce, MarkdownPostProcessor, MarkdownPostProcessorContext } from "obsidian";
 import { createEngine, Engine } from "src/Math/Engine";
 import PadScope from "src/Math/PadScope";
 import { MathResult } from "./ResultMarkdownChild";
+import parse from 'src/Math/Parsing';
 
 
 export const getPostPrcessor = (settings: IMathpadSettings):MarkdownPostProcessor => {
@@ -40,23 +42,19 @@ function processCode(code: HTMLElement, engine: Engine, context: MarkdownPostPro
         text = code.dataset.mathpadInput;
     }
 
-    if (text.contains(":=")) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        produceResult(text, engine, context, code, settings);
-    } else if (text.endsWith("=?")) {
-        produceResult(text.slice(0, -2), engine, context, code, settings);
+    const pr = parse(text, settings);
+    if(pr.isValid){
+        produceResult(pr, engine, context, code);
     }
+
 }
 
-function produceResult(text: any, engine: Engine, context: MarkdownPostProcessorContext, code: HTMLElement, settings: IMathpadSettings) {
-    const res = new PadScope(text).process(
+function produceResult(parseResult: ParseResult, engine: Engine, context: MarkdownPostProcessorContext, code: HTMLElement) {
+    const res = new PadScope().process(
         engine,
-        {},
-        {
-            evaluate: settings.evaluate,
-        }
+        parseResult
     );
-    context.addChild(new MathResult(code, res, settings.latex));
+    context.addChild(new MathResult(code, res, parseResult.latex));
 }
 
 export default getPostPrcessor;

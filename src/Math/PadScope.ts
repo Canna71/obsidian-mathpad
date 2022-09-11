@@ -1,7 +1,9 @@
+import { IMathpadSettings } from 'src/MathpadSettings';
+import parse, { ParseResult } from "./Parsing";
 import { createEngine } from "src/Math/Engine";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Engine } from "./Engine";
-import { ProcessOptions } from "./PadStack";
+// import { ProcessOptions } from "./PadStack";
 
 const PLOT_PARSE = /plot\((.*)\)/m;
 const PARAMS_RE = / *(\[[^\]].*\])| *([^[,]+) */gm;
@@ -18,10 +20,15 @@ export default class PadScope {
         funcs: { [x: string]: any };
     };
 
-    private _opts: ProcessOptions;
+    // private _opts: ProcessOptions;
 
     private _subs: any;
     private _ident: boolean;
+    private _parseResult: ParseResult;
+    public get parseResult(): ParseResult {
+        return this._parseResult;
+    }
+
     public get ident(): boolean {
         return this._ident;
     }
@@ -30,9 +37,6 @@ export default class PadScope {
         return this._subs;
     }
 
-    public get opts(): ProcessOptions {
-        return this._opts;
-    }
 
     public get scope(): {
         vars: { [x: string]: string };
@@ -87,104 +91,94 @@ export default class PadScope {
         return this._text;
     }
 
+    public get isValid(): boolean {
+        return !!this._expression;
+    }
+
+    public get value(): any {
+        return this._expression.valueOf();
+    }
+
     /**
      *
      */
-    constructor(input: string) {
-        this._input = input;
-    }
+    constructor() {}
 
-    process(engine: Engine, subs = {}, opts: ProcessOptions): PadScope {
+    process(engine: Engine, parseResult: ParseResult): PadScope {
         try {
             // save processing options and scope
+            this._input = parseResult.text;
             this._scope = engine.getScope();
-            this._opts = opts;
-            this._subs = subs;
+            this._parseResult = parseResult;
+            // this._opts = opts;
+            // this._subs = subs;
 
             this._error = undefined;
 
-            const fnDec = engine.tryParseFunc(this.input);
-            
-            if (fnDec) {
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                const { name, params, def } = fnDec;
-                this._expression = engine.parse(def);
-                this._resultTex =
-                    /*name + "(" + params.map(param => engine.parse(param).toTeX()).join(",") +
-                    ") := " + */ engine.parse(def).toTeX();
+            if (parseResult.isFnDec) {
+                engine.setFunction(
+                    parseResult.name,
+                    parseResult.params,
+                    parseResult.def
+                );
+                this._expression = engine.parse(parseResult.def);
+                this._resultTex = engine.parse(parseResult.def).toTeX();
+            } else if (parseResult.isVarDec) {
+                engine.setVar(parseResult.name, parseResult.def);
+                this._expression = engine.parse(parseResult.def);
+                this._resultTex = engine.parse(parseResult.def).toTeX();
+
                 // return this;
             } else {
-                const varDec = engine.tryParseVar(this.input);
-                
-                if (varDec) {
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    const { name, def } = varDec;
+                this._expression = engine.parse(parseResult.text);
+                if ((this._expression as any).symbol?._plotme) {
+                    this._plot = (this._expression as any).symbol?._plotme;
+                }
 
-                    this._expression = engine.parse(def);
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                if (!(this._expression as any).isFraction()) {
+                    // this will return the symbol itself, not the Expression
+                    // this._expression = (this._expression as any).simplify();
+                    if (parseResult.evaluate) {
+                        this._expression = this._expression.evaluate();
+                    }
+                }
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                this._resultTex = (this._expression as any).toTeX(
+                    parseResult.evaluate ? "decimal" : undefined
+                );
 
-                    this._resultTex = /* name + " := " + */ engine
-                        .parse(def)
-                        .toTeX();
-
-                    // return this;
-                } else {
-                    this._expression = engine.parse(this.input, subs);
-                    if ((this._expression as any).symbol?._plotme) {
-                        this._plot = (this._expression as any).symbol?._plotme;
-                    }
-                    // A martix will trow an exception if we try to simplify it
-                    if (opts.simplify) {
-                        try {
-                            this._expression = engine.parse(
-                                `simplify(${this.input})`,
-                                subs
-                            );
-                        } catch (e) {
-                            //
-                        }
-                    }
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    if (!(this._expression as any).isFraction()) {
-                        // this will return the symbol itself, not the Expression
-                        // this._expression = (this._expression as any).simplify();
-                        if (opts.evaluate) {
-                            this._expression = this._expression.evaluate();
-                        }
-                    }
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    this._resultTex = (this._expression as any).toTeX(
-                        opts.evaluate ? "decimal" : undefined
-                    );
-
-                    try {
-                        this._fn = [this._expression.buildFunction()];
-                    } catch (ex) {
-                        // probably it's a collection:
-                        const tmp: ((...args: number[]) => number)[] = [];
-                        (this._expression as any).each((element: any) => {
-                            tmp.push(engine.parse(element).buildFunction());
-                        });
-                        //
-                        this._fn = tmp;
-                    }
+                try {
+                    this._fn = [this._expression.buildFunction()];
+                } catch (ex) {
+                    // probably it's a collection:
+                    const tmp: ((...args: number[]) => number)[] = [];
+                    (this._expression as any).each((element: any) => {
+                        tmp.push(engine.parse(element).buildFunction());
+                    });
+                    //
+                    this._fn = tmp;
                 }
             }
         } catch (e) {
             this._error = e.toString();
             console.warn(e, this.input);
         }
+
         let inputText = this.input;
-        if(this.plot){
+        if (this.plot) {
             const m = PLOT_PARSE.exec(inputText);
-            if(m){
+            if (m) {
                 inputText = m[1];
-                this._inputLatex = "plot("+engine.toLatex(inputText)+")";
+                this._inputLatex = "plot(" + engine.toLatex(inputText) + ")";
             }
         } else {
             this._inputLatex = engine.toLatex(inputText);
         }
         if (this._expression) {
-            const expr = this._expression.text(opts.evaluate?"decimals":"fractions");
+            const expr = this._expression.text(
+                parseResult.evaluate ? "decimals" : "fractions"
+            );
             const decl = this.input.indexOf(":=");
             if (decl > 0) {
                 this._ident = this.input.substr(decl + 2) === expr;
@@ -193,21 +187,19 @@ export default class PadScope {
             }
             this._text = expr;
         }
-        
+
         return this;
     }
 
-
-
-    getCodeBlock() {
+    getCodeBlock(settings: IMathpadSettings) {
         const lines: string[] = [];
         for (const v in this.scope.vars) {
-            lines.push(`${v}:=${this.scope.vars[v]}`);
+            lines.push(`${v}${settings.declarationStr}${this.scope.vars[v]}`);
         }
         for (const f in this.scope.funcs) {
             // console.log(f,this.scope.funcs[f])
             const def = this.scope.funcs[f][2];
-            lines.push(`${def.name}(${def.params.join(",")}):=${def.body}`);
+            lines.push(`${def.name}(${def.params.join(",")})${settings.declarationStr}${def.body}`);
         }
         let str = this.input;
 
@@ -234,35 +226,36 @@ export default class PadScope {
                 } else {
                     params = params.filter((p) => !p.startsWith("["));
                 }
-                params.push(`[${this.plot.xDomain?.toString()}]`);
-                params.push(`[${this.plot.yDomain?.toString()}]`);
+                this.plot.xDomain && params.push(`[${this.plot.xDomain?.toString()}]`);
+
+                this.plot.xDomain && this.plot.yDomain && params.push(`[${this.plot.yDomain?.toString()}]`);
 
                 str = `plot(${params.join(", ")})`;
             }
         }
-        lines.push(`${this.opts.evaluate ? "=" : "~"}${str}`);
+
+        
+
+        lines.push(`${str}${this.parseResult.evaluate ? settings.evaluateNumericStr : settings.evaluateSymbolicStr}`);
         return lines.join("\n");
     }
 
-    static parseCodeBlock(source: string): PadScope[] | undefined {
+    static parseCodeBlock(source: string, settings: IMathpadSettings): PadScope[] | undefined {
         const lines = source.split("\n");
         const engine = createEngine();
         const ret: PadScope[] = [];
         lines.forEach((line) => {
-            if (line.startsWith("=") || line.startsWith("~")) {
-                // process the input
-                ret.push(
-                    new PadScope(line.substring(1)).process(
-                        engine,
-                        {},
-                        {
-                            evaluate: line.startsWith("~"),
-                        }
-                    )
-                );
-            } else {
-                new PadScope(line).process(engine, {}, {});
+
+            const pr = parse(line, settings);
+
+            if(pr.isValid){
+                if(pr.isEval){
+                    ret.push(new PadScope().process(engine,pr))
+                } else {
+                    new PadScope().process(engine,pr)
+                }
             }
+            
         });
 
         return ret;

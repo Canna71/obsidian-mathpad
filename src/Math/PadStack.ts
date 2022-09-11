@@ -1,7 +1,9 @@
+import { IMathpadSettings } from 'src/MathpadSettings';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { createEngine, Engine } from "./Engine";
 import PadSlot from "./PadSlot";
+import parse from './Parsing';
 
 export interface ProcessOptions {
     evaluate?: boolean;
@@ -31,7 +33,7 @@ export class SlotStack {
 
     addSlot(
         input: string,
-        scope = {},
+        settings: IMathpadSettings,
         options: ProcessOptions = {
             evaluate: false,
             simplify: false,
@@ -42,36 +44,40 @@ export class SlotStack {
             this.engine,
             this.nextId(),
             input,
-            scope,
+            settings,
             opts
         );
         // const pad = new PadSlot(nextId(stack), input).process(scope, opts);
         // this.stack = [...this.stack, slot];
         const newEngine = this.engine.clone();
 
-        if (!slot.error && slot.expression) {
+        if (!slot.error && slot.isValid) {
             newEngine.setVar(
                 SlotStack.getSlotVariableName(slot.id),
-                slot.expression.valueOf()
+                slot.value 
             );
         }
 
         return new SlotStack(newEngine, [...this.items, slot]);
     }
 
-    updateSlot(id: number, value: string, scope = {}, options: ProcessOptions) {
+    updateSlot(id: number, value: string, settings:IMathpadSettings, options: ProcessOptions) {
         // resetContext();
         const newEngine = createEngine();
         const newStack: PadSlot[] = [];
         this.items.forEach((slot) => {
             if (slot.id == id) {
-                slot = new PadSlot(slot.id, value);
+                const pr = parse(value,settings);5
+                if(pr.isValid){
+                    slot = new PadSlot(slot.id).process(newEngine,pr) as PadSlot;
+                }
+            } else {
+                slot.process(newEngine, slot.parseResult);
             }
-            slot.process(newEngine, scope, options);
-            if (!slot.error && slot.expression) {
+            if (!slot.error && slot.isValid) {
                 newEngine.setVar(
                     SlotStack.getSlotVariableName(slot.id),
-                    slot.expression.valueOf()
+                    slot.value
                 );
             }
             newStack.push(slot);
@@ -85,11 +91,11 @@ export class SlotStack {
         const newStack: PadSlot[] = [];
         this.items.forEach((slot) => {
             if (slot.id !== id) {
-                slot.process(newEngine, scope, options);
-                if (!slot.error && slot.expression) {
+                slot.process(newEngine, slot.parseResult);
+                if (!slot.error && slot.isValid) {
                     newEngine.setVar(
                         SlotStack.getSlotVariableName(slot.id),
-                        slot.expression.valueOf()
+                        slot.value
                     );
                 }
 

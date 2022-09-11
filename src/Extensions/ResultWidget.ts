@@ -1,4 +1,4 @@
-import { IMathpadSettings } from './../MathpadSettings';
+import { ParseResult } from './../Math/Parsing';
 // import { Input } from './../Views/Input';
 import PadScope from "src/Math/PadScope";
 import { EditorView, WidgetType } from "@codemirror/view";
@@ -10,15 +10,15 @@ export class ResultWidget extends WidgetType {
     // text: string;
     // isLatex: boolean;
     padScope: PadScope;
-    settings: IMathpadSettings;
+    parseResult: ParseResult;
     pos?: number;
     /**
      *
      */
-    constructor(padScope: PadScope, settings: IMathpadSettings, pos?: number) {
+    constructor(padScope: PadScope, parseResult: ParseResult, pos?: number) {
         super();
         this.padScope = padScope;
-        this.settings = settings;
+        this.parseResult = parseResult;
         this.pos = pos;
         // this.isLatex = isLatex;÷
     }
@@ -26,7 +26,7 @@ export class ResultWidget extends WidgetType {
     toDOM(view: EditorView): HTMLElement {
         // div.addClass("eh")
         let el: HTMLElement;
-        if (!this.settings.latex) {
+        if (!this.parseResult.latex) {
             const span = document.createElement("span");
             span.innerText =
                 this.padScope.input +

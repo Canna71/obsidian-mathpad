@@ -8,6 +8,7 @@ import { MarkdownPostProcessorContext } from "obsidian";
 // import { createSlot } from "src/Math/PadStack";
 import { createRoot } from "react-dom/client";
 import PadScope from "src/Math/PadScope";
+import { IMathpadSettings } from "src/MathpadSettings";
 // import { createEngine } from "src/Math/Engine";
 
 /* const codeBlockRegex = /^\s*(\w*):\s?(.*)\s*$/gm;
@@ -30,14 +31,14 @@ function parseSource(source: string){
     return ob;
 } */
 
-export function processCodeBlock(source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) {
+export function processCodeBlock(source: string, el: HTMLElement, settings: IMathpadSettings, ctx: MarkdownPostProcessorContext) {
 
     // const {input/*, expr*/} = parseSource(source);
 
     // const slot = createSlot(1,expr,{});
     // TODO: take processing options from source
     // const slot = new PadSlot(1, expr).process(createEngine(),{});
-    const scopes = PadSlot.parseCodeBlock(source);
+    const scopes = PadSlot.parseCodeBlock(source, settings);
 
 
     //TODO: determine what to store in the codeblock
@@ -74,7 +75,7 @@ const DocView = ({ padScope }:
 
             <div className="slot-content">
 
-                <Latex latex={padScope.inputLaTeX + " " + (padScope.opts.evaluate?"=":"=") + " " + padScope.laTeX} />
+                <Latex latex={padScope.inputLaTeX + " " + (padScope.parseResult.evaluate?"=":"=") + " " + padScope.laTeX} />
          
                 
                 

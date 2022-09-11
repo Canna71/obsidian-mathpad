@@ -1,3 +1,4 @@
+import parse, { ParseResult } from './../Math/Parsing';
 import { IMathpadSettings } from "src/MathpadSettings";
 
 import { createEngine, Engine } from "src/Math/Engine";
@@ -52,35 +53,27 @@ export const resultField = StateField.define<DecorationSet>({
         tree.iterate({
             enter: (node: SyntaxNodeRef) => {
                 if (node.name === "inline-code") {
-                    let text = transaction.state.doc.sliceString(
+                    const text = transaction.state.doc.sliceString(
                         node.from,
                         node.to
                     );
                     const caret = node.from-1 <= caretPos && caretPos <= node.to;
-                    try {
-                        if (text.contains(":=")) {
+
+                    const parseResult = parse(text,settings);
+                    if(parseResult.isValid) {
+                        try{
                             addDecoration(
-                                text,
                                 engine,
-                                settings,
+                                parseResult,
                                 builder,
                                 caret,
                                 node
                             );
-                        } else if (text.endsWith("=?")) {
-                            text = text.slice(0, -2);
-                            addDecoration(
-                                text,
-                                engine,
-                                settings,
-                                builder,
-                                caret,
-                                node
-                            );
+                        } catch (e) {
+                            console.log(e);
+                            console.log(text);
                         }
-                    } catch (e) {
-                        console.log(e);
-                        console.log(text);
+
                     }
                 }
             },
@@ -96,35 +89,32 @@ export const resultField = StateField.define<DecorationSet>({
 });
 
 function addDecoration(
-    text: string,
+   
     engine: Engine,
-    settings: IMathpadSettings,
+    parseResult: ParseResult,
     builder: RangeSetBuilder<Decoration>,
     caret: boolean,
     node: SyntaxNodeRef
 ) {
-    const res = new PadScope(text).process(
+    const res = new PadScope().process(
         engine,
-        {},
-        {
-            evaluate: settings.evaluate,
-        }
+        parseResult
     );
 
-    if (settings.latex) {
+    if (parseResult.latex) {
         builder.add(
             caret ? node.to : node.from,
 
             node.to,
             caret ? 
             Decoration.widget({
-                widget: new ResultWidget(res, settings, node.from),
+                widget: new ResultWidget(res, parseResult, node.from),
                 block: true,
                 side: 1,
                 res
             }):
             Decoration.replace({
-                widget: new ResultWidget(res, settings, node.from),
+                widget: new ResultWidget(res, parseResult, node.from),
                 block: true,
                 inclusive: true,
                 res
@@ -136,7 +126,7 @@ function addDecoration(
                 node.from,
                 node.to,
                 Decoration.replace({
-                    widget: new ResultWidget(res, settings, node.from),
+                    widget: new ResultWidget(res, parseResult, node.from),
                     block: false,
                     inclusive: true,
                     res
