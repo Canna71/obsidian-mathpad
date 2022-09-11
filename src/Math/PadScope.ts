@@ -179,9 +179,10 @@ export default class PadScope {
             const expr = this._expression.text(
                 parseResult.evaluate ? "decimals" : "fractions"
             );
-            const decl = this.input.indexOf(":=");
-            if (decl > 0) {
-                this._ident = this.input.substr(decl + 2) === expr;
+
+            // const decl = this.input.indexOf(":=");
+            if (parseResult.isFnDec || parseResult.isVarDec) {
+                this._ident = parseResult.def === expr;
             } else {
                 this._ident = expr === this.input;
             }
