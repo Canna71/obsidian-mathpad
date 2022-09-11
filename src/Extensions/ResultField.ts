@@ -56,7 +56,7 @@ export const resultField = StateField.define<DecorationSet>({
                         node.from,
                         node.to
                     );
-                    const caret = node.from <= caretPos && caretPos <= node.to;
+                    const caret = node.from-1 <= caretPos && caretPos <= node.to;
                     try {
                         if (text.contains(":=")) {
                             addDecoration(
@@ -118,13 +118,13 @@ function addDecoration(
             node.to,
             caret ? 
             Decoration.widget({
-                widget: new ResultWidget(res, settings, node.to-1),
+                widget: new ResultWidget(res, settings, node.from),
                 block: true,
                 side: 1,
                 res
             }):
             Decoration.replace({
-                widget: new ResultWidget(res, settings, node.to-1),
+                widget: new ResultWidget(res, settings, node.from),
                 block: true,
                 inclusive: true,
                 res
@@ -136,7 +136,7 @@ function addDecoration(
                 node.from,
                 node.to,
                 Decoration.replace({
-                    widget: new ResultWidget(res, settings, node.to-1),
+                    widget: new ResultWidget(res, settings, node.from),
                     block: false,
                     inclusive: true,
                     res
