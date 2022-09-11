@@ -1,4 +1,4 @@
-import { IMathpadSettings } from 'src/MathpadSettings';
+import { MathpadSettings } from 'src/MathpadSettings';
 import parse, { ParseResult } from "./Parsing";
 import { createEngine } from "src/Math/Engine";
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -192,7 +192,7 @@ export default class PadScope {
         return this;
     }
 
-    getCodeBlock(settings: IMathpadSettings) {
+    getCodeBlock(settings: MathpadSettings) {
         const lines: string[] = [];
         for (const v in this.scope.vars) {
             lines.push(`${v}${settings.declarationStr}${this.scope.vars[v]}`);
@@ -241,7 +241,7 @@ export default class PadScope {
         return lines.join("\n");
     }
 
-    static parseCodeBlock(source: string, settings: IMathpadSettings): PadScope[] | undefined {
+    static parseCodeBlock(source: string, settings: MathpadSettings): PadScope[] | undefined {
         const lines = source.split("\n");
         const engine = createEngine();
         const ret: PadScope[] = [];

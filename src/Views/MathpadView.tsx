@@ -8,13 +8,13 @@ import { MathpadContainer } from "./MathpadContainer";
 
 import { loadMathJax } from "obsidian";
 import PadSlot from "src/Math/PadSlot";
-import { IMathpadSettings } from "src/MathpadSettings";
+import { MathpadSettings } from "src/MathpadSettings";
 export const MATHPAD_VIEW = "mathpad-view";
 
 export const MathpadContext = React.createContext<any>({});
 
 export class MathpadView extends ItemView {
-    settings: IMathpadSettings;
+    settings: MathpadSettings;
 	root: Root;
 	state= {
 	
@@ -24,7 +24,7 @@ export class MathpadView extends ItemView {
 
 	constructor(leaf: WorkspaceLeaf) {
 		super(leaf);
-        this.settings = (this.app as any).plugins.plugins["obsidian-mathpad"].settings as IMathpadSettings;
+        this.settings = (this.app as any).plugins.plugins["obsidian-mathpad"].settings as MathpadSettings;
 		this.state = {
 			
 		};

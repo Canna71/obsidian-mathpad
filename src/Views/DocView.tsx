@@ -8,7 +8,7 @@ import { MarkdownPostProcessorContext } from "obsidian";
 // import { createSlot } from "src/Math/PadStack";
 import { createRoot } from "react-dom/client";
 import PadScope from "src/Math/PadScope";
-import { IMathpadSettings } from "src/MathpadSettings";
+import { MathpadSettings } from "src/MathpadSettings";
 // import { createEngine } from "src/Math/Engine";
 
 /* const codeBlockRegex = /^\s*(\w*):\s?(.*)\s*$/gm;
@@ -31,7 +31,7 @@ function parseSource(source: string){
     return ob;
 } */
 
-export function processCodeBlock(source: string, el: HTMLElement, settings: IMathpadSettings, ctx: MarkdownPostProcessorContext) {
+export function processCodeBlock(source: string, el: HTMLElement, settings: MathpadSettings, ctx: MarkdownPostProcessorContext) {
 
     // const {input/*, expr*/} = parseSource(source);
 

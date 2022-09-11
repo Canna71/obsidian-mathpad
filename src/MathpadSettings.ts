@@ -1,4 +1,4 @@
-export interface IMathpadSettings {
+export interface MathpadSettings {
     addRibbonIcon: boolean;
     latex: boolean;
     evaluate: boolean;
@@ -12,7 +12,7 @@ export interface IMathpadSettings {
     latexPostfix: string;
 }   
 
-export const DEFAULT_SETTINGS: IMathpadSettings = {
+export const DEFAULT_SETTINGS: MathpadSettings = {
     addRibbonIcon: true,
     latex: true,
     evaluate: false,

@@ -14,7 +14,7 @@ import { useCallback, useEffect, useState } from "react";
 import PadSlotView from "./PadSlotView";
 import PadSlot from "src/Math/PadSlot";
 import {  getNewStack, SlotStack,  } from "src/Math/PadStack";
-import { IMathpadSettings } from 'src/MathpadSettings';
+import { MathpadSettings } from 'src/MathpadSettings';
 // import { registerHelper } from "codemirror";
 // import codemirror from "codemirror";
 // window.codemirror = codemirror;
@@ -49,7 +49,7 @@ const DEFAULTSTATE: MathPadState = {
 
 
 export const MathpadContainer = ({onCopySlot, settings}:
-    {onCopySlot:(slot:PadSlot)=>void, settings: IMathpadSettings}
+    {onCopySlot:(slot:PadSlot)=>void, settings: MathpadSettings}
     
     ) => {
 

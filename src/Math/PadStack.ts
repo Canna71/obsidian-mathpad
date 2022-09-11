@@ -1,4 +1,4 @@
-import { IMathpadSettings } from 'src/MathpadSettings';
+import { MathpadSettings } from 'src/MathpadSettings';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { createEngine, Engine } from "./Engine";
@@ -33,7 +33,7 @@ export class SlotStack {
 
     addSlot(
         input: string,
-        settings: IMathpadSettings,
+        settings: MathpadSettings,
         options: ProcessOptions = {
             evaluate: false,
             simplify: false,
@@ -61,7 +61,7 @@ export class SlotStack {
         return new SlotStack(newEngine, [...this.items, slot]);
     }
 
-    updateSlot(id: number, value: string, settings:IMathpadSettings, options: ProcessOptions) {
+    updateSlot(id: number, value: string, settings:MathpadSettings, options: ProcessOptions) {
         // resetContext();
         const newEngine = createEngine();
         const newStack: PadSlot[] = [];

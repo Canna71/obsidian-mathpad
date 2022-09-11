@@ -1,5 +1,5 @@
 import parse, { ParseResult } from './../Math/Parsing';
-import { IMathpadSettings } from "src/MathpadSettings";
+import { MathpadSettings } from "src/MathpadSettings";
 
 import { createEngine, Engine } from "src/Math/Engine";
 import { ResultWidget } from "./ResultWidget";
@@ -135,18 +135,18 @@ function addDecoration(
     }
 }
 
-const setConfigEffect = StateEffect.define<IMathpadSettings>();
+const setConfigEffect = StateEffect.define<MathpadSettings>();
 
-export const mathpadConfigField = StateField.define<IMathpadSettings>({
+export const mathpadConfigField = StateField.define<MathpadSettings>({
     create(state: EditorState): any {
         return {
             latex: true,
         };
     },
     update(
-        oldState: IMathpadSettings,
+        oldState: MathpadSettings,
         transaction: Transaction
-    ): IMathpadSettings {
+    ): MathpadSettings {
         let newState = oldState;
 
         for (const effect of transaction.effects) {
@@ -159,7 +159,7 @@ export const mathpadConfigField = StateField.define<IMathpadSettings>({
     },
 });
 
-export function setConfig(view: EditorView, config: IMathpadSettings) {
+export function setConfig(view: EditorView, config: MathpadSettings) {
     view.dispatch({
         effects: [setConfigEffect.of(config)],
     });

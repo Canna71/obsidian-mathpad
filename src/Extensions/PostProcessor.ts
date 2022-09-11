@@ -1,5 +1,5 @@
 import { ParseResult } from './../Math/Parsing';
-import { IMathpadSettings } from 'src/MathpadSettings';
+import { MathpadSettings } from 'src/MathpadSettings';
 import { debounce, MarkdownPostProcessor, MarkdownPostProcessorContext } from "obsidian";
 import { createEngine, Engine } from "src/Math/Engine";
 import PadScope from "src/Math/PadScope";
@@ -7,7 +7,7 @@ import { MathResult } from "./ResultMarkdownChild";
 import parse from 'src/Math/Parsing';
 
 
-export const getPostPrcessor = (settings: IMathpadSettings):MarkdownPostProcessor => {
+export const getPostPrcessor = (settings: MathpadSettings):MarkdownPostProcessor => {
     return debounce((element: HTMLElement, context: MarkdownPostProcessorContext) => {
         console.log("running processor...", element,context.docId);
         // todo: debounce and then use context.containerEl
@@ -34,7 +34,7 @@ export const getPostPrcessor = (settings: IMathpadSettings):MarkdownPostProcesso
 // },100);
 
 
-function processCode(code: HTMLElement, engine: Engine, context: MarkdownPostProcessorContext, settings: IMathpadSettings) {
+function processCode(code: HTMLElement, engine: Engine, context: MarkdownPostProcessorContext, settings: MathpadSettings) {
     let text;
     if (code.nodeName === "CODE") {
         text = (code as any).innerText.trim();

@@ -1,5 +1,5 @@
 import { amendSettings } from 'src/Math/Parsing';
-import { IMathpadSettings } from 'src/MathpadSettings';
+import { MathpadSettings } from 'src/MathpadSettings';
 import parse from 'src/Math/Parsing';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Engine } from './Engine';
@@ -29,7 +29,7 @@ export default class PadSlot extends PadScope {
         this._id = id;
     }
 
-    static createSlot(engine:Engine, id: number, input: string, settings: IMathpadSettings, options:ProcessOptions= {
+    static createSlot(engine:Engine, id: number, input: string, settings: MathpadSettings, options:ProcessOptions= {
         evaluate: false,
         simplify: false
     }) {

@@ -1,4 +1,4 @@
-import { DEFAULT_SETTINGS, IMathpadSettings } from 'src/MathpadSettings';
+import { DEFAULT_SETTINGS, MathpadSettings } from 'src/MathpadSettings';
 import { MarkdownView } from 'obsidian';
 // import { createEngine } from 'src/Math/Engine';
 import { mathpadConfigField, resultField, setConfig } from './Extensions/ResultField';
@@ -18,7 +18,7 @@ import { getPostPrcessor } from './Extensions/PostProcessor';
 
 
 export default class MathpadPlugin extends Plugin {
-    settings: IMathpadSettings;
+    settings: MathpadSettings;
 
     async onload() {
         await this.loadSettings();

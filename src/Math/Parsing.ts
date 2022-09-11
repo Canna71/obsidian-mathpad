@@ -1,4 +1,4 @@
-import { IMathpadSettings } from 'src/MathpadSettings';
+import { MathpadSettings } from 'src/MathpadSettings';
 
 export interface ParseResult {
     text: string;
@@ -15,7 +15,7 @@ export interface ParseResult {
 
 
 
-export default function parse(text: string, settings: IMathpadSettings) : ParseResult {
+export default function parse(text: string, settings: MathpadSettings) : ParseResult {
     // from text it should return a PadScope?
     // just a text to further parse?
     let retText=text;
@@ -115,7 +115,7 @@ export default function parse(text: string, settings: IMathpadSettings) : ParseR
 }
 
 
-export function amendSettings(settings: IMathpadSettings, parseResult: any):IMathpadSettings {
+export function amendSettings(settings: MathpadSettings, parseResult: any):MathpadSettings {
     return ({
         ...settings,
         latex: parseResult.latex || settings.latex,
