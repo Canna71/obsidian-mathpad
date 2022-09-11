@@ -253,13 +253,13 @@ export default class PadScope {
 
             const pr = parse(line, settings);
 
-            if(pr.isValid){
-                if(pr.isEval){
+            // if(pr.isValid){
+                if(!(pr.isVarDec || pr.isFnDec)){
                     ret.push(new PadScope().process(engine,pr))
                 } else {
                     new PadScope().process(engine,pr)
                 }
-            }
+            // }
             
         });
 
