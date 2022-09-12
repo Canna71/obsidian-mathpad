@@ -46,12 +46,16 @@ export const resultField = StateField.define<DecorationSet>({
 
         let oldDec = undefined as any;
         if(!transaction.docChanged){
+
+            if(!transaction.selection || !transaction.selection.asSingle().main.empty){
+                return oldState.map(transaction.changes);
+            }
             // here we should simply toggle the "visibility" of the code 
             // depending on the caret position
             // const mapDec = oldState.iter()
             oldDec = oldState.iter();
         }
-
+        console.log("doing decorations:", nodeA.name, nodeB.name, transaction.docChanged, transaction.changes.empty, transaction.selection, transaction.effects.length);
         console.time("decorations-code");
         tree.iterate({
             enter: (node: SyntaxNodeRef) => {
