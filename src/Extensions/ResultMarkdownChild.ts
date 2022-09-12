@@ -12,7 +12,7 @@ export class MathResult extends MarkdownRenderChild {
     }
 
     onload() {
-        
+    
 
         if (!this.isLatex) {
             const code = this.containerEl.createEl("code")
