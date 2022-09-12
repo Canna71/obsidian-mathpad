@@ -55,7 +55,7 @@ export const resultField = StateField.define<DecorationSet>({
             // const mapDec = oldState.iter()
             oldDec = oldState.iter();
         }
-        console.log("doing decorations:", nodeA.name, nodeB.name, transaction.docChanged, transaction.changes.empty, transaction.selection, transaction.effects.length);
+        // console.log("doing decorations:", nodeA.name, nodeB.name, transaction.docChanged, transaction.changes.empty, transaction.selection, transaction.effects.length);
         console.time("decorations-code");
         tree.iterate({
             enter: (node: SyntaxNodeRef) => {
