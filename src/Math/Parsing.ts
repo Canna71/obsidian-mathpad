@@ -18,7 +18,7 @@ export interface ParseResult {
 export default function parse(text: string, settings: MathpadSettings) : ParseResult {
     // from text it should return a PadScope?
     // just a text to further parse?
-    let retText=text;
+    // let retText=text;
     let evaluate = settings.evaluate;
     let latex = settings.latex;
     let isVarDec = false;
@@ -51,12 +51,12 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
 
         if (text.endsWith(settings.evaluateNumericStr)) {
             evaluate = true;
-            retText = text = text.slice(0, -settings.evaluateNumericStr.length);
+            text = text.slice(0, -settings.evaluateNumericStr.length);
         } else if (text.endsWith(settings.evaluateSymbolicStr)) {
             evaluate = false;
-            retText = text = text.slice(0, -settings.evaluateSymbolicStr.length);
+            text = text.slice(0, -settings.evaluateSymbolicStr.length);
         } else {
-            retText = text = text.slice(0, -settings.evaluateStr.length);
+            text = text.slice(0, -settings.evaluateStr.length);
         }
     
     } else {
@@ -102,7 +102,7 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
 
 
     return {
-        text: retText,
+        text: text.trim(),
         evaluate,
         latex,
         isVarDec,
