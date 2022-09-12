@@ -62,7 +62,7 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
     } else {
         // maybe declaration
         const fnDecRegEx = new RegExp("([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\\(([a-z_,\\s]*)\\)\\s*(" 
-        + settings.declarationStr + "|" + settings.declarationNumeric + "|" + settings.declarationSymbolic +
+        + settings.declarationNumeric + "|" + settings.declarationSymbolic + "|" + settings.declarationStr +
         ")\\s*(.+)","i");
     
         const fnDec = fnDecRegEx.exec(text);
@@ -79,7 +79,7 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
         } else {
     
             const varDecRegEx = new RegExp("([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\\s*(" 
-            + settings.declarationStr + "|" + settings.declarationNumeric + "|" + settings.declarationSymbolic +
+            + settings.declarationNumeric + "|" + settings.declarationSymbolic + "|" + settings.declarationStr +
             ")\\s*(.+)","i");
         
             const varDec = varDecRegEx.exec(text);

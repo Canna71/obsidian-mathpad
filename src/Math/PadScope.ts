@@ -122,11 +122,11 @@ export default class PadScope {
                     parseResult.def
                 );
                 this._expression = engine.parse(parseResult.def);
-                this._resultTex = engine.parse(parseResult.def).toTeX();
+                // this._resultTex = engine.parse(parseResult.def).toTeX();
             } else if (parseResult.isVarDec) {
                 engine.setVar(parseResult.name, parseResult.def);
                 this._expression = engine.parse(parseResult.def);
-                this._resultTex = engine.parse(parseResult.def).toTeX();
+                // this._resultTex = engine.parse(parseResult.def).toTeX();
 
                 // return this;
             } else {
@@ -144,9 +144,9 @@ export default class PadScope {
                     }
                 }
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                this._resultTex = (this._expression as any).toTeX(
-                    parseResult.evaluate ? "decimal" : undefined
-                );
+                // this._resultTex = (this._expression as any).toTeX(
+                //     parseResult.evaluate ? "decimal" : undefined
+                // );
 
                 try {
                     this._fn = [this._expression.buildFunction()];
@@ -160,11 +160,16 @@ export default class PadScope {
                     this._fn = tmp;
                 }
             }
+
+            this._resultTex = (this._expression as any).toTeX(
+                parseResult.evaluate ? "decimal" : undefined
+            );
+
         } catch (e) {
             this._error = e.toString();
             console.warn(e, this.input);
         }
-
+        
         let inputText = this.input;
         if (this.plot) {
             const m = PLOT_PARSE.exec(inputText);
@@ -174,7 +179,14 @@ export default class PadScope {
             }
         } else {
             try{
-                this._inputLatex = engine.toLatex(inputText);
+                if(this.parseResult.isEval){
+                    this._input= this.parseResult.text; 
+                    this._inputLatex = engine.toLatex(this.parseResult.text);
+                } else {
+                    this._input = this.parseResult.name + ":=" + this.parseResult.def;
+                    this._inputLatex = engine.toLatex(this.parseResult.name) + ":=" + 
+                    engine.toLatex(this.parseResult.def);
+                }
             } catch(ex){
                 // console.log()
             }
