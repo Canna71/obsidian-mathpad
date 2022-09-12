@@ -29,6 +29,7 @@ export class ResultWidget extends WidgetType {
         if(this.padScope.isValid) {
             if (!this.parseResult.latex) {
                 const span = document.createElement("span");
+                span.addClasses(["mathpad-inline","cm-inline-code"]);
                 span.innerText =
                     this.padScope.input +
                     (this.padScope.ident

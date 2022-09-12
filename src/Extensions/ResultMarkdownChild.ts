@@ -15,15 +15,15 @@ export class MathResult extends MarkdownRenderChild {
         
 
         if (!this.isLatex) {
-            const span = this.containerEl.createSpan()
-
-            span.innerText =
+            const code = this.containerEl.createEl("code")
+            code.addClass("mathpad-inline");
+            code.innerText =
                 this.padScope.input +
                 (this.padScope.ident
                     ? ""
                     : " = " + this.padScope.text);
-            span.dataset.mathpadInput=this.padScope.input+"=?";  
-            this.containerEl.replaceWith(span);
+            code.dataset.mathpadInput=this.padScope.input+"=?";  
+            this.containerEl.replaceWith(code);
 
         } else {
             const div = this.containerEl.createDiv();
