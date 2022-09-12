@@ -27,13 +27,14 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
     let name = "";
     let params = [] as string[];
     let def = "";
+    text = text.trim();
 
     if(text.endsWith(settings.inlinePostfix)){
         latex = false;
-        text = text.slice(0, -settings.inlinePostfix.length);
+        text = text.slice(0, -settings.inlinePostfix.length).trimEnd();
     } else if (text.endsWith(settings.latexPostfix)) {
         latex = true;
-        text = text.slice(0, -settings.latexPostfix.length);
+        text = text.slice(0, -settings.latexPostfix.length).trimEnd();
     }
 
     
