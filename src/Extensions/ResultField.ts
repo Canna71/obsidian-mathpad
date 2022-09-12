@@ -120,9 +120,9 @@ function addDecoration(
     node: SyntaxNodeRef,
     previousRes?: PadScope
 ) {
-    let res: PadScope | undefined;
+    // let res: PadScope | undefined;
     // if (parseResult.latex || !caret) {
-        res = previousRes || new PadScope().process(engine, parseResult);
+       const res = previousRes || new PadScope().process(engine, parseResult);
     // }
     if (previousRes) {
         console.log("reciclying preciousRes", previousRes.input);
