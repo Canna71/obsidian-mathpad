@@ -1,4 +1,4 @@
-import parse, { ParseResult } from './../Math/Parsing';
+import parse, { ParseResult } from "./../Math/Parsing";
 import { MathpadSettings } from "src/MathpadSettings";
 
 import { createEngine, Engine } from "src/Math/Engine";
@@ -31,10 +31,11 @@ export const resultField = StateField.define<DecorationSet>({
         const tree = syntaxTree(transaction.state);
         const caretPos = transaction.state.selection.ranges[0].from;
 
+        // console.log("state", transaction);
+
         const nodeA = tree.resolve(caretPos, 1);
         const nodeB = tree.resolve(caretPos, -1);
 
-        
         // we try to avoid recomputing if editing outside inline-code
         if (
             nodeA.name !== "inline-code" &&
@@ -44,13 +45,17 @@ export const resultField = StateField.define<DecorationSet>({
             return oldState.map(transaction.changes);
         }
 
-        let oldDec = undefined as any;
-        if(!transaction.docChanged){
+        const okToProcess = transaction.effects.find(eff => eff.is(setConfigEffect));
 
-            if(!transaction.selection || !transaction.selection.asSingle().main.empty){
+        let oldDec = undefined as any;
+        if (!transaction.docChanged) {
+            if (
+                (!transaction.selection ||
+                !transaction.selection.asSingle().main.empty) && !okToProcess
+            ) {
                 return oldState.map(transaction.changes);
             }
-            // here we should simply toggle the "visibility" of the code 
+            // here we should simply toggle the "visibility" of the code
             // depending on the caret position
             // const mapDec = oldState.iter()
             oldDec = oldState.iter();
@@ -64,31 +69,35 @@ export const resultField = StateField.define<DecorationSet>({
                         node.from,
                         node.to
                     );
-                    const caret = node.from-1 <= caretPos && caretPos <= node.to;
-                    let previousRes : PadScope | undefined;
-                    if(!transaction.docChanged){
-                        previousRes = oldDec?.value?.spec?.res
+                    const caret =
+                        node.from - 1 <= caretPos && caretPos <= node.to;
+                    let previousRes: PadScope | undefined;
+                    if (!transaction.docChanged) {
+                        previousRes = oldDec?.value?.spec?.res;
                     } else {
                         //  console.log("doc changed!")
                     }
-                    const parseResult = parse(text,settings);
-                    if(parseResult.isValid) {
-                        try{ 
-                            addDecoration(
+                    const parseResult = parse(text, settings);
+                    
+                    if (parseResult.isValid) {
+                        try {
+                            if(addDecoration(
                                 engine,
                                 parseResult,
                                 builder,
                                 caret,
                                 node,
                                 previousRes
-                            );
+                            )){
+                                oldDec && oldDec.next();
+                            }
                         } catch (e) {
                             console.log(e);
                             console.log(text);
                         }
                         // we need to do this inside this if, otherwise we are iterating also for normal "inline-code"!
                         // TODO: bug not when modifying a inline-code it gets the wrong previous result!!!
-                        oldDec && oldDec.next();
+                        
                     }
                 }
             },
@@ -104,7 +113,6 @@ export const resultField = StateField.define<DecorationSet>({
 });
 
 function addDecoration(
-   
     engine: Engine,
     parseResult: ParseResult,
     builder: RangeSetBuilder<Decoration>,
@@ -112,32 +120,37 @@ function addDecoration(
     node: SyntaxNodeRef,
     previousRes?: PadScope
 ) {
-    const res = previousRes || new PadScope().process(
-        engine,
-        parseResult
-    );
-
-    if (parseResult.latex) {
+    let res: PadScope | undefined;
+    // if (parseResult.latex || !caret) {
+        res = previousRes || new PadScope().process(engine, parseResult);
+    // }
+    if (previousRes) {
+        console.log("reciclying preciousRes", previousRes.input);
+    } else {
+        console.log("processed ", parseResult.text);
+    }
+    if (parseResult.latex && res) {
         builder.add(
             caret ? node.to : node.from,
 
             node.to,
-            caret ? 
-            Decoration.widget({
-                widget: new ResultWidget(res, parseResult, node.from),
-                block: true,
-                side: 1,
-                res
-            }):
-            Decoration.replace({
-                widget: new ResultWidget(res, parseResult, node.from),
-                block: true,
-                inclusive: true,
-                res
-            })
+            caret
+                ? Decoration.widget({
+                      widget: new ResultWidget(res, parseResult, node.from),
+                      block: true,
+                      side: 1,
+                      res,
+                  })
+                : Decoration.replace({
+                      widget: new ResultWidget(res, parseResult, node.from),
+                      block: true,
+                      inclusive: true,
+                      res,
+                  })
         );
-    } else { // inline
-        if (!caret)
+    } else {
+        // inline
+        if (!caret && res){
             builder.add(
                 node.from,
                 node.to,
@@ -145,10 +158,25 @@ function addDecoration(
                     widget: new ResultWidget(res, parseResult, node.from),
                     block: false,
                     inclusive: true,
-                    res
+                    res,
                 })
             );
+        } else {
+            builder.add(
+                node.to,
+                node.to,
+                Decoration.replace({
+                    widget: undefined,
+                    block: false,
+                    inclusive: true,
+                    res,
+                })
+            )
+        }
+
     }
+    // return true means we used up the precious result
+    return true;
 }
 
 const setConfigEffect = StateEffect.define<MathpadSettings>();
