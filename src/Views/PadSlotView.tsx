@@ -105,9 +105,9 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
                 <a className="view-action mod-close-leaf" onClick={onClose}>
                     <Close />
                 </a>
-                <a className="view-action mod-close-leaf" onClick={onCopy}>
+                {!padSlot.error && <a className="view-action mod-close-leaf" onClick={onCopy}>
                     <Copy />
-                </a>
+                </a>}
             </div>
 
         </div>
