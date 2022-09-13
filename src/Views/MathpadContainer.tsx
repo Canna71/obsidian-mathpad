@@ -74,11 +74,16 @@ export const MathpadContainer = ({onCopySlot, settings}:
     }, []);
 
     const processInput = useCallback(() => {
-        setState(state => ({
-            ...state,
-            stack: state.stack?.addSlot(state.input, settings, { evaluate: state.options.evaluate }),
-            input: ""
-        }))
+            setState(state => 
+                state.input.trim().length>0 ?
+                ({
+                ...state,
+                stack: state.stack?.addSlot(state.input, settings, { evaluate: state.options.evaluate }),
+                input: ""
+                })
+                :
+                state
+            )
     }, []);
 
     const onKeyDown = useCallback((e: React.KeyboardEvent) => {
