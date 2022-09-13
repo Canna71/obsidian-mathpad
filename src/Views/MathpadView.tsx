@@ -28,7 +28,7 @@ export class MathpadView extends ItemView {
 		this.state = {
 			
 		};
-        this.icon = "dice";
+        this.icon = "sigma";
         this.onCopySlot = this.onCopySlot.bind(this);
 	}
 

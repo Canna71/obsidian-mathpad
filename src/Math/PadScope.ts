@@ -99,6 +99,22 @@ export default class PadScope {
         return this._expression.valueOf();
     }
 
+    public get noteText(): any {
+        if(this.parseResult.isFnDec || this.parseResult.isVarDec){
+            return this._input;
+        } else {
+            return this._input + " = " + this._text;
+        }
+    }
+
+    public get noteLatex(): any {
+        if(this.parseResult.isFnDec || this.parseResult.isVarDec){
+            return this._inputLatex;
+        } else {
+            return this._inputLatex + " = " + this._resultTex;
+        }
+    }
+
     /**
      *
      */
@@ -179,13 +195,18 @@ export default class PadScope {
             }
         } else {
             try{
-                if(this.parseResult.isEval){
+                if(!(this.parseResult.isFnDec || this.parseResult.isVarDec)){
                     this._input= this.parseResult.text; 
                     this._inputLatex = engine.toLatex(this.parseResult.text);
                 } else {
-                    this._input = this.parseResult.name + ":=" + this.parseResult.def;
-                    this._inputLatex = engine.toLatex(this.parseResult.name) + ":=" + 
-                    engine.toLatex(this.parseResult.def);
+                    this._input = this.parseResult.name;
+                    this._inputLatex = engine.toLatex(`${this.parseResult.name}`);
+                    if(this.parseResult.isFnDec){
+                        this._input+=`(${this.parseResult.params.join(", ")})`;
+                        this._inputLatex = engine.toLatex(`${this.parseResult.name}(${this.parseResult.params.join(", ")})`)
+                    }
+                    this._input += ":=" + this.parseResult.def;
+                    this._inputLatex += ":=" + engine.toLatex(this.parseResult.def);
                 }
             } catch(ex){
                 // console.log()
@@ -261,7 +282,7 @@ export default class PadScope {
         const lines = source.split("\n");
         const engine = createEngine();
         const ret: PadScope[] = [];
-        lines.forEach((line) => {
+        lines.filter(line=>line.trim().length>0).forEach((line) => {
 
             const pr = parse(line, settings);
 

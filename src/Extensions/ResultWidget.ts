@@ -30,19 +30,21 @@ export class ResultWidget extends WidgetType {
             if (!this.parseResult.latex) {
                 const span = document.createElement("span");
                 span.addClasses(["mathpad-inline","cm-inline-code"]);
-                span.innerText =
-                    this.padScope.input +
-                    (this.padScope.ident
-                        ? ""
-                        : " = " + this.padScope.text);
+                // span.innerText =
+                //     this.padScope.input +
+                //     (this.padScope.ident
+                //         ? ""
+                //         : " = " + this.padScope.text);
+                span.innerText = this.padScope.noteText;
                 el=span;
             } else {
                 // determine if
                 const div = document.createElement("div");
                 
                 const mathEl = renderMath(
-                    this.padScope.inputLaTeX +
-                        (this.padScope.ident ? "" : " = " + this.padScope.laTeX),
+                    // this.padScope.inputLaTeX +
+                    //     (this.padScope.ident ? "" : " = " + this.padScope.laTeX),
+                    this.padScope.noteLatex,
                     true
                 );
     

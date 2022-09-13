@@ -1,5 +1,5 @@
 import { DEFAULT_SETTINGS, MathpadSettings } from "src/MathpadSettings";
-import { MarkdownView } from "obsidian";
+import { addIcon, MarkdownView } from "obsidian";
 // import { createEngine } from 'src/Math/Engine';
 import {
     mathpadConfigField,
@@ -22,20 +22,26 @@ import { processCodeBlock } from "./Views/DocView";
 import PadScope from "./Math/PadScope";
 import { getPostPrcessor } from "./Extensions/PostProcessor";
 
+const sigma = `<path  fill="currentColor" stroke="currentColor" d="M0+0L100.802+0L100.802+23.6688L82.9281+23.6688L82.9281+17.1459L38.2883+17.1459L67.1631+50.213L38.2883+83.28L82.9287+83.28L82.9287+76.7571L100.803+76.7571L100.803+100.426L0+100.426L43.8464+50.213L0+0Z" opacity="1" fill="#000000"/>
+`;
+
 // Remember to rename these classes and interfaces!
 
 export default class MathpadPlugin extends Plugin {
     settings: MathpadSettings;
-
+ 
     async onload() {
         await this.loadSettings();
 
         this.registerView(MATHPAD_VIEW, (leaf) => new MathpadView(leaf));
 
+        addIcon("sigma",sigma); 
+
+
         if (this.settings.addRibbonIcon) {
             // This creates an icon in the left ribbon.
             const ribbonIconEl = this.addRibbonIcon(
-                "dice",
+                "sigma",
                 "Open Mathpad",
                 (evt: MouseEvent) => {
                     this.activateView();
