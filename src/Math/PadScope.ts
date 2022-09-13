@@ -1,9 +1,9 @@
 import { MathpadSettings } from 'src/MathpadSettings';
-import parse, { ParseResult } from "./Parsing";
+import parse, { ParseResult, SLOT_VARIABLE_PREFIX } from "./Parsing";
 import { createEngine } from "src/Math/Engine";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Engine } from "./Engine";
-// import { ProcessOptions } from "./PadStack";
+// import { ProcessOptions } from "./PadStack";s
 
 const PLOT_PARSE = /plot\((.*)\)/m;
 const PARAMS_RE = / *(\[[^\]].*\])| *([^[,]+) */gm;
@@ -100,7 +100,7 @@ export default class PadScope {
     }
 
     public get noteText(): any {
-        if(this.parseResult.isFnDec || this.parseResult.isVarDec){
+        if(this.parseResult.isFnDec || this.parseResult.isVarDec || (this._input.trim()===this._text.trim())){
             return this._input;
         } else {
             return this._input + " = " + this._text;
@@ -108,7 +108,7 @@ export default class PadScope {
     }
 
     public get noteLatex(): any {
-        if(this.parseResult.isFnDec || this.parseResult.isVarDec){
+        if(this.parseResult.isFnDec || this.parseResult.isVarDec || (this._input.trim()===this._text.trim())){
             return this._inputLatex;
         } else {
             return this._inputLatex + " = " + this._resultTex;
@@ -226,13 +226,15 @@ export default class PadScope {
             this._text = expr;
         }
 
-        return this;
+        return this;  
     }
 
     getCodeBlock(settings: MathpadSettings) {
+
         const lines: string[] = [];
         for (const v in this.scope.vars) {
-            lines.push(`${v}${settings.declarationStr}${this.scope.vars[v]}`);
+            const postfix = v.startsWith(SLOT_VARIABLE_PREFIX)?settings.inlinePostfix:"";
+            lines.push(`${v}${settings.declarationStr}${this.scope.vars[v]}${postfix}`);
         }
         for (const f in this.scope.funcs) {
             // console.log(f,this.scope.funcs[f])
@@ -240,12 +242,9 @@ export default class PadScope {
             lines.push(`${def.name}(${def.params.join(",")})${settings.declarationStr}${def.body}`);
         }
         let str = this.input;
-
+        
         if (this.plot) {
-            // str = `plot(${str})`;
-            //TODO: we shold inject the actual xDomain and yDomain
-            // this will be easier to do when we'll have written a custom
-            // plot function
+
             let m;
             if ((m = PLOT_PARSE.exec(this.input)) !== null) {
                 const parList = m[1];
@@ -273,8 +272,9 @@ export default class PadScope {
         }
 
         
-
-        lines.push(`${str}${this.parseResult.evaluate ? settings.evaluateNumericStr : settings.evaluateSymbolicStr}`);
+        if(!this.parseResult.isFnDec && !this.parseResult.isVarDec){
+            lines.push(`${str}${this.parseResult.evaluate ? settings.evaluateNumericStr : settings.evaluateSymbolicStr}`);
+        }
         return lines.join("\n");
     }
 
@@ -287,11 +287,15 @@ export default class PadScope {
             const pr = parse(line, settings);
 
             // if(pr.isValid){
-                if(!(pr.isVarDec || pr.isFnDec)){
-                    ret.push(new PadScope().process(engine,pr))
-                } else {
-                    new PadScope().process(engine,pr)
-                }
+                // if(!(pr.isVarDec || pr.isFnDec)){
+                    if(!pr.hide){
+                        ret.push(new PadScope().process(engine,pr))
+                    } else {
+                        new PadScope().process(engine,pr)
+                    }
+                // } else {
+                    // new PadScope().process(engine,pr)
+                // }
             // }
             
         });

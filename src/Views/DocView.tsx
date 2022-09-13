@@ -79,16 +79,16 @@ const DocView = ({ padScope }:
                 {
                     padScope.error &&
                     <div className="slot-error">{padScope.error}</div>
-                    
+
                 }
                 {
                     !padScope.plot &&
-                    <Latex latex={padScope.inputLaTeX + " " + (padScope.parseResult.evaluate ? "=" : "=") + " " + padScope.laTeX} />
+                    <Latex latex={padScope.noteLatex} />
                 }
-                  {
+                {
                     padScope.plot &&
                     <Latex latex={padScope.laTeX} />
-                }             
+                }
                 {padScope.plot &&
                     makePlot(cxt, padScope, cxt.settings)
                 }

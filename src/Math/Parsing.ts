@@ -11,9 +11,10 @@ export interface ParseResult {
     name: string;
     def: string;
     params: string[];
+    hide: boolean;
 }
 
-
+export const SLOT_VARIABLE_PREFIX = "$";
 
 export default function parse(text: string, settings: MathpadSettings) : ParseResult {
     // from text it should return a PadScope?
@@ -27,11 +28,13 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
     let name = "";
     let params = [] as string[];
     let def = "";
+    let hide = false;
     text = text.trim();
 
     if(text.endsWith(settings.inlinePostfix)){
         latex = false;
         text = text.slice(0, -settings.inlinePostfix.length).trimEnd();
+        hide = true;
     } else if (text.endsWith(settings.latexPostfix)) {
         latex = true;
         text = text.slice(0, -settings.latexPostfix.length).trimEnd();
@@ -113,7 +116,8 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
         name,
         def,
         params,
-        isValid: isVarDec || isFnDec || isEval
+        isValid: isVarDec || isFnDec || isEval,
+        hide
     }
 }
 

@@ -3,7 +3,7 @@ import { MathpadSettings } from 'src/MathpadSettings';
 
 import { createEngine, Engine } from "./Engine";
 import PadSlot from "./PadSlot";
-import parse from './Parsing';
+import parse, { SLOT_VARIABLE_PREFIX } from './Parsing';
 
 export interface ProcessOptions {
     evaluate?: boolean;
@@ -14,6 +14,8 @@ const DEFAULT_OPTS: ProcessOptions = {
     evaluate: false,
     simplify: false,
 };
+
+
 
 export class SlotStack {
     engine: Engine;
@@ -110,7 +112,7 @@ export class SlotStack {
     }
 
     static getSlotVariableName(id: number) {
-        return `$${id}`;
+        return `${SLOT_VARIABLE_PREFIX}${id}`;
     }
 
     static create() {

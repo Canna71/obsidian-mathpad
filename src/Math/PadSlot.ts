@@ -13,10 +13,6 @@ export default class PadSlot extends PadScope {
     private _id: number;
     
 
-
-
-
-
     public get id(): number {
         return this._id;
     }
