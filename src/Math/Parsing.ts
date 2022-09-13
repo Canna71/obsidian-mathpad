@@ -38,7 +38,7 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
     }
 
     
-    let assign = "";
+    // let assign = "";
 
     if(text.endsWith(settings.evaluateNumericStr)
     ||
@@ -62,7 +62,8 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
     } else {
         // maybe declaration
         const fnDecRegEx = new RegExp("([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\\(([a-z_,\\s]*)\\)\\s*(" 
-        + settings.declarationNumeric + "|" + settings.declarationSymbolic + "|" + settings.declarationStr +
+        // + settings.declarationNumeric + "|" + settings.declarationSymbolic + "|" 
+        + settings.declarationStr +
         ")\\s*(.+)","i");
     
         const fnDec = fnDecRegEx.exec(text);
@@ -70,7 +71,7 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
         if (fnDec) {
             name = fnDec[1];
             params = fnDec[2].split(",").map((p) => p.trim());
-            assign = fnDec[3];
+            // assign = fnDec[3];
             def = fnDec[4];
             isFnDec = true;
             
@@ -79,23 +80,24 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
         } else {
     
             const varDecRegEx = new RegExp("([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\\s*(" 
-            + settings.declarationNumeric + "|" + settings.declarationSymbolic + "|" + settings.declarationStr +
+            // + settings.declarationNumeric + "|" + settings.declarationSymbolic + "|" 
+            + settings.declarationStr +
             ")\\s*(.+)","i");
         
             const varDec = varDecRegEx.exec(text);
             if(varDec){
                 name=varDec[1];
-                assign=varDec[2];
+                // assign=varDec[2];
                 def=varDec[3];
                 isVarDec = true;
             }
         }
 
-        if(assign === settings.declarationNumeric) {
-            evaluate = true;
-        } else if (assign === (settings.declarationSymbolic)){
-            evaluate = false;
-        }
+        // if(assign === settings.declarationNumeric) {
+        //     evaluate = true;
+        // } else if (assign === (settings.declarationSymbolic)){
+        //     evaluate = false;
+        // }
     }
 
     

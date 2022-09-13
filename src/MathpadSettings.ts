@@ -4,8 +4,8 @@ export interface MathpadSettings {
     latex: boolean;
     evaluate: boolean;
     declarationStr: string;
-    declarationNumeric: string;
-    declarationSymbolic: string;
+    // declarationNumeric: string;
+    // declarationSymbolic: string;
     evaluateStr: string;
     evaluateNumericStr: string;
     evaluateSymbolicStr: string;
@@ -20,8 +20,8 @@ export const DEFAULT_SETTINGS: MathpadSettings = {
     latex: true,
     evaluate: false,
     declarationStr: ":=",
-    declarationNumeric: ":=~",
-    declarationSymbolic: ":==",
+    // declarationNumeric: ":=~",
+    // declarationSymbolic: ":==",
     evaluateStr: "=?",
     evaluateNumericStr: "=~?",
     evaluateSymbolicStr: "==?",
