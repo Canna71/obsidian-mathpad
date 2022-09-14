@@ -83,11 +83,11 @@ const DocView = ({ padScope }:
                 }
                 {
                     !padScope.plot &&
-                    <Latex latex={padScope.noteLatex} />
+                    <Latex latex={padScope.noteLatex} block={padScope.parseResult.block} />
                 }
                 {
                     padScope.plot &&
-                    <Latex latex={padScope.laTeX} />
+                    <Latex latex={padScope.laTeX} block={true} />
                 }
                 {padScope.plot &&
                     makePlot(cxt, padScope, cxt.settings)

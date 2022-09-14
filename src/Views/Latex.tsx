@@ -4,10 +4,10 @@ import { renderMath, finishRenderMath } from "obsidian";
 import { useEffect, useRef } from "react";
 
 
-const Latex = ({latex}:{latex: string}) => {
+const Latex = ({latex, block}:{latex: string, block: boolean}) => {
     const divRef = useRef<HTMLDivElement>(null);
     useEffect(()=>{
-        const mathEl = renderMath(latex, true);
+        const mathEl = renderMath(latex, block);
         divRef.current &&
         divRef.current.replaceChildren(mathEl);
         finishRenderMath();

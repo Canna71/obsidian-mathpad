@@ -6,7 +6,7 @@ import Close from "../icons/close.svg";
 import { makePlot } from "./Plot";
 import { MathpadContext } from "./MathpadView";
 import SlotInput from "./SlotInput";
-import Copy from "../icons/edit.svg";
+// import Copy from "../icons/edit.svg";
 import { SlotStack } from "src/Math/PadStack";
 import { FunctionPlotOptions } from "function-plot/dist/types";
 

@@ -27,9 +27,9 @@ export class MathpadSettingsTab extends PluginSettingTab {
         "showAtStartUp"
     );
 
-        this.createToggle(containerEl, "Default to LaTeX",
-            "Inline expressions will be rendered in LaTeX blocks by default",
-            "latex"
+        this.createToggle(containerEl, "Prefers Block Latex",
+            "Prefer LaTeX block to inline LaTeX",
+            "preferBlock"
         );
         this.createToggle(containerEl, "Evaluate Results",
             "Evaluates expressions in order to obtain a numeric result",

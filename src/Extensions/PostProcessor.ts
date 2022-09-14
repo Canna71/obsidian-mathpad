@@ -55,7 +55,7 @@ function produceResult(parseResult: ParseResult, engine: Engine, context: Markdo
         parseResult
     );
     if(res.isValid){
-        context.addChild(new MathResult(code, res, parseResult.latex));
+        context.addChild(new MathResult(code, res, parseResult.block));
     }
 }
 

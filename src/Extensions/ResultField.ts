@@ -129,7 +129,7 @@ function addDecoration(
     } else {
         console.log("processed ", parseResult.text);
     }
-    if (parseResult.latex && res) {
+    if (parseResult.block && res) {
         builder.add(
             caret ? node.to : node.from,
 

@@ -3,7 +3,7 @@ import { MathpadSettings } from 'src/MathpadSettings';
 export interface ParseResult {
     text: string;
     evaluate: boolean;
-    latex: boolean;
+    block: boolean;
     isVarDec: boolean;
     isFnDec: boolean;
     isEval: boolean;
@@ -21,7 +21,7 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
     // just a text to further parse?
     // let retText=text;
     let evaluate = settings.evaluate;
-    let latex = settings.latex;
+    let latex = settings.preferBlock;
     let isVarDec = false;
     let isFnDec = false;
     let isEval = false;
@@ -109,7 +109,7 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
     return {
         text: text.trim(),
         evaluate,
-        latex,
+        block: latex,
         isVarDec,
         isFnDec,
         isEval,
@@ -125,7 +125,7 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
 export function amendSettings(settings: MathpadSettings, parseResult: any):MathpadSettings {
     return ({
         ...settings,
-        latex: parseResult.latex || settings.latex,
+        preferBlock: parseResult.latex || settings.preferBlock,
         evaluate: parseResult.evaluate || settings.evaluate
     })
 }

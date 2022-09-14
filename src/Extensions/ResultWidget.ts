@@ -30,7 +30,7 @@ export class ResultWidget extends WidgetType {
 
             el = renderMath(
                 this.padScope.noteLatex,
-                this.parseResult.latex
+                this.parseResult.block
             );
             
             finishRenderMath();
