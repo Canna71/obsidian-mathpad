@@ -28,14 +28,22 @@ export class ResultWidget extends WidgetType {
         let el: HTMLElement;
         if(this.padScope.isValid) {
             if (!this.parseResult.latex) {
-                const span = document.createElement("span");
-                span.addClasses(["mathpad-inline","cm-inline-code"]);
+                const span  // = document.createElement("span");
+                = renderMath(
+                    // this.padScope.inputLaTeX +
+                    //     (this.padScope.ident ? "" : " = " + this.padScope.laTeX),
+                    this.padScope.noteLatex,
+                    false
+                );
+                span.addClasses(["mathpad-inline"]);
                 // span.innerText =
                 //     this.padScope.input +
                 //     (this.padScope.ident
                 //         ? ""
                 //         : " = " + this.padScope.text);
-                span.innerText = this.padScope.noteText;
+                // span.innerText = this.padScope.noteText;
+                
+                
                 el=span;
             } else {
                 // determine if
