@@ -13,34 +13,14 @@ export class MathResult extends MarkdownRenderChild {
 
     onload() {
     
-
-        if (!this.isLatex) {
-            const code = this.containerEl.createEl("code")
-            code.addClass("mathpad-inline");
-            // code.innerText =
-            //     this.padScope.input +
-            //     (this.padScope.ident
-            //         ? ""
-            //         : " = " + this.padScope.text);
-            code.innerText = this.padScope.noteText;
-            code.dataset.mathpadInput=this.padScope.input+"=?";  
-            this.containerEl.replaceWith(code);
-
-        } else {
-            const div = this.containerEl.createDiv();
             const mathEl = renderMath(
-                // this.padScope.inputLaTeX +
-                //     (this.padScope.ident ? "" : " = " + this.padScope.laTeX),
                 this.padScope.noteLatex,
-                true
+                this.isLatex
             );
 
-            // mathEl.dataset.input=this.padScope.input+"=?";
-            
-            div.appendChild(mathEl);
             finishRenderMath();
-            div.dataset.mathpadInput=this.padScope.input+"=?";
-            this.containerEl.replaceWith(div);
+            mathEl.dataset.mathpadInput=this.padScope.input+"=?";
+            this.containerEl.replaceWith(mathEl);
         }
         
         
