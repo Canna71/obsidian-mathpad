@@ -106,13 +106,13 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
                     <Close />
                 </a>
                 {!padSlot.error && <a className="view-action mod-close-leaf" onClick={onCopy} data-copy="code" title="copy to code block" >
-                    <Copy />
+                    &lt;\&gt;
                 </a>}
                 {!padSlot.error && <a className="view-action mod-close-leaf" onClick={onCopy} data-copy="input" title="copy input as LaTeX" >
-                    <Copy />
+                    $
                 </a>}
                 {!padSlot.error && <a className="view-action mod-close-leaf" onClick={onCopy}  data-copy="result" title="copy result as LaTeX">
-                    <Copy />
+                    =?
                 </a>}
             </div>
 

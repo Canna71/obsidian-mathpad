@@ -12,17 +12,10 @@ export class MathResult extends MarkdownRenderChild {
     }
 
     onload() {
-    
-            const mathEl = renderMath(
-                this.padScope.noteLatex,
-                this.isLatex
-            );
+        const mathEl = renderMath(this.padScope.noteLatex, this.isLatex);
 
-            finishRenderMath();
-            mathEl.dataset.mathpadInput=this.padScope.input+"=?";
-            this.containerEl.replaceWith(mathEl);
-        }
-        
-        
+        finishRenderMath();
+        mathEl.dataset.mathpadInput = this.padScope.input + "=?";
+        this.containerEl.replaceWith(mathEl);
     }
 }
