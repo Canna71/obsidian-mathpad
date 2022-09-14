@@ -2,7 +2,7 @@ import parse, { ParseResult } from "./../Math/Parsing";
 import { MathpadSettings } from "src/MathpadSettings";
 
 import { createEngine, Engine } from "src/Math/Engine";
-import { ResultWidget } from "./ResultWidget";
+import { EmptyWidget, ResultWidget } from "./ResultWidget";
 import { syntaxTree } from "@codemirror/language";
 import { IterMode, SyntaxNodeRef } from "@lezer/common";
 import { StateEffect, EditorState } from "@codemirror/state";
@@ -165,10 +165,10 @@ function addDecoration(
             builder.add(
                 node.to,
                 node.to,
-                Decoration.replace({
-                    widget: undefined,
+                Decoration.widget({
+                    widget: new EmptyWidget(),
                     block: false,
-                    inclusive: true,
+                    inclusive: false,
                     res,
                 })
             )

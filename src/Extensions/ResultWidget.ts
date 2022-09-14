@@ -51,3 +51,9 @@ export class ResultWidget extends WidgetType {
         return el;
     }
 }
+
+export class EmptyWidget extends WidgetType {
+    toDOM(view: EditorView): HTMLElement {
+        return document.createSpan();
+    }
+}

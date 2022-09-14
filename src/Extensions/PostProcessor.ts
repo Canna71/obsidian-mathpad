@@ -47,14 +47,14 @@ function processCode(code: HTMLElement, engine: Engine, context: MarkdownPostPro
         produceResult(pr, engine, context, code);
     }
 
-}
+} 
 
 function produceResult(parseResult: ParseResult, engine: Engine, context: MarkdownPostProcessorContext, code: HTMLElement) {
     const res = new PadScope().process(
         engine,
         parseResult
     );
-    if(res.isValid){
+    if(res.isValid){ 
         context.addChild(new MathResult(code, res, parseResult.block));
     }
 }
