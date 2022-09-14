@@ -92,7 +92,7 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
                         padSlot.error ?
                             <div className="slot-error">{padSlot.error}</div>
                             :
-                            <Latex latex={padSlot.laTeX} />
+                            <Latex latex={padSlot.laTeX} block={true} />
 
                     }
                 </div>
