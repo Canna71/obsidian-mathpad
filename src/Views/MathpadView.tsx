@@ -50,18 +50,30 @@ export class MathpadView extends ItemView {
     },300);
 
 
-    onCopySlot(slot:PadSlot){
+    onCopySlot(slot:PadSlot, what:string){
         const str = slot.getCodeBlock(this.settings);
         const leaf = this.app.workspace.getMostRecentLeaf();
         if(!leaf) return;
         if (leaf.view instanceof MarkdownView) {
             const editor = leaf.view.editor;
             if(editor){
-                editor.replaceSelection(`
+                switch(what){
+                    case "input":
+                    editor.replaceSelection(`$$${slot.inputLaTeX}$$`);
+                    break;
+                    case "result":
+                        editor.replaceSelection(`$$${slot.laTeX}$$`);
+                        break;
+                    default:
+                        editor.replaceSelection(`
 \`\`\`mathpad
 ${str}
 \`\`\`
-`)
+                        `)
+                    break;
+                }
+
+
             }
         } else {
         console.warn('Mathpad: Unable to determine current editor.');

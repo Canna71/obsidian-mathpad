@@ -24,7 +24,7 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
         padSlot: PadSlot,
         onChanged: (id: number, value: string) => void,
         onClosed: (id: number) => void,
-        onCopied: (slot: PadSlot) => void,
+        onCopied: (slot: PadSlot, what:string) => void,
 
     }) => {
 
@@ -68,8 +68,8 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
     }, [padSlot.id])
 
 
-    const onCopy = useCallback((e: React.MouseEvent) => {
-        onCopied(padSlot)
+    const onCopy = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+        onCopied(padSlot, e.currentTarget.dataset.copy || "code")
     }, [padSlot])
 
     const handlePlotScaleChanhed = useCallback((opts: FunctionPlotOptions)=>{
@@ -105,7 +105,13 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
                 <a className="view-action mod-close-leaf" onClick={onClose}>
                     <Close />
                 </a>
-                {!padSlot.error && <a className="view-action mod-close-leaf" onClick={onCopy}>
+                {!padSlot.error && <a className="view-action mod-close-leaf" onClick={onCopy} data-copy="code" title="copy to code block" >
+                    <Copy />
+                </a>}
+                {!padSlot.error && <a className="view-action mod-close-leaf" onClick={onCopy} data-copy="input" title="copy input as LaTeX" >
+                    <Copy />
+                </a>}
+                {!padSlot.error && <a className="view-action mod-close-leaf" onClick={onCopy}  data-copy="result" title="copy result as LaTeX">
                     <Copy />
                 </a>}
             </div>

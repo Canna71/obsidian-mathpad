@@ -49,7 +49,7 @@ const DEFAULTSTATE: MathPadState = {
 
 
 export const MathpadContainer = ({onCopySlot, settings}:
-    {onCopySlot:(slot:PadSlot)=>void, settings: MathpadSettings}
+    {onCopySlot:(slot:PadSlot, what:string)=>void, settings: MathpadSettings}
     
     ) => {
 
@@ -125,8 +125,8 @@ export const MathpadContainer = ({onCopySlot, settings}:
         }))
     }, []);
 
-    const onSlotCopied = useCallback((slot: PadSlot) => {
-        slot && setTimeout(()=>onCopySlot(slot),0);
+    const onSlotCopied = useCallback((slot: PadSlot, what: string) => {
+        slot && setTimeout(()=>onCopySlot(slot, what),0);
     }, [onCopySlot]);
 
     return (
