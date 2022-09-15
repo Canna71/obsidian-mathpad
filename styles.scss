@@ -96,15 +96,22 @@
                         }
                     }
                 }
+                .slot-actions {
+                    position: absolute;
+                    top: 0px;
+                    right: 0px;
+                    display: flex;
+                    flex-direction: column;
+                    visibility: hidden;
+                }
+                &:hover .slot-actions {
+                    visibility: visible;
+                }
             }
 
-            .slot-actions {
-                position: absolute;
-                top: 0px;
-                right: 0px;
-                display: flex;
-                flex-direction: column;
-            }
+
+
+
         }
     }
 
