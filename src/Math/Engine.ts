@@ -14,7 +14,7 @@ require("nerdamer/Solve");
 const MY_VALIDATION_REGEX =
     /^[a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*$/i;
 
-
+const FNCALL_REGEX = /([a-z]*)\((.*)\)/i;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (nerdamer as any).set("VALIDATION_REGEX", MY_VALIDATION_REGEX);
 
@@ -199,16 +199,24 @@ export class NerdamerWrapper implements Engine {
         param_array: string[],
         function_body: string
     ) => {
-        this.restoreScope();
-        nerdamer.setFunction(function_name, param_array, function_body);
-        this.saveScope();
+        try {
+            this.restoreScope();
+            nerdamer.setFunction(function_name, param_array, function_body);
+            this.saveScope();
+        } catch (ex) {
+            console.warn(ex);
+        }
         return this;
     };
 
     setVar = (name: string, value: string | number) => {
-        this.restoreScope();
-        nerdamer.setVar(name, value);
-        this.saveScope();
+        try {
+            this.restoreScope();
+            nerdamer.setVar(name, value);
+            this.saveScope();
+        } catch (ex) {
+            console.warn(ex);
+        }
     };
 
     getScope = () => {
@@ -263,6 +271,14 @@ export class NerdamerWrapper implements Engine {
     toLatex = (expr: string) => {
         this.restoreScope();
         const e = prepare_expression(expr);
+
+        const m = FNCALL_REGEX.exec(expr);
+        if(m){
+            const fnName = m[1];
+            const params = m[2];
+            return fnName + "\\left(" + nerdamer.convertToLaTeX(params) + "\\right)";
+        }
+
         return nerdamer.convertToLaTeX(e);
         this.saveScope();
     };
@@ -286,7 +302,7 @@ export function createEngine(): Engine {
 
 (window as any).createEngine = createEngine;
 
-const prepare_expression = function (e:string) {
+const prepare_expression = function (e: string) {
     /*
      * Since variables cannot start with a number, the assumption is made that when this occurs the
      * user intents for this to be a coefficient. The multiplication symbol in then added. The same goes for
@@ -327,8 +343,7 @@ const prepare_expression = function (e:string) {
                     const first = str.charAt(start);
                     let before = "",
                         d = "*";
-                    if (!first.match(/[+\-/*]/))
-                        before = str.charAt(start - 1);
+                    if (!first.match(/[+\-/*]/)) before = str.charAt(start - 1);
                     if (before.match(/[a-z]/i)) d = "";
                     return group1 + d + group2;
                 }

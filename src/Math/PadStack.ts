@@ -1,9 +1,9 @@
-import { MathpadSettings } from 'src/MathpadSettings';
+import { MathpadSettings } from "src/MathpadSettings";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { createEngine, Engine } from "./Engine";
 import PadSlot from "./PadSlot";
-import parse, { SLOT_VARIABLE_PREFIX } from './Parsing';
+import parse, { SLOT_VARIABLE_PREFIX } from "./Parsing";
 
 export interface ProcessOptions {
     evaluate?: boolean;
@@ -14,8 +14,6 @@ const DEFAULT_OPTS: ProcessOptions = {
     evaluate: false,
     simplify: false,
 };
-
-
 
 export class SlotStack {
     engine: Engine;
@@ -48,7 +46,7 @@ export class SlotStack {
             input,
             settings,
             opts
-        ); 
+        );
         // const pad = new PadSlot(nextId(stack), input).process(scope, opts);
         // this.stack = [...this.stack, slot];
         const newEngine = this.engine.clone();
@@ -56,22 +54,27 @@ export class SlotStack {
         if (!slot.error && slot.isValid) {
             newEngine.setVar(
                 SlotStack.getSlotVariableName(slot.id),
-                slot.value 
+                slot.value
             );
         }
 
         return new SlotStack(newEngine, [...this.items, slot]);
     }
 
-    updateSlot(id: number, value: string, settings:MathpadSettings, options: ProcessOptions) {
+    updateSlot(
+        id: number,
+        value: string,
+        settings: MathpadSettings,
+        options: ProcessOptions
+    ) {
         // resetContext();
         const newEngine = createEngine();
         const newStack: PadSlot[] = [];
         this.items.forEach((slot) => {
             if (slot.id == id) {
-                const pr = parse(value,settings);
+                const pr = parse(value, settings);
                 // if(pr.isValid){
-                    slot = new PadSlot(slot.id).process(newEngine,pr) as PadSlot;
+                slot = new PadSlot(slot.id).process(newEngine, pr) as PadSlot;
                 // }
             } else {
                 slot.process(newEngine, slot.parseResult);
@@ -100,7 +103,6 @@ export class SlotStack {
                         slot.value
                     );
                 }
-
                 newStack.push(slot);
             }
         });

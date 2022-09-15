@@ -26,7 +26,7 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied, onClicked, select
         padSlot: PadSlot,
         onChanged: (id: number, value: string) => void,
         onClosed: (id: number) => void,
-        onCopied: (slot: PadSlot, what:string) => void,
+        onCopied: (slot: PadSlot, what: string) => void,
         onClicked: (id: number) => void,
         selected: boolean
     }) => {
@@ -78,13 +78,13 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied, onClicked, select
         onCopied(padSlot, e.currentTarget.dataset.copy || "code")
     }, [padSlot])
 
-    const handlePlotScaleChanhed = useCallback((opts: FunctionPlotOptions)=>{
-        padSlot.plot.xDomain = opts.xAxis?.domain?.map(n=>n.toPrecision(3));
-        padSlot.plot.yDomain = opts.yAxis?.domain?.map(n=>n.toPrecision(3));
-    },[]);
+    const handlePlotScaleChanhed = useCallback((opts: FunctionPlotOptions) => {
+        padSlot.plot.xDomain = opts.xAxis?.domain?.map(n => n.toPrecision(3));
+        padSlot.plot.yDomain = opts.yAxis?.domain?.map(n => n.toPrecision(3));
+    }, []);
 
     const anchorClassNames = ["slot-anchor"];
-    if(selected){
+    if (selected) {
         anchorClassNames.push("selected");
     }
     return (
@@ -121,7 +121,7 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied, onClicked, select
                 {!padSlot.error && <a className="view-action mod-close-leaf" onClick={onCopy} data-copy="input" title="copy input as LaTeX" >
                     <Input />
                 </a>}
-                {!padSlot.error && <a className="view-action mod-close-leaf" onClick={onCopy}  data-copy="result" title="copy result as LaTeX">
+                {!padSlot.error && <a className="view-action mod-close-leaf" onClick={onCopy} data-copy="result" title="copy result as LaTeX">
                     <Question />
                 </a>}
             </div>
