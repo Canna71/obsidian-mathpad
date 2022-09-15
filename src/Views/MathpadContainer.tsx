@@ -37,6 +37,7 @@ interface MathPadState {
     input: string;
     stack?: SlotStack;
     options: MathPadOptions;
+    selected?: number;
 }
 
 const DEFAULTSTATE: MathPadState = {
@@ -56,15 +57,9 @@ export const MathpadContainer = ({onCopySlot, settings}:
     const [state, setState] = useState({ ...DEFAULTSTATE });
 
     const { input, stack, options: { evaluate } } = state;
-    // const [input, setInput] = useState("");
-    // const [history, setHistory] = useState<PadSlot[]>([])
-    // const [options, setOptions] = useState<MathPadOptions>({
-    //     evaluate: true 
-    // });
-    // console.log(stack);
+    
 
     useEffect(() => { 
-        // resetContext();
         setState(state=>({...state, stack: getNewStack(), options:
         {
             ...state.options,
@@ -129,11 +124,25 @@ export const MathpadContainer = ({onCopySlot, settings}:
         slot && setTimeout(()=>onCopySlot(slot, what),0);
     }, [onCopySlot]);
 
+    const applyFn = (fn:string) => useCallback(()=>{
+        console.log("TODO: ", fn);
+    },[fn])
+
+    const onSlotClicked = useCallback((changedId: number) => {
+        setState(state => ({
+            ...state,
+            
+            selected:changedId
+        }))
+    }, []);
+
     return (
 
         <div className="mathpad-container">
             <div className="toolbar">
-                <button onClick={onToggleEvaluate}>{evaluate ? "Num" : "Sym"}</button>
+                <button onClick={onToggleEvaluate} title={evaluate ? "numeric" : "symbolic"} >{evaluate ? "3" : "⒳"}</button>
+                <button onClick={applyFn("diff")} title="derivate" >f′</button>
+            
             </div>
             <div className="mathpad-scroller">
                 <div className="mathpad-slots-container">
@@ -143,6 +152,7 @@ export const MathpadContainer = ({onCopySlot, settings}:
                                 onChanged={onSlotChanged}
                                 onClosed={onSlotClosed}
                                 onCopied={onSlotCopied}
+                                onClicked={onSlotClicked}
                             />
                         ))
                     }

@@ -21,12 +21,13 @@ const DEFAULT_SLOT_STATE: PadSlotViewState = {
     edit: false
 }
 
-const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
+const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied, onClicked }:
     {
         padSlot: PadSlot,
         onChanged: (id: number, value: string) => void,
         onClosed: (id: number) => void,
         onCopied: (slot: PadSlot, what:string) => void,
+        onClicked: (id: number) => void,
 
     }) => {
 
@@ -69,6 +70,9 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
         onClosed(padSlot.id)
     }, [padSlot.id])
 
+    const onClick = useCallback((e: React.MouseEvent) => {
+        onClicked(padSlot.id)
+    }, [padSlot.id])
 
     const onCopy = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
         onCopied(padSlot, e.currentTarget.dataset.copy || "code")
@@ -82,7 +86,7 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
     return (
         <div className="slot-container">
             <div className="slot-anchor">
-                <div className="slot-name">{SlotStack.getSlotVariableName(padSlot.id)}</div>
+                <div className="slot-name" onClick={onClick}>{SlotStack.getSlotVariableName(padSlot.id)}</div>
             </div>
             <div className="slot-content">
                 <SlotInput onMouseDown={onMouseDown} edit={edit}
