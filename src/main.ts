@@ -22,7 +22,7 @@ import { processCodeBlock } from "./Views/DocView";
 import PadScope from "./Math/PadScope";
 import { getPostPrcessor } from "./Extensions/PostProcessor";
 
-const sigma = `<path  fill="currentColor" stroke="currentColor" d="M0+0L100.802+0L100.802+23.6688L82.9281+23.6688L82.9281+17.1459L38.2883+17.1459L67.1631+50.213L38.2883+83.28L82.9287+83.28L82.9287+76.7571L100.803+76.7571L100.803+100.426L0+100.426L43.8464+50.213L0+0Z" opacity="1" fill="#000000"/>
+const sigma = `<path stroke="currentColor" d="M78.6067 22.8905L78.6067 7.71171L17.8914 7.71171L48.2491 48.1886L17.8914 88.6654L78.6067 88.6654L78.6067 73.4866" opacity="1"  stroke-linecap="round" stroke-linejoin="round" stroke-width="6" />
 `;
 
 // Remember to rename these classes and interfaces!

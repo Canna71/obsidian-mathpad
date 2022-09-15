@@ -101,7 +101,6 @@ export const resultField = StateField.define<DecorationSet>({
                             console.log(text);
                         }
                         // we need to do this inside this if, otherwise we are iterating also for normal "inline-code"!
-                        // TODO: bug not when modifying a inline-code it gets the wrong previous result!!!
                     }
                 }
             },

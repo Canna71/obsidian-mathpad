@@ -6,7 +6,9 @@ import Close from "../icons/close.svg";
 import { makePlot } from "./Plot";
 import { MathpadContext } from "./MathpadView";
 import SlotInput from "./SlotInput";
-// import Copy from "../icons/edit.svg";
+import Code from "../icons/code.svg";
+import Input from "../icons/input.svg";
+import Question from "../icons/question.svg";
 import { SlotStack } from "src/Math/PadStack";
 import { FunctionPlotOptions } from "function-plot/dist/types";
 
@@ -106,13 +108,13 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied }:
                     <Close />
                 </a>
                 {!padSlot.error && <a className="view-action mod-close-leaf" onClick={onCopy} data-copy="code" title="copy to code block" >
-                    &lt;\&gt;
+                    <Code />
                 </a>}
                 {!padSlot.error && <a className="view-action mod-close-leaf" onClick={onCopy} data-copy="input" title="copy input as LaTeX" >
-                    $
+                    <Input />
                 </a>}
                 {!padSlot.error && <a className="view-action mod-close-leaf" onClick={onCopy}  data-copy="result" title="copy result as LaTeX">
-                    =?
+                    <Question />
                 </a>}
             </div>
 
