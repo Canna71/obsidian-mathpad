@@ -4,7 +4,8 @@
     height: 100%;
     .toolbar {
         border-bottom: 1px solid var(--background-modifier-border);
-
+        border-top: 1px solid var(--background-modifier-border);
+        margin-top: -16px;
         padding: 4px;
         flex: 0;
         button {
@@ -35,6 +36,8 @@
                     width: 24px;
                     border-right: 1px solid var(--background-modifier-border);
                     justify-content: center;
+                    background-color: transparent;
+                    cursor: pointer;
 
                     .slot-name {
                         width: 100%;
@@ -45,6 +48,12 @@
 
                     &:hover {
                         background-color: var(--background-modifier-border);
+                    }
+
+                    &.selected {
+                        cursor:default;
+                        background-color: var(--background-modifier-border);
+                        border-color: var(--interactive-accent);
                     }
                 }
 
@@ -62,6 +71,7 @@
                         mjx-container {
                             text-align: left;
                         }
+                        cursor:text;
 
                         .plain-input {
                             padding: 5px;

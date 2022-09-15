@@ -21,14 +21,14 @@ const DEFAULT_SLOT_STATE: PadSlotViewState = {
     edit: false
 }
 
-const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied, onClicked }:
+const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied, onClicked, selected }:
     {
         padSlot: PadSlot,
         onChanged: (id: number, value: string) => void,
         onClosed: (id: number) => void,
         onCopied: (slot: PadSlot, what:string) => void,
         onClicked: (id: number) => void,
-
+        selected: boolean
     }) => {
 
     const [state, setState] = useState(DEFAULT_SLOT_STATE);
@@ -71,8 +71,8 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied, onClicked }:
     }, [padSlot.id])
 
     const onClick = useCallback((e: React.MouseEvent) => {
-        onClicked(padSlot.id)
-    }, [padSlot.id])
+        !selected && onClicked(padSlot.id)
+    }, [padSlot.id, selected])
 
     const onCopy = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
         onCopied(padSlot, e.currentTarget.dataset.copy || "code")
@@ -83,10 +83,14 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied, onClicked }:
         padSlot.plot.yDomain = opts.yAxis?.domain?.map(n=>n.toPrecision(3));
     },[]);
 
+    const anchorClassNames = ["slot-anchor"];
+    if(selected){
+        anchorClassNames.push("selected");
+    }
     return (
         <div className="slot-container">
-            <div className="slot-anchor">
-                <div className="slot-name" onClick={onClick}>{SlotStack.getSlotVariableName(padSlot.id)}</div>
+            <div className={anchorClassNames.join(" ")} onClick={onClick}>
+                <div className="slot-name" >{SlotStack.getSlotVariableName(padSlot.id)}</div>
             </div>
             <div className="slot-content">
                 <SlotInput onMouseDown={onMouseDown} edit={edit}

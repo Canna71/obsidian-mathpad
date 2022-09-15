@@ -48,6 +48,10 @@ const DEFAULTSTATE: MathPadState = {
     }
 }
 
+function applyFnStr(fn:string, input:string){
+    return `${fn}(${input})`;
+}
+
 
 export const MathpadContainer = ({onCopySlot, settings}:
     {onCopySlot:(slot:PadSlot, what:string)=>void, settings: MathpadSettings}
@@ -56,7 +60,7 @@ export const MathpadContainer = ({onCopySlot, settings}:
 
     const [state, setState] = useState({ ...DEFAULTSTATE });
 
-    const { input, stack, options: { evaluate } } = state;
+    const { input, stack, options: { evaluate }, selected } = state;
     
 
     useEffect(() => { 
@@ -125,7 +129,18 @@ export const MathpadContainer = ({onCopySlot, settings}:
     }, [onCopySlot]);
 
     const applyFn = (fn:string) => useCallback(()=>{
-        console.log("TODO: ", fn);
+
+        setState(state=>{
+            if(!state.selected) return state;
+            const slot = state.stack?.getSlotById(state.selected);
+            if(!slot) return state;
+            const input = slot?.input;
+            const newInput = applyFnStr(fn,input);
+            return ({
+                ...state,
+                stack: state.stack?.addSlot(newInput, settings, { evaluate: state.options.evaluate })
+            })
+        })
     },[fn])
 
     const onSlotClicked = useCallback((changedId: number) => {
@@ -142,7 +157,12 @@ export const MathpadContainer = ({onCopySlot, settings}:
             <div className="toolbar">
                 <button onClick={onToggleEvaluate} title={evaluate ? "numeric" : "symbolic"} >{evaluate ? "3" : "⒳"}</button>
                 <button onClick={applyFn("diff")} title="derivate" >f′</button>
-            
+                <button onClick={applyFn("integrate")} title="integrate" >∫</button>
+                <button onClick={applyFn("solve")} title="solve" >x=?</button>
+                <button onClick={applyFn("expand")} title="expand" >...</button>
+                <button onClick={applyFn("simplify")} title="simplify" >()</button>
+
+
             </div>
             <div className="mathpad-scroller">
                 <div className="mathpad-slots-container">
@@ -153,6 +173,7 @@ export const MathpadContainer = ({onCopySlot, settings}:
                                 onClosed={onSlotClosed}
                                 onCopied={onSlotCopied}
                                 onClicked={onSlotClicked}
+                                selected={selected === ms.id}
                             />
                         ))
                     }
