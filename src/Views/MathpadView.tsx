@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { debounce, finishRenderMath, ItemView, MarkdownView, WorkspaceLeaf } from "obsidian";
+import { debounce, finishRenderMath, ItemView, MarkdownView, Notice, WorkspaceLeaf } from "obsidian";
 import * as React from "react";
 import { createRoot, Root } from "react-dom/client";
 
@@ -12,6 +12,20 @@ import { MathpadSettings } from "src/MathpadSettings";
 export const MATHPAD_VIEW = "mathpad-view";
 
 export const MathpadContext = React.createContext<any>({});
+
+function copyContent(view: MarkdownView, content: string, block?: boolean) {
+
+    if(block !==undefined){
+        content = block ? `$$${content}$$`:`$${content}$`;   
+    }
+
+    if(view.getMode()==="source"){
+        view.editor.replaceSelection(content);
+    } else {
+        navigator.clipboard.writeText(content);
+        new Notice("Content copied to clipboard");
+    }
+}
 
 export class MathpadView extends ItemView {
     settings: MathpadSettings;
@@ -59,23 +73,17 @@ export class MathpadView extends ItemView {
             if (editor) {
                 switch (what) {
                     case "input":
-                        if (this.settings.preferBlock)
-                            editor.replaceSelection(`$$${slot.inputLaTeX}$$`);
-                        else
-                            editor.replaceSelection(`$${slot.inputLaTeX}$`);
-                        break;
+                            copyContent(leaf.view, slot.inputLaTeX, this.settings.preferBlock);
+                            break;
                     case "result":
-                        if (this.settings.preferBlock)
-                            editor.replaceSelection(`$$${slot.laTeX}$$`);
-                        else
-                            editor.replaceSelection(`$${slot.laTeX}$`);
-                        break;
+                        copyContent(leaf.view, slot.laTeX, this.settings.preferBlock);
+
+                    break;
                     default:
-                        editor.replaceSelection(`
-\`\`\`mathpad
+                        copyContent(leaf.view, `\`\`\`mathpad
 ${str}
 \`\`\`
-                        `)
+`)
                         break;
                 }
 
