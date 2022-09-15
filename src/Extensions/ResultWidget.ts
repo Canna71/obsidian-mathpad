@@ -12,14 +12,16 @@ export class ResultWidget extends WidgetType {
     padScope: PadScope;
     parseResult: ParseResult;
     pos?: number;
+    onlyResult: boolean;
     /**
      *
      */
-    constructor(padScope: PadScope, parseResult: ParseResult, pos?: number) {
+    constructor(padScope: PadScope, parseResult: ParseResult, onlyResult: boolean, pos?: number) {
         super();
         this.padScope = padScope;
         this.parseResult = parseResult;
         this.pos = pos;
+        this.onlyResult = onlyResult;
         // this.isLatex = isLatex;÷
     }
 
@@ -29,7 +31,7 @@ export class ResultWidget extends WidgetType {
         if(this.padScope.isValid) {
 
             el = renderMath(
-                this.padScope.noteLatex,
+                this.onlyResult?this.padScope.laTeX:this.padScope.noteLatex,
                 this.parseResult.block
             );
             
@@ -54,6 +56,9 @@ export class ResultWidget extends WidgetType {
 
 export class EmptyWidget extends WidgetType {
     toDOM(view: EditorView): HTMLElement {
-        return document.createSpan();
+        console.log("empty widget");
+        const span = document.createElement("span");
+        // span.setText("test")
+        return span;
     }
 }

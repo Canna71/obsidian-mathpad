@@ -38,20 +38,23 @@ export const resultField = StateField.define<DecorationSet>({
 
         // we try to avoid recomputing if editing outside inline-code
         if (
-            nodeA.name !== "inline-code" &&
-            nodeB.name !== "inline-code" &&
+            nodeA.name !== "inline-code" && nodeA.name !==  "formatting_formatting-code_inline-code" &&
+            nodeB.name !== "inline-code" && nodeB.name !==  "formatting_formatting-code_inline-code" &&
             transaction.docChanged
         ) {
             return oldState.map(transaction.changes);
         }
 
-        const okToProcess = transaction.effects.find(eff => eff.is(setConfigEffect));
+        const okToProcess = transaction.effects.find((eff) =>
+            eff.is(setConfigEffect)
+        );
 
         let oldDec = undefined as any;
         if (!transaction.docChanged) {
             if (
                 (!transaction.selection ||
-                !transaction.selection.asSingle().main.empty) && !okToProcess
+                    !transaction.selection.asSingle().main.empty) &&
+                !okToProcess
             ) {
                 return oldState.map(transaction.changes);
             }
@@ -78,17 +81,19 @@ export const resultField = StateField.define<DecorationSet>({
                         //  console.log("doc changed!")
                     }
                     const parseResult = parse(text, settings);
-                    
+
                     if (parseResult.isValid) {
                         try {
-                            if(addDecoration(
-                                engine,
-                                parseResult,
-                                builder,
-                                caret,
-                                node,
-                                previousRes
-                            )){
+                            if (
+                                addDecoration(
+                                    engine,
+                                    parseResult,
+                                    builder,
+                                    caret,
+                                    node,
+                                    previousRes
+                                )
+                            ) {
                                 oldDec && oldDec.next();
                             }
                         } catch (e) {
@@ -97,7 +102,6 @@ export const resultField = StateField.define<DecorationSet>({
                         }
                         // we need to do this inside this if, otherwise we are iterating also for normal "inline-code"!
                         // TODO: bug not when modifying a inline-code it gets the wrong previous result!!!
-                        
                     }
                 }
             },
@@ -122,7 +126,7 @@ function addDecoration(
 ) {
     // let res: PadScope | undefined;
     // if (parseResult.latex || !caret) {
-       const res = previousRes || new PadScope().process(engine, parseResult);
+    const res = previousRes || new PadScope().process(engine, parseResult);
     // }
     if (previousRes) {
         console.log("reciclying preciousRes", previousRes.input);
@@ -136,31 +140,47 @@ function addDecoration(
             node.to,
             caret
                 ? Decoration.widget({
-                      widget: new ResultWidget(res, parseResult, node.from),
+                      widget: new ResultWidget(
+                          res,
+                          parseResult,
+                          false,
+                          node.from
+                      ),
                       block: true,
                       side: 1,
                       res,
                   })
                 : Decoration.replace({
-                      widget: new ResultWidget(res, parseResult, node.from),
+                      widget: new ResultWidget(
+                          res,
+                          parseResult,
+                          false,
+                          node.from
+                      ),
                       block: true,
-                      inclusive: true,
                       res,
+                      side: 1,
                   })
         );
     } else {
         // inline
-        if (!caret && res){
+        if (!caret && res) {
             builder.add(
                 node.from,
                 node.to,
                 Decoration.replace({
-                    widget: new ResultWidget(res, parseResult, node.from),
+                    widget: new ResultWidget(
+                        res,
+                        parseResult,
+                        false,
+                        node.from
+                    ),
                     block: false,
-                    inclusive: true,
+                    inclusive: false,
                     res,
+                    side: 1,
                 })
-            );
+            ); 
         } else {
             builder.add(
                 node.to,
@@ -170,10 +190,17 @@ function addDecoration(
                     block: false,
                     inclusive: false,
                     res,
+                    side: 1,
                 })
-            )
+                // Decoration.widget({
+                //     widget: new ResultWidget(res, parseResult,true, node.from),
+                //     block: false,
+                //     inclusive: false,
+                //     res,
+                //     side: 1
+                // }),
+            );
         }
-
     }
     // return true means we used up the precious result
     return true;
