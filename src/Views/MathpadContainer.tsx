@@ -156,11 +156,11 @@ export const MathpadContainer = ({onCopySlot, settings}:
         <div className="mathpad-container">
             <div className="toolbar">
                 <button onClick={onToggleEvaluate} title={evaluate ? "numeric" : "symbolic"} >{evaluate ? "3" : "⒳"}</button>
-                <button onClick={applyFn("diff")} title="derivate" >f′</button>
-                <button onClick={applyFn("integrate")} title="integrate" >∫</button>
-                <button onClick={applyFn("solve")} title="solve" >x=?</button>
-                <button onClick={applyFn("expand")} title="expand" >...</button>
-                <button onClick={applyFn("simplify")} title="simplify" >()</button>
+                <button onClick={applyFn("diff")} title="derivate" disabled={!selected} >𝑓′</button>
+                <button onClick={applyFn("integrate")} title="integrate" disabled={!selected}>∫</button>
+                <button onClick={applyFn("solve")} title="solve" disabled={!selected}>𝒙=</button>
+                <button onClick={applyFn("expand")} title="expand" disabled={!selected}>⋯</button>
+                <button onClick={applyFn("simplify")} title="simplify" disabled={!selected}>()</button>
 
 
             </div>

@@ -271,16 +271,21 @@ export class NerdamerWrapper implements Engine {
     toLatex = (expr: string) => {
         this.restoreScope();
         const e = prepare_expression(expr);
-
-        const m = FNCALL_REGEX.exec(expr);
-        if(m){
-            const fnName = m[1];
-            const params = m[2];
-            return fnName + "\\left(" + nerdamer.convertToLaTeX(params) + "\\right)";
+        let ret = expr;
+        
+        try{
+            ret = nerdamer.convertToLaTeX(e);
+        } catch(ex) {
+            const m = FNCALL_REGEX.exec(expr);
+            if(m){
+                const fnName = m[1];
+                const params = m[2];
+                ret = fnName + "\\left(" + nerdamer.convertToLaTeX(params) + "\\right)";
+            }
+            
         }
-
-        return nerdamer.convertToLaTeX(e);
         this.saveScope();
+        return ret;
     };
 
     clone = () => {

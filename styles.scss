@@ -9,7 +9,15 @@
         padding: 4px;
         flex: 0;
         button {
-            padding: 4px 8px;
+            padding: 2px 2px;
+            width: 28px;
+            height: 28px;
+
+            &:disabled {
+                color: var(--text-faint);
+                // background-color: var(--background-modifier-border);
+                cursor: default;
+            }
         }
     }
 
