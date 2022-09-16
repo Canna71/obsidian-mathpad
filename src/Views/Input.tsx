@@ -15,7 +15,7 @@ export const Input: React.FC<InputProps> = ({
 
  
     return <div className="current-input">
-        <textarea rows={1} className="mathpad-input" wrap="off" onKeyDown={onKeyDown} value={input} onChange={onChange} ref={edRef}>
+        <textarea placeholder=">" rows={1} className="mathpad-input" wrap="off" onKeyDown={onKeyDown} value={input} onChange={onChange} ref={edRef}>
 
         </textarea>
     </div>;

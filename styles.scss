@@ -5,7 +5,7 @@
     .toolbar {
         border-bottom: 1px solid var(--background-modifier-border);
         border-top: 1px solid var(--background-modifier-border);
-        margin-top: -16px;
+        // margin-top: -16px;
         padding: 4px;
         flex: 0;
         button {
@@ -125,8 +125,14 @@
 
     .current-input {
         border-top: 1px solid var(--background-modifier-border);
-        padding-top: 16px;
+        // padding-top: 16px;
         flex: 0;
+        margin-bottom: 32px;
+        padding: 16px 8px 8px 8px;
+        
+        textarea.mathpad-input {
+            
+        }
     }
 
     .mathpad-input {
@@ -196,6 +202,4 @@
     // color: var(--text-on-accent);
 }
 
-.minimal-theme .mathpad-container .current-input {
-    margin-bottom: 32px;
-}
+
