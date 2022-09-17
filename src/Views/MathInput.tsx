@@ -26,7 +26,7 @@ export const MathInput: React.FC<React.DetailedHTMLProps<React.InputHTMLAttribut
             // if(!props.placeholder)
             setTimeout(() => { txtRef.current?.focus() }, 0);
         }
-    },[])
+    }, [])
 
 
     const handleInput = useCallback((e: React.FormEvent<HTMLInputElement>) => {
@@ -38,53 +38,49 @@ export const MathInput: React.FC<React.DetailedHTMLProps<React.InputHTMLAttribut
         const inputType = (e.nativeEvent as InputEvent).inputType;
         const el = e.currentTarget;
         console.log(inputType)
+        const nextchar = val.slice(pos, pos + 1)[0];
 
-        if (inputType === "insertText" && closeChar) {
+        if (inputType === "insertText" && closeChar && (!nextchar || nextchar === " " || isCloseChar.get(nextchar))) {
             val.splice(pos, 0, closeChar);
-            
-            e.currentTarget.value = val.join('');
-            // setTimeout(()=>{
-                el.selectionEnd = pos;
-            // },0)
-        } 
-        
-        if (inputType === "insertText" && isCloseChar.get(char)) {
-            const nextchar = val.slice(pos, pos+1)[0];
 
-            if(nextchar === char){
-                val.splice(pos,1);
-                
+            e.currentTarget.value = val.join('');
+            el.selectionEnd = pos;
+        }
+
+        if (inputType === "insertText" && isCloseChar.get(char)) {
+
+
+            if (nextchar === char) {
+                val.splice(pos, 1);
+
                 el.value = val.join("");
-                // setTimeout(()=>{
-                    el.selectionEnd = pos;
-                // },0)
+                el.selectionEnd = pos;
             }
         }
 
         // deleteContentBackward, deleteContentForward
-        if(inputType === "deleteContentBackward" || inputType === "deleteContentForward") {
-            const removedChar = (props.value as string)[pos];
-            const closeChar = closeChars.get(removedChar)
-            if(closeChar){
-                const nextChar = el.value[pos];
-                if(isCloseChar.get(nextChar)){
-                    console.log(val,pos);
-                    val.splice(pos,1);
-                    el.value = val.join("");
-                    el.selectionEnd = pos;
+        if (inputType === "deleteContentBackward" || inputType === "deleteContentForward") {
+            const removedChar = (props.value as string)?.at(pos);
+            if (removedChar) {
+                const closeChar = closeChars.get(removedChar)
+                if (closeChar) {
+                    // const nextChar = el.value[pos];
+                    if (isCloseChar.get(nextchar)) {
+                        val.splice(pos, 1);
+                        el.value = val.join("");
+                        el.selectionEnd = pos;
+                    }
                 }
             }
-            
-            
 
         }
 
         // propagate it
         props.onInput && props.onInput(e);
     }, [props.value]);
-    
+
     return (
-        <input type={"text"} {...props}  onInput={handleInput} ref={txtRef} >
+        <input type={"text"} {...props} onInput={handleInput} ref={txtRef} >
         </input>
     );
 

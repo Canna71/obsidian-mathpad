@@ -3,7 +3,7 @@
 	"name": "Mathpad",
 	"version": "0.5.5",
 	"minAppVersion": "0.15.0",
-	"description": "Integrate a Computer Algebra System into Onsidian",
+	"description": "Computer Algebra System for Onsidian",
 	"author": "Gabriele Cannata",
 	"authorUrl": "https://github.com/Canna71",
 	"isDesktopOnly": true
