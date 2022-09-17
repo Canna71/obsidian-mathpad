@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-mathpad",
 	"name": "Mathpad",
-	"version": "0.5.5",
+	"version": "0.5.6",
 	"minAppVersion": "0.15.0",
 	"description": "Computer Algebra System for Onsidian",
 	"author": "Gabriele Cannata",
