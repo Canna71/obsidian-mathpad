@@ -35,33 +35,53 @@ export const MathInput: React.FC<React.DetailedHTMLProps<React.InputHTMLAttribut
 
         const char = val.slice(pos - 1, pos)[0];
         const closeChar = closeChars.get(char);
+        const inputType = (e.nativeEvent as InputEvent).inputType;
+        const el = e.currentTarget;
+        console.log(inputType)
 
-
-        if ((e.nativeEvent as InputEvent).inputType === "insertText" && closeChar) {
+        if (inputType === "insertText" && closeChar) {
             val.splice(pos, 0, closeChar);
-            const el = e.currentTarget
+            
             e.currentTarget.value = val.join('');
             // setTimeout(()=>{
                 el.selectionEnd = pos;
             // },0)
         } 
         
-        if ((e.nativeEvent as InputEvent).inputType === "insertText" && isCloseChar.get(char)) {
+        if (inputType === "insertText" && isCloseChar.get(char)) {
             const nextchar = val.slice(pos, pos+1)[0];
 
             if(nextchar === char){
                 val.splice(pos,1);
-                const el = e.currentTarget
-
+                
                 el.value = val.join("");
                 // setTimeout(()=>{
                     el.selectionEnd = pos;
                 // },0)
             }
         }
+
+        // deleteContentBackward, deleteContentForward
+        if(inputType === "deleteContentBackward" || inputType === "deleteContentForward") {
+            const removedChar = (props.value as string)[pos];
+            const closeChar = closeChars.get(removedChar)
+            if(closeChar){
+                const nextChar = el.value[pos];
+                if(isCloseChar.get(nextChar)){
+                    console.log(val,pos);
+                    val.splice(pos,1);
+                    el.value = val.join("");
+                    el.selectionEnd = pos;
+                }
+            }
+            
+            
+
+        }
+
         // propagate it
         props.onInput && props.onInput(e);
-    }, []);
+    }, [props.value]);
     
     return (
         <input type={"text"} {...props}  onInput={handleInput} ref={txtRef} >
