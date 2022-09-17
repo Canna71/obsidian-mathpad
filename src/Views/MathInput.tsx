@@ -16,9 +16,9 @@ export const isCloseChar = new Map([
 ]);
 
 
-export const MathInput: React.FC<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>> = React.memo(props => {
+export const MathInput: React.FC<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>> = React.memo(props => {
 
-    const txtRef = useRef<HTMLTextAreaElement>(null);
+    const txtRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if (txtRef.current) {
@@ -29,7 +29,7 @@ export const MathInput: React.FC<React.DetailedHTMLProps<React.InputHTMLAttribut
     },[])
 
 
-    const handleInput = useCallback((e: React.FormEvent<HTMLTextAreaElement>) => {
+    const handleInput = useCallback((e: React.FormEvent<HTMLInputElement>) => {
         const pos = e.currentTarget.selectionStart || 0;
         const val = [...e.currentTarget.value];
 
@@ -64,8 +64,8 @@ export const MathInput: React.FC<React.DetailedHTMLProps<React.InputHTMLAttribut
     }, []);
     
     return (
-        <textarea rows={1} wrap="off" type={"text"} {...props}  onInput={handleInput} ref={txtRef} >
-        </textarea>
+        <input type={"text"} {...props}  onInput={handleInput} ref={txtRef} >
+        </input>
     );
 
 });
