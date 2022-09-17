@@ -27,6 +27,9 @@ const sigma = `<path stroke="currentColor" fill="none" d="M78.6067 22.8905L78.60
 
 // Remember to rename these classes and interfaces!
 
+let gSettings: MathpadSettings;
+
+export function getMathpadSettings() { return gSettings; }
 export default class MathpadPlugin extends Plugin {
     settings: MathpadSettings;
  
@@ -52,7 +55,7 @@ export default class MathpadPlugin extends Plugin {
         }
 
         this.addCommand({
-            id: "show-mathpad-vew",
+            id: "show-mathpad-view",
             name: "Show Mathpad Sidebar",
             callback: () => this.activateView(),
           });
@@ -102,6 +105,7 @@ export default class MathpadPlugin extends Plugin {
             DEFAULT_SETTINGS,
             await this.loadData()
         );
+        gSettings = this.settings;
     }
 
     async saveSettings() {

@@ -31,8 +31,6 @@ export const resultField = StateField.define<DecorationSet>({
         const tree = syntaxTree(transaction.state);
         const caretPos = transaction.state.selection.ranges[0].from;
 
-        // console.log("state", transaction);
-
         const nodeA = tree.resolve(caretPos, 1);
         const nodeB = tree.resolve(caretPos, -1);
 
@@ -73,7 +71,7 @@ export const resultField = StateField.define<DecorationSet>({
                         node.to
                     );
                     const caret =
-                        node.from - 1 <= caretPos && caretPos <= node.to;
+                        node.from /*-1*/ <= caretPos && caretPos <= node.to;
                     let previousRes: PadScope | undefined;
                     if (!transaction.docChanged) {
                         previousRes = oldDec?.value?.spec?.res;
@@ -127,11 +125,11 @@ function addDecoration(
     // if (parseResult.latex || !caret) {
     const res = previousRes || new PadScope().process(engine, parseResult);
     // }
-    if (previousRes) {
-        console.log("reciclying preciousRes", previousRes.input);
-    } else {
-        console.log("processed ", parseResult.text);
-    }
+    // if (previousRes) {
+    //     console.log("reciclying preciousRes", previousRes.input);
+    // } else {
+    //     console.log("processed ", parseResult.text);
+    // }
     if (parseResult.block && res) {
         builder.add(
             caret ? node.to : node.from,
