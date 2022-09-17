@@ -22,11 +22,11 @@ export const MathInput: React.FC<React.DetailedHTMLProps<React.InputHTMLAttribut
 
     useEffect(() => {
         if (txtRef.current) {
-            // txtRef.current.setSelectionRange(txtRef.current.value.length, txtRef.current.value.length);
+            txtRef.current.setSelectionRange(txtRef.current.value.length, txtRef.current.value.length);
             // if(!props.placeholder)
             setTimeout(() => { txtRef.current?.focus() }, 0);
         }
-    })
+    },[])
 
 
     const handleInput = useCallback((e: React.FormEvent<HTMLTextAreaElement>) => {
