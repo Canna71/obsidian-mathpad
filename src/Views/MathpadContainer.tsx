@@ -92,7 +92,7 @@ export const MathpadContainer = ({onCopySlot, settings}:
         }
     }, [processInput]);
 
-    const onChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setState(state => ({ ...state, input: e.target.value }));
     }, [])
 
@@ -183,7 +183,7 @@ export const MathpadContainer = ({onCopySlot, settings}:
                 </div>
 
             </div>
-            <Input onKeyDown={onKeyDown} input={input} onChange={onChange} />
+            <Input onKeyDown={onKeyDown} input={input} />
         </div>
 
     )

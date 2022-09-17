@@ -1,38 +1,31 @@
 import * as React from "react";
-import { useEffect, useRef } from "react";
 import Latex from "./Latex";
+import { MathInput } from "./MathInput";
 
 const SlotInput:React.FC<{
     onMouseDown: (e: React.MouseEvent) => void,
     edit: boolean,
-    onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void,
-    onBlur: (e: React.FocusEvent<HTMLTextAreaElement>) => void,
+    onKeyDown: (e: React.KeyboardEvent<HTMLElement>) => void,
+    onBlur: (e: React.FocusEvent<HTMLElement>) => void,
     input: string,
     inputLaTeX?: string
 
 }> = ({ onMouseDown, edit, onKeyDown, onBlur, input, inputLaTeX }) => {
 
-    const txtRef = useRef<HTMLTextAreaElement>(null);
 
-    useEffect(() => {
-        if (txtRef.current) {
-            txtRef.current.setSelectionRange(txtRef.current.value.length, txtRef.current.value.length);
-            setTimeout(() => { txtRef.current?.focus() }, 0);
-        }
-    })
+
 
     return (<div className="slot-input" onMouseDown={onMouseDown}>
         {edit ? 
-        <textarea 
+        <MathInput 
         className="mathpad-input" 
-        rows={1} wrap="off"
         defaultValue={input} 
         onKeyDown={onKeyDown} 
-        onBlur={onBlur} 
-        ref={txtRef} /> 
+        onBlur={onBlur}  
+         /> 
         : 
         inputLaTeX ? 
-            <Latex latex={inputLaTeX} /> 
+            <Latex latex={inputLaTeX} block={true} /> 
             : 
             <div className="plain-input">{input}</div>}
 

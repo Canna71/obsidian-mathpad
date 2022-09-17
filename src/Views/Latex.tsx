@@ -13,7 +13,7 @@ const Latex = ({latex, block}:{latex: string, block: boolean}) => {
         finishRenderMath();
     })
 
-    return (<div ref={divRef}>
+    return (<div className="latex-wrapper" ref={divRef}>
 
     </div>)
 }

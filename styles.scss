@@ -94,6 +94,15 @@
                                 background-color: var(--background-primary);
                             }
                         }
+
+                        .mathpad-input {
+                            margin: 1em 0px;
+                        }
+
+                        .latex-wrapper {
+                            padding: 4px;
+                            margin: 1px;
+                        }
                     }
 
                     .slot-result {
@@ -130,8 +139,9 @@
         margin-bottom: 32px;
         padding: 16px 8px 8px 8px;
         
-        textarea.mathpad-input {
-            
+        input.mathpad-input {
+            height: 30px;
+            // border: 1px solid var(--interactive-accent);
         }
     }
 

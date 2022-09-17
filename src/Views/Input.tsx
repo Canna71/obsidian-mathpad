@@ -1,9 +1,10 @@
-import React, { useRef } from "react";
+import React from "react";
+import { MathInput } from "./MathInput";
 
 export interface InputProps {
-    onKeyDown:(e: React.KeyboardEvent) => void,
+    onKeyDown: (e: React.KeyboardEvent) => void,
     input: string,
-    onChange:(e: React.ChangeEvent<HTMLTextAreaElement>) => void,
+    onChange: (e: React.ChangeEvent<HTMLElement>) => void,
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -11,12 +12,11 @@ export const Input: React.FC<InputProps> = ({
     input,
     onChange
 }) => {
-    const edRef = useRef<HTMLTextAreaElement>(null);
 
- 
     return <div className="current-input">
-        <textarea placeholder=">" rows={1} className="mathpad-input" wrap="off" onKeyDown={onKeyDown} value={input} onChange={onChange} ref={edRef}>
+        <MathInput placeholder=">" className="mathpad-input" onKeyDown={onKeyDown} defaultValue={input} onChange={onChange}  />
 
-        </textarea>
     </div>;
 }
+
+

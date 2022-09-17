@@ -52,7 +52,7 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied, onClicked, select
         onChanged(padSlot.id, value);
     }, [padSlot.id, onChanged]);
 
-    const onKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const onKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.code === "Enter") {
 
             e.preventDefault();
@@ -60,7 +60,7 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied, onClicked, select
         }
     }, []);
 
-    const onBlur = useCallback((e: React.FocusEvent<HTMLTextAreaElement>) => {
+    const onBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
         // console.log("blur")
 
         finishEdit(e.currentTarget.value);
