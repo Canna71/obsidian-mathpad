@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 
 
@@ -15,18 +16,18 @@ export const isCloseChar = new Map([
 ]);
 
 
-export const MathInput: React.FC<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>> = (props => {
+export const MathInput: React.FC<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>> = React.memo(props => {
 
     const txtRef = useRef<HTMLTextAreaElement>(null);
 
-
     useEffect(() => {
         if (txtRef.current) {
-            txtRef.current.setSelectionRange(txtRef.current.value.length, txtRef.current.value.length);
+            // txtRef.current.setSelectionRange(txtRef.current.value.length, txtRef.current.value.length);
             // if(!props.placeholder)
             setTimeout(() => { txtRef.current?.focus() }, 0);
         }
     })
+
 
     const handleInput = useCallback((e: React.FormEvent<HTMLTextAreaElement>) => {
         const pos = e.currentTarget.selectionStart || 0;
@@ -34,7 +35,7 @@ export const MathInput: React.FC<React.DetailedHTMLProps<React.InputHTMLAttribut
 
         const char = val.slice(pos - 1, pos)[0];
         const closeChar = closeChars.get(char);
-        
+
 
         if ((e.nativeEvent as InputEvent).inputType === "insertText" && closeChar) {
             val.splice(pos, 0, closeChar);
@@ -61,9 +62,9 @@ export const MathInput: React.FC<React.DetailedHTMLProps<React.InputHTMLAttribut
         // propagate it
         props.onInput && props.onInput(e);
     }, []);
-
+    
     return (
-        <textarea rows={1} wrap="off" type={"text"} {...props} onInput={handleInput} ref={txtRef} >
+        <textarea rows={1} wrap="off" type={"text"} {...props}  onInput={handleInput} ref={txtRef} >
         </textarea>
     );
 

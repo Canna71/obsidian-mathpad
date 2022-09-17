@@ -14,7 +14,7 @@ export const Input: React.FC<InputProps> = ({
 }) => {
 
     return <div className="current-input">
-        <MathInput placeholder=">" className="mathpad-input" onKeyDown={onKeyDown} defaultValue={input} onChange={onChange}  />
+        <MathInput placeholder=">" className="mathpad-input" onKeyDown={onKeyDown} value={input} onChange={onChange}  />
 
     </div>;
 }

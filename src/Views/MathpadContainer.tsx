@@ -183,7 +183,7 @@ export const MathpadContainer = ({onCopySlot, settings}:
                 </div>
 
             </div>
-            <Input onKeyDown={onKeyDown} input={input} />
+            <Input onKeyDown={onKeyDown} input={input} onChange={onChange} />
         </div>
 
     )
