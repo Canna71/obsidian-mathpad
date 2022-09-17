@@ -210,7 +210,7 @@ export default class PadScope {
                         this._inputLatex = engine.toLatex(`${this.parseResult.name}(${this.parseResult.params.join(", ")})`)
                     }
                     this._input += ":=" + this.parseResult.def;
-                    this._inputLatex += ":=" + engine.toLatex(this.parseResult.def);
+                    this._inputLatex += "\\coloneqq" + engine.toLatex(this.parseResult.def);
                 }
             } catch(ex){
                 // console.log()
@@ -221,7 +221,6 @@ export default class PadScope {
                 parseResult.evaluate ? "decimals" : "fractions"
             );
 
-            // const decl = this.input.indexOf(":=");
             if (parseResult.isFnDec || parseResult.isVarDec) {
                 this._ident = parseResult.def === expr;
             } else {

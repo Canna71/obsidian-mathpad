@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { debounce, finishRenderMath, ItemView, MarkdownView, Notice, WorkspaceLeaf } from "obsidian";
+import { debounce, finishRenderMath, ItemView, MarkdownView, Notice, View, WorkspaceLeaf } from "obsidian";
 import * as React from "react";
 import { createRoot, Root } from "react-dom/client";
 
@@ -14,13 +14,15 @@ export const MATHPAD_VIEW = "mathpad-view";
 
 export const MathpadContext = React.createContext<any>({});
 
-function copyContent(view: MarkdownView, content: string, block?: boolean) {
+function copyContent(view: View, content: string, block?: boolean) {
 
     if(block !==undefined){
         content = block ? `$$${content}$$`:`$${content}$`;   
     }
 
-    if(view.getMode()==="source"){
+    // const mv: MarkdownView = view as MarkdownView;
+
+    if(view instanceof MarkdownView && view.getMode()==="source"){
         view.editor.replaceSelection(content);
     } else {
         navigator.clipboard.writeText(content);
@@ -70,9 +72,9 @@ export class MathpadView extends ItemView {
         const str = slot.getCodeBlock(this.settings);
         const leaf = this.app.workspace.getMostRecentLeaf();
         if (!leaf) return;
-        if (leaf.view instanceof MarkdownView) {
-            const editor = leaf.view.editor;
-            if (editor) {
+        // if (leaf.view instanceof MarkdownView) {
+        //     const editor = leaf.view.editor;
+        //     if (editor) {
                 switch (what) {
                     case "input":
                             copyContent(leaf.view, slot.inputLaTeX, this.settings.preferBlock);
@@ -90,11 +92,11 @@ ${str}
                 }
 
 
-            }
-        } else {
-            console.warn('Mathpad: Unable to determine current editor.');
-            return;
-        }
+        //     }
+        // } else {
+        //     console.warn('Mathpad: Unable to determine current editor.');
+        //     return;
+        // }
 
 
     }
