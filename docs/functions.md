@@ -3,13 +3,22 @@
 Mathpad is heavily based on [Nerdamer](https://nerdamer.com/) so further documentation could be inferred from its own web site. For simplicity in this doc we will use the *inline code* usage, but the same goes for the sidebar tool. Just remember that in the sidebar inputs you don't have to append the "=?" prefix. 
 Note that some function could return different result depending on the "evaluation" flags (the symbolic/numeric bunnon in the sidebar or the `==?` vs `=~?` postfic): in the example it is reported explicitely in order to force evaluation in some cases. Sometimes, for clarity, only the result is displayed.
 
+# General Math Functions
+
+
+| function | meaning           | example      | result |
+|----------|-------------------|--------------|--------|
+| `log`    | Natural Logarithm | `log(e^2)=?` | TODO   |
+
+
+
 # Trigonometry
 Trigonometric functions works in radians and will try to return known values when possible. 
 Available funcions: 
 
-| function | meaning               | example          | result                                                                                                                 |
-|----------|-----------------------|------------------|------------------------------------------------------------------------------------------------------------------------|
-| `cos`    | cosine                | `cos(pi)=?`      | $\mathrm{cos}\left(\pi\right) = -1$                                                                                    |
+| function | meaning               | example          | result                                                                                                               |
+|----------|-----------------------|------------------|----------------------------------------------------------------------------------------------------------------------|
+| `cos`    | cosine                | `cos(pi)=?`      | $\mathrm{cos}\left(\pi\right) = -1$                                                                                  |
 | `sin`    | sine                  | `sin(1/2)=~?`    | $\mathrm{sin}\left(1/2\right)=0.47942553860420299549$                                                                |
 | `tan`    | tangent               | `tan(2pi)=?`     | $\mathrm{tan}\left(2*\pi\right)=0$                                                                                   |
 | `sec`    | secant                | `diff(sec(x))=?` | $\frac{d}{d x}\left({\mathrm{sec}\left(x\right)}\right)=\mathrm{sec}\left(x\right) \cdot \mathrm{tan}\left(x\right)$ |
@@ -260,3 +269,35 @@ example:
 $$5 \cdot e^{\mathrm{atan}\left(\frac{3}{4}\right) \cdot i}$$
 
 NoteL actually evaluating the result will five back the original number.
+
+## converting to rectangular form
+
+`rectform(Z)`
+
+example:
+
+`rectform(e^(atan(1/5)*i)*sqrt(26))=~?`
+will convert to:
+$$rectform\left({e}^{\left(\mathrm{atan}\left(1/5\right) \cdot i\right)} \cdot \sqrt{26}\right) = i+5$$
+
+## Getting the argument of a complex number
+
+`arg(Z)`
+
+example:
+
+`arg(-1)==?`
+$$\pi$$
+
+## Getting the modulus of a complex number
+
+you can use the `abs` (absolute value) funcion:
+
+`abs(Z)`
+
+example:
+
+`abs(sqrt(2)/2+i*sqrt(2)/2)=~?`
+
+will convert to:
+$$\left|\frac{\sqrt{2}}{2} + i \cdot \frac{\sqrt{2}}{2}\right| = 1$$
