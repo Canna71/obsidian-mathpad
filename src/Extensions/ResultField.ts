@@ -61,8 +61,6 @@ export const resultField = StateField.define<DecorationSet>({
             // const mapDec = oldState.iter()
             oldDec = oldState.iter();
         }
-        // console.log("doing decorations:", nodeA.name, nodeB.name, transaction.docChanged, transaction.changes.empty, transaction.selection, transaction.effects.length);
-        console.time("decorations-code");
         tree.iterate({
             enter: (node: SyntaxNodeRef) => {
                 if (node.name === "inline-code") {
@@ -95,8 +93,7 @@ export const resultField = StateField.define<DecorationSet>({
                                 oldDec && oldDec.next();
                             }
                         } catch (e) {
-                            console.log(e);
-                            console.log(text);
+                            console.warn(e, text);
                         }
                         // we need to do this inside this if, otherwise we are iterating also for normal "inline-code"!
                     }
@@ -104,7 +101,6 @@ export const resultField = StateField.define<DecorationSet>({
             },
             mode: IterMode.IncludeAnonymous,
         });
-        console.timeEnd("decorations-code");
 
         return builder.finish();
     },
@@ -121,15 +117,7 @@ function addDecoration(
     node: SyntaxNodeRef,
     previousRes?: PadScope
 ) {
-    // let res: PadScope | undefined;
-    // if (parseResult.latex || !caret) {
     const res = previousRes || new PadScope().process(engine, parseResult);
-    // }
-    // if (previousRes) {
-    //     console.log("reciclying preciousRes", previousRes.input);
-    // } else {
-    //     console.log("processed ", parseResult.text);
-    // }
     if (parseResult.block && res) {
         builder.add(
             caret ? node.to : node.from,

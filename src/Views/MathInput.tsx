@@ -37,7 +37,6 @@ export const MathInput: React.FC<React.DetailedHTMLProps<React.InputHTMLAttribut
         const closeChar = closeChars.get(char);
         const inputType = (e.nativeEvent as InputEvent).inputType;
         const el = e.currentTarget;
-        console.log(inputType)
         const nextchar = val.slice(pos, pos + 1)[0];
 
         if (inputType === "insertText" && closeChar && (!nextchar || nextchar === " " || isCloseChar.get(nextchar))) {

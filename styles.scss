@@ -89,7 +89,9 @@
                             // line-height: 12px;
                             // margin: 1px;
                             font-family: monospace;
-
+                            white-space: nowrap;
+                            overflow: hidden;
+                            overflow-x: auto;
                             &:hover {
                                 background-color: var(--background-primary);
                             }

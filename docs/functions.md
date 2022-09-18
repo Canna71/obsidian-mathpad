@@ -51,9 +51,21 @@ Identity Matrix of given rank:
 
 $$\begin{vmatrix}1 & 0 & 0 \cr 0 & 1 & 0 \cr 0 & 0 & 1\end{vmatrix}$$
 
-Extracts a column (returning a vector)
+Extracts a column (returning a vector). Note: it's 0-based
 
 `matgetcol(M, 1)=?`
 
 $$\begin{vmatrix}b \cr -a\end{vmatrix}$$
+
+Extracts a row (returning a vector). Note: it's 0-based
+
+`matgetrow(M,1)=?`
+
+$$\begin{vmatrix}b & -a\end{vmatrix}$$
+
+Determinant
+
+`determinant(matrix([8,7],[2,7]))=?`
+
+$$42$$
 
