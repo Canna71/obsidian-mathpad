@@ -210,7 +210,7 @@ export default class PadScope {
                         this._inputLatex = engine.toLatex(`${this.parseResult.name}(${this.parseResult.params.join(", ")})`)
                     }
                     this._input += ":=" + this.parseResult.def;
-                    this._inputLatex += "\\coloneqq" + engine.toLatex(this.parseResult.def);
+                    this._inputLatex += " \\coloneqq " + engine.toLatex(this.parseResult.def);
                 }
             } catch(ex){
                 // console.log()
