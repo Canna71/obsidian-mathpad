@@ -29,7 +29,24 @@ also available are the following hyberbolic functions:
 
 ## Matrix and Vector
 
-Definine a matrix:
+### Defining a vector:
+
+`vector(...elements)`
+
+example:
+
+`V1:=vector(1,2)`
+
+or
+
+`V1:=[1,2]`
+
+$$[1, 2]$$
+### Definine a matrix:
+
+`matrix(...rows vectors)`
+
+example:
 
 `M:=matrix([a,b],[b,-a])`
 
@@ -39,28 +56,52 @@ $$\begin{vmatrix}a & b \cr b & -a\end{vmatrix}$$
 
 $$\begin{vmatrix}2 \cdot a & a+b \cr a+b & 0\end{vmatrix}$$
 
-Transpose a matrix: 
+### Getting the size of a matrix or vector
+
+`size(matric or vector)`
+
+example:
+
+`size(M)=?`
+$$\left[2, 2\right]$$
+
+`size([1,2,3])=?`
+$$3$$
+
+### Transpose a matrix: 
+
+`transpose(matrix)`
+
+example:
 
 `transpose(M)=?`
 
 $$\begin{vmatrix}a & b \cr b & -a\end{vmatrix}$$
 
-Identity Matrix of given rank:
+### Identity Matrix of given rank:
+
+`imatrix(rank)`
+
+example:
 
 `imatrix(3)=?`
 
 $$\begin{vmatrix}1 & 0 & 0 \cr 0 & 1 & 0 \cr 0 & 0 & 1\end{vmatrix}$$
 
 
-Determinant
+### Determinant
+
+`determinant(matric)`
+
+example:
 
 `determinant(matrix([8,7], [2,7]))=?`
 
 $$42$$
 
-Inverse of a matrix:
+### Inverse of a matrix:
 
-`inverse(M)`
+`inverse(Matrix)`
 
 example:
 
@@ -72,19 +113,30 @@ $$\begin{vmatrix}1 & 2 \cr 4 & 4\end{vmatrix}$$
 
 $$\begin{vmatrix}-1 & \frac{1}{2} \cr 1 & -\frac{1}{4}\end{vmatrix}$$
 
-Extracts a column (returning a vector). Note: it's 0-based
+### Extracts a column (returning a vector). 
+Note: it's 0-based
+
+`matgetcol(matrix, columnIndex)`
+
+example:
 
 `matgetcol(M, 1)=?`
 
 $$\begin{vmatrix}b \cr -a\end{vmatrix}$$
 
-Extracts a row (returning a vector). Note: it's 0-based
+### Extracts a row (returning a vector). 
+Note: it's 0-based
+
+`matgetrow(matrix, rowIndex)`
+
+example:
 
 `matgetrow(M, 1)=?`
 
 $$\begin{vmatrix}b & -a\end{vmatrix}$$
 
-Extract an element from a matrix, Note: 0-based
+### Extract an element from a matrix, 
+Note: 0-based
 
 `matget(M, row, col)`
 
@@ -94,7 +146,7 @@ example:
 
 $$b$$
 
-Setting an element in a matrix
+### Setting an element in a matrix
 
 `matset(Matrix, row, col, element)`
 
@@ -104,4 +156,62 @@ example:
 
 $$\begin{vmatrix}a & x \cr b & -a\end{vmatrix}$$
 
+### Setting a column in a matrix
+
+`matsetcol(Matrix, columnIndex, column)`
+
+example:
+
+`matsetcol(M,1, [[x],[y]])=?`
+
+$$\begin{vmatrix}a & x \cr b & y\end{vmatrix}$$
+
+Note: columns needs to be passed as a vector of vectors.
+
+### setting a row in a matrix
+
+`matsetrow(Matrix, rowIndex, row)`
+
+example:
+
+`matsetrow(M,1, [y,z])=?`
+$$\begin{vmatrix}a & b \cr y & z\end{vmatrix}$$
+
+### Getting an element from a vector:
+
+`vecget(vector, index)`
+
+example:
+
+`V1:=[a,x,x^2]`
+$$[a, x, x^{2}]$$
+`vecget(V1,1)=?`
+$$x$$
+
+### Setting an element into a vector:
+
+`vecset(vector, index, element)`
+
+example:
+
+`vecset(V1,1, x-1)=?`
+$$[a, x-1, x^{2}]$$
+
+### Cross product
+
+`cross(vector1, vector2)`
+
+example:
+
+`cross([1,2,3], [4,5,6])=?`
+$$[-3, 6, -3]$$
+
+### Dot product
+
+`dot(vector1, vector2)`
+
+example:
+
+`dot([x,y,z],[1,0,-1])=?`
+$$-z+x$$
 
