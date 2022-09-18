@@ -3,7 +3,7 @@
 Mathpad is heavily based on [Nerdamer](https://nerdamer.com/) so further documentation could be inferred from its own web site. For simplicity in this doc we will use the *inline code* usage, but the same goes for the sidebar tool. Just remember that in the sidebar inputs you don't have to append the "=?" prefix. 
 Note that some function could return different result depending on the "evaluation" flags (the symbolic/numeric bunnon in the sidebar or the `==?` vs `=~?` postfic): in the example it is reported explicitely in order to force evaluation in some cases. Sometimes, for clarity, only the result is displayed.
 
-## Trigonometry
+# Trigonometry
 Trigonometric functions works in radians and will try to return known values when possible. 
 Available funcions: 
 
@@ -27,9 +27,9 @@ also available are the following hyberbolic functions:
 
 `cosh`,`sinh`,`tanh`,`sech`,`csch`,`coth`,`acosh`,`asinh`,`atanh`,`asech`,`acsch` and `acoth`
 
-## Matrix and Vector
+# Matrix and Vector
 
-### Defining a vector:
+## Defining a vector:
 
 `vector(...elements)`
 
@@ -42,7 +42,7 @@ or
 `V1:=[1,2]`
 
 $$[1, 2]$$
-### Definine a matrix:
+## Definine a matrix:
 
 `matrix(...rows vectors)`
 
@@ -56,7 +56,7 @@ $$\begin{vmatrix}a & b \cr b & -a\end{vmatrix}$$
 
 $$\begin{vmatrix}2 \cdot a & a+b \cr a+b & 0\end{vmatrix}$$
 
-### Getting the size of a matrix or vector
+## Getting the size of a matrix or vector
 
 `size(matric or vector)`
 
@@ -68,7 +68,7 @@ $$\left[2, 2\right]$$
 `size([1,2,3])=?`
 $$3$$
 
-### Transpose a matrix: 
+## Transpose a matrix: 
 
 `transpose(matrix)`
 
@@ -78,7 +78,7 @@ example:
 
 $$\begin{vmatrix}a & b \cr b & -a\end{vmatrix}$$
 
-### Identity Matrix of given rank:
+## Identity Matrix of given rank:
 
 `imatrix(rank)`
 
@@ -89,7 +89,7 @@ example:
 $$\begin{vmatrix}1 & 0 & 0 \cr 0 & 1 & 0 \cr 0 & 0 & 1\end{vmatrix}$$
 
 
-### Determinant
+## Determinant
 
 `determinant(matric)`
 
@@ -99,7 +99,7 @@ example:
 
 $$42$$
 
-### Inverse of a matrix:
+## Inverse of a matrix:
 
 `inverse(Matrix)`
 
@@ -113,7 +113,7 @@ $$\begin{vmatrix}1 & 2 \cr 4 & 4\end{vmatrix}$$
 
 $$\begin{vmatrix}-1 & \frac{1}{2} \cr 1 & -\frac{1}{4}\end{vmatrix}$$
 
-### Extracts a column (returning a vector). 
+## Extracts a column (returning a vector). 
 Note: it's 0-based
 
 `matgetcol(matrix, columnIndex)`
@@ -124,7 +124,7 @@ example:
 
 $$\begin{vmatrix}b \cr -a\end{vmatrix}$$
 
-### Extracts a row (returning a vector). 
+## Extracts a row (returning a vector). 
 Note: it's 0-based
 
 `matgetrow(matrix, rowIndex)`
@@ -135,7 +135,7 @@ example:
 
 $$\begin{vmatrix}b & -a\end{vmatrix}$$
 
-### Extract an element from a matrix, 
+## Extract an element from a matrix, 
 Note: 0-based
 
 `matget(M, row, col)`
@@ -146,7 +146,7 @@ example:
 
 $$b$$
 
-### Setting an element in a matrix
+## Setting an element in a matrix
 
 `matset(Matrix, row, col, element)`
 
@@ -155,8 +155,7 @@ example:
 `matset(M,0,1,x)=?`
 
 $$\begin{vmatrix}a & x \cr b & -a\end{vmatrix}$$
-
-### Setting a column in a matrix
+## Setting a column in a matrix
 
 `matsetcol(Matrix, columnIndex, column)`
 
@@ -168,7 +167,7 @@ $$\begin{vmatrix}a & x \cr b & y\end{vmatrix}$$
 
 Note: columns needs to be passed as a vector of vectors.
 
-### setting a row in a matrix
+## setting a row in a matrix
 
 `matsetrow(Matrix, rowIndex, row)`
 
@@ -177,7 +176,7 @@ example:
 `matsetrow(M,1, [y,z])=?`
 $$\begin{vmatrix}a & b \cr y & z\end{vmatrix}$$
 
-### Getting an element from a vector:
+## Getting an element from a vector:
 
 `vecget(vector, index)`
 
@@ -188,7 +187,7 @@ $$[a, x, x^{2}]$$
 `vecget(V1,1)=?`
 $$x$$
 
-### Setting an element into a vector:
+## Setting an element into a vector:
 
 `vecset(vector, index, element)`
 
@@ -197,7 +196,7 @@ example:
 `vecset(V1,1, x-1)=?`
 $$[a, x-1, x^{2}]$$
 
-### Cross product
+## Cross product
 
 `cross(vector1, vector2)`
 
@@ -206,7 +205,7 @@ example:
 `cross([1,2,3], [4,5,6])=?`
 $$[-3, 6, -3]$$
 
-### Dot product
+## Dot product
 
 `dot(vector1, vector2)`
 
@@ -215,3 +214,49 @@ example:
 `dot([x,y,z],[1,0,-1])=?`
 $$-z+x$$
 
+# Imaginary numbers
+
+Imaginary numbers are written like this:
+
+`3i+4`
+
+examples:
+
+`(3i+4)+(2i-3)=?`
+$$5 \cdot i+1$$
+
+`(3i+4)(-3*i+4)=?`
+$$\left(3 \cdot i+4\right) \cdot \left(-3 \cdot i+4\right)$$
+
+`expand((3i+4)(-3*i+4))=?`
+$$25$$
+
+## Extracting Real part
+
+`realpart(Z)`
+
+example:
+
+`a:=3i+4`
+
+`realpart(a)=?`
+will convert to
+
+$$\operatorname{Re}\left(a\right) = 4$$
+
+## Extracting imaginary part
+
+`imagpart(a)=?`
+will converto to
+$$\operatorname{Im}\left(a\right) = 3$$
+
+## Converting to polar form
+
+`polarform(Z)`
+
+example:
+
+`polarform(a)==?`
+$$5 \cdot e^{\mathrm{atan}\left(\frac{3}{4}\right) \cdot i}$$
+
+NoteL actually evaluating the result will five back the original number.
