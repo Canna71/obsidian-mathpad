@@ -54,9 +54,23 @@ $$\begin{vmatrix}1 & 0 & 0 \cr 0 & 1 & 0 \cr 0 & 0 & 1\end{vmatrix}$$
 
 Determinant
 
-`determinant(matrix([8,7],[2,7]))=?`
+`determinant(matrix([8,7], [2,7]))=?`
 
 $$42$$
+
+Inverse of a matrix:
+
+`inverse(M)`
+
+example:
+
+`A:=matrix([1,2],[4,4])`
+
+$$\begin{vmatrix}1 & 2 \cr 4 & 4\end{vmatrix}$$
+
+`invert(A)=?`
+
+$$\begin{vmatrix}-1 & \frac{1}{2} \cr 1 & -\frac{1}{4}\end{vmatrix}$$
 
 Extracts a column (returning a vector). Note: it's 0-based
 
@@ -66,14 +80,28 @@ $$\begin{vmatrix}b \cr -a\end{vmatrix}$$
 
 Extracts a row (returning a vector). Note: it's 0-based
 
-`matgetrow(M,1)=?`
+`matgetrow(M, 1)=?`
 
 $$\begin{vmatrix}b & -a\end{vmatrix}$$
 
 Extract an element from a matrix, Note: 0-based
 
-`matget(M,row,col)`
+`matget(M, row, col)`
 
-`matget(M,0,1)=?`
+example:
+
+`matget(M, 0, 1)=?`
 
 $$b$$
+
+Setting an element in a matrix
+
+`matset(Matrix, row, col, element)`
+
+example:
+
+`matset(M,0,1,x)=?`
+
+$$\begin{vmatrix}a & x \cr b & -a\end{vmatrix}$$
+
+

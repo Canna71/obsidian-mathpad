@@ -147,6 +147,11 @@ export default class PadScope {
                 // return this;
             } else {
                 this._expression = engine.parse(parseResult.text);
+                //TODO: sometimpes this._expression.symbol is null because of errors
+                // we should throw
+                if((this._expression as any).symbol === null){
+                    throw new Error("Unable to evaluate expression.")
+                }
                 if ((this._expression as any).symbol?._plotme) {
                     this._plot = (this._expression as any).symbol?._plotme;
                 }
@@ -213,20 +218,25 @@ export default class PadScope {
                     this._inputLatex += " \\coloneqq " + engine.toLatex(this.parseResult.def);
                 }
             } catch(ex){
-                // console.log()
+                console.warn(ex);
             }
         }
         if (this._expression) {
-            const expr = this._expression.text(
-                parseResult.evaluate ? "decimals" : "fractions"
-            );
-
-            if (parseResult.isFnDec || parseResult.isVarDec) {
-                this._ident = parseResult.def === expr;
-            } else {
-                this._ident = expr === this.input;
+            try{
+                const expr = this._expression.text(
+                    parseResult.evaluate ? "decimals" : "fractions"
+                );
+    
+                if (parseResult.isFnDec || parseResult.isVarDec) {
+                    this._ident = parseResult.def === expr;
+                } else {
+                    this._ident = expr === this.input;
+                }
+                this._text = expr;
+            } catch(ex) {
+                console.warn(ex)
             }
-            this._text = expr;
+
         }
 
         return this;  
