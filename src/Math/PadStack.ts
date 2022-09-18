@@ -109,6 +109,12 @@ export class SlotStack {
         return new SlotStack(newEngine, newStack);
     }
 
+    clear() {
+        const newEngine = createEngine();
+        const newStack: PadSlot[] = [];
+        return new SlotStack(newEngine, newStack);
+    }
+
     getSlotById(id: number) {
         return this.items.find((slot) => slot.id === id);
     }

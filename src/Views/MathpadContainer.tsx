@@ -151,16 +151,25 @@ export const MathpadContainer = ({onCopySlot, settings}:
         }))
     }, []);
 
+    const clear = useCallback(() => {
+        setState(state => ({
+            ...state,
+            stack: state.stack?.clear()
+        }))
+    }, []);
+
     return (
 
         <div className="mathpad-container">
             <div className="toolbar">
                 <button onClick={onToggleEvaluate} title={evaluate ? "numeric" : "symbolic"} >{evaluate ? "3" : "⒳"}</button>
+                
                 <button onClick={applyFn("diff")} title="derivate" disabled={!selected} >𝑓′</button>
                 <button onClick={applyFn("integrate")} title="integrate" disabled={!selected}>∫</button>
                 <button onClick={applyFn("solve")} title="solve" disabled={!selected}>𝒙=</button>
                 <button onClick={applyFn("expand")} title="expand" disabled={!selected}>⋯</button>
                 <button onClick={applyFn("simplify")} title="simplify" disabled={!selected}>()</button>
+                <button onClick={clear} title={"clear stack"} >✕</button>
 
 
             </div>
