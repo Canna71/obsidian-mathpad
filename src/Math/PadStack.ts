@@ -3,7 +3,7 @@ import { MathpadSettings } from "src/MathpadSettings";
 
 import { createEngine, Engine } from "./Engine";
 import PadSlot from "./PadSlot";
-import parse, { SLOT_VARIABLE_PREFIX } from "./Parsing";
+import parse, { amendSettings, SLOT_VARIABLE_PREFIX } from "./Parsing";
 
 export interface ProcessOptions {
     evaluate?: boolean;
@@ -72,7 +72,7 @@ export class SlotStack {
         const newStack: PadSlot[] = [];
         this.items.forEach((slot) => {
             if (slot.id == id) {
-                const pr = parse(value, settings);
+                const pr = parse(value, amendSettings(settings,options));
                 // if(pr.isValid){
                 slot = new PadSlot(slot.id).process(newEngine, pr) as PadSlot;
                 // }
