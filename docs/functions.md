@@ -33,27 +33,27 @@ Definine a matrix:
 
 `M:=matrix([a,b],[b,-a])`
 
-$\begin{vmatrix}a & b \cr b & -a\end{vmatrix}$
+$$\begin{vmatrix}a & b \cr b & -a\end{vmatrix}$$
 
 `a+M=?`
 
-$\begin{vmatrix}2 \cdot a & a+b \cr a+b & 0\end{vmatrix}$
+$$\begin{vmatrix}2 \cdot a & a+b \cr a+b & 0\end{vmatrix}$$
 
 Transpose a matrix: 
 
 `transpose(M)=?`
 
-$\begin{vmatrix}a & b \cr b & -a\end{vmatrix}$
+$$\begin{vmatrix}a & b \cr b & -a\end{vmatrix}$$
 
 Identity Matrix of given rank:
 
 `imatrix(3)=?`
 
-$\begin{vmatrix}1 & 0 & 0 \cr 0 & 1 & 0 \cr 0 & 0 & 1\end{vmatrix}$
+$$\begin{vmatrix}1 & 0 & 0 \cr 0 & 1 & 0 \cr 0 & 0 & 1\end{vmatrix}$$
 
 Extracts a column (returning a vector)
 
 `matgetcol(M, 1)=?`
 
-$\begin{vmatrix}b \cr -a\end{vmatrix}$
+$$\begin{vmatrix}b \cr -a\end{vmatrix}$$
 
