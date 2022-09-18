@@ -20,7 +20,6 @@ function copyContent(view: View, content: string, block?: boolean) {
         content = block ? `$$${content}$$`:`$${content}$`;   
     }
 
-    // const mv: MarkdownView = view as MarkdownView;
 
     if(view instanceof MarkdownView && view.getMode()==="source"){
         view.editor.replaceSelection(content);
