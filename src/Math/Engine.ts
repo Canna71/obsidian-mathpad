@@ -280,7 +280,7 @@ export class NerdamerWrapper implements Engine {
             if(m){
                 const fnName = m[1];
                 const params = m[2];
-                ret = fnName + "\\left(" + nerdamer.convertToLaTeX(params) + "\\right)";
+                ret = fnName + "\\left(" + this.toLatex(params) + "\\right)";
             }
             
         }
