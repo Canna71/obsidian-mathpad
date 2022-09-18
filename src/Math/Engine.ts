@@ -268,22 +268,27 @@ export class NerdamerWrapper implements Engine {
     //     }
     // };
 
-    toLatex = (expr: string) => {
-        this.restoreScope();
-        const e = prepare_expression(expr);
+    tolatexInternal = (expr: string) => {
         let ret = expr;
         
         try{
-            ret = nerdamer.convertToLaTeX(e);
+            ret = nerdamer.convertToLaTeX(expr);
         } catch(ex) {
             const m = FNCALL_REGEX.exec(expr);
             if(m){
                 const fnName = m[1];
                 const params = m[2];
-                ret = fnName + "\\left(" + this.toLatex(params) + "\\right)";
+                ret = fnName + "\\left(" + this.tolatexInternal(params) + "\\right)";
             }
             
         }
+        return ret;
+    }
+
+    toLatex = (expr: string) => {
+        this.restoreScope();
+        const e = prepare_expression(expr);
+        const ret = this.tolatexInternal(e);
         this.saveScope();
         return ret;
     };
