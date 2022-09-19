@@ -10,35 +10,41 @@ Also the examples tends to use numeric evaluation to show actual results, but al
 
 
 
-| function     | meaning                    | example             | result                                                           |
-|--------------|----------------------------|---------------------|------------------------------------------------------------------|
-| `log`        | Natural Logarithm          | `log(e^2)==?`       | $\ln\left( {e}^{2}\right) = 2$                                   |
-| `log10`      | Logarithm (mase 10)        | `log10(100)=~?`     | $\log_{10}\left( 100\right) = 2$                                 |
-| `min`        | Mininum                    | `min(1,2,3)=?`      | $\mathrm{min}\left(1,2,3\right) = 1$                             |
-| `max`        | Maximum                    | `max(1,2,3)=?`      | $\mathrm{max}\left(1,2,3\right) = 3$                             |
-| `abs`        | Absolute Value             | `abs(-1)=?`         | $\left\|- 1\right\| = 1$                                         |
-| `floor`      | Floor                      | `floor(3/2)=~?`     | $\left \lfloor{\frac{3}{2}}\right \rfloor = 1$                   |
-| `ceil`       | Ceiling                    | `ceil(3/2)=~?`      | $\left \lceil{\frac{3}{2}}\right \rceil = 2$                     |
-| `Si`         | Sine Integral              | `Si(5)=~?`          | $\mathrm{Si}\left(5\right) = 1.5499312449446738$                 |
-| `Ci`         | Cosine Integral            | `Ci(5)=~?`          | $\mathrm{Ci}\left(5\right) = -0.19002974965664432$               |
-| `Ei`         | Exponential Integral       | `Ei(0)=~?`          | $\mathrm{Ei}\left(0\right) = -\infty$                            |
-| `rect`       | Rectangular Function       | `rect(0)=~?`        | $\mathrm{rect}\left(0\right) = 1$                                |
-| `step`       | Heaviside Step Function    | `step(0)=~?`        | $\mathrm{step}\left(0\right) = 0.5$                              |
-| `sinc`       | Cardinal Sine              | `sinc(0)=~?`        | $\mathrm{sinc}\left(0\right) = 1$                                |
-| `Shi`        | Hyperbolic Sine Integral   | `Shi(0)=~?`         | $\mathrm{Shi}\left(0\right) = 0$                                 |
-| `Chi`        | Hyperbolic Cosine Integral | `Chi(0)=~?`         | $\mathrm{Chi}\left(0\right) = -\infty$                           |
-| `fact`       | Factorial                  | `fact(5)=~?`        | $\mathrm{fact}\left(5\right) = 120$                              |
-| `factorial`  | Factorial                  | `factorial(1/2)==?` | $\frac{1}{2}! = \frac{\sqrt{\pi}}{2}$                            |
-| `!`          | Factorial                  | `5! =~?`            | $5 != 120$                                                       |
-| `dfactorial` | Double Factorial           | `dfactorial(5)=~?`  | $5!! = 15$                                                       |
-| `!!`         | Double Factorial           | `5!!=~?`            | $5!! = 15$                                                       |
-| `exp`        | Exponential                | `diff(exp(x))=?`    | $\frac{d}{d x}\left({\mathrm{exp}\left(x\right)}\right) = e^{x}$ |
-| `mod` | Modulus | `mod(7,4)=?`
+| function     | meaning                    | example             | result                                                                                            |
+|--------------|----------------------------|---------------------|---------------------------------------------------------------------------------------------------|
+| `log`        | Natural Logarithm          | `log(e^2)==?`       | $\ln\left( {e}^{2}\right) = 2$                                                                    |
+| `log10`      | Logarithm (mase 10)        | `log10(100)=~?`     | $\log_{10}\left( 100\right) = 2$                                                                  |
+| `min`        | Mininum                    | `min(1,2,3)=?`      | $\mathrm{min}\left(1,2,3\right) = 1$                                                              |
+| `max`        | Maximum                    | `max(1,2,3)=?`      | $\mathrm{max}\left(1,2,3\right) = 3$                                                              |
+| `abs`        | Absolute Value             | `abs(-1)=?`         | $\left\|- 1\right\| = 1$                                                                          |
+| `sign`       | Sign                       | `sign(pi)=~?`       | $\mathrm{sign}\left(\pi\right) = 1$                                                               |
+| `sqrt`       | Square Root                | `sqrt(-1)=?`        | $\sqrt{- 1} = i$                                                                                  |
+| `exp`        | Exponential                | `diff(exp(x))=?`    | $\frac{d}{d x}\left({\mathrm{exp}\left(x\right)}\right) = e^{x}$                                  |
+| `floor`      | Floor                      | `floor(3/2)=~?`     | $\left \lfloor{\frac{3}{2}}\right \rfloor = 1$                                                    |
+| `ceil`       | Ceiling                    | `ceil(3/2)=~?`      | $\left \lceil{\frac{3}{2}}\right \rceil = 2$                                                      |
+| `round`      | Round to Nearest Integer   | `round(5.7)=~?`     | $\mathrm{round}\left(5.7\right) = 6$                                                              |
+| `mod`        | Modulus                    | `mod(7,4)=?`        | $7 \bmod 4 = 3$                                                                                   |
+| `fact`       | Factorial                  | `fact(5)=~?`        | $\mathrm{fact}\left(5\right) = 120$                                                               |
+| `factorial`  | Factorial                  | `factorial(1/2)==?` | $\frac{1}{2}! = \frac{\sqrt{\pi}}{2}$                                                             |
+| `!`          | Factorial                  | `5! =~?`            | $5 != 120$                                                                                        |
+| `dfactorial` | Double Factorial           | `dfactorial(5)=~?`  | $5!! = 15$                                                                                        |
+| `!!`         | Double Factorial           | `5!!=~?`            | $5!! = 15$                                                                                        |
+| `Si`         | Sine Integral              | `Si(5)=~?`          | $\mathrm{Si}\left(5\right) = 1.5499312449446738$                                                  |
+| `Ci`         | Cosine Integral            | `Ci(5)=~?`          | $\mathrm{Ci}\left(5\right) = -0.19002974965664432$                                                |
+| `Ei`         | Exponential Integral       | `Ei(0)=~?`          | $\mathrm{Ei}\left(0\right) = -\infty$                                                             |
+| `sinc`       | Cardinal Sine              | `sinc(0)=~?`        | $\mathrm{sinc}\left(0\right) = 1$                                                                 |
+| `Shi`        | Hyperbolic Sine Integral   | `Shi(0)=~?`         | $\mathrm{Shi}\left(0\right) = 0$                                                                  |
+| `Chi`        | Hyperbolic Cosine Integral | `Chi(0)=~?`         | $\mathrm{Chi}\left(0\right) = -\infty$                                                            |
+| `erf`        | Error Function             | `erf(1)=~?`         | $\mathrm{erf}\left(1\right) = 0.8427007877600067$                                                 |
+| `step`       | Heaviside Step Function    | `step(0)=~?`        | $\mathrm{step}\left(0\right) = 0.5$                                                               |
+| `tri`        | Triangular Funtion         | `tri(0)=~?`         | $\mathrm{tri}\left(0\right) = 1$                                                                  |
+| `rect`       | Rectangular Function       | `rect(0)=~?`        | $\mathrm{rect}\left(0\right) = 1$                                                                 |
+ 
 
 ## Simplification
 Attempts to simplify an expression
 
-`simplify(expression)
+`simplify(expression)`
 
 example:
 
@@ -48,9 +54,75 @@ will convert to
 
 $$ simplify\left(\frac{{x}^{2} - 9}{x + 3}\right) =  x-3$$
 
+## Expansion
+Expand an expression
+
+`expand(expression)`
+
+example:
+
+`expand((a+b)(a-b))=?`
+
+will concert to:
+
+$$expand\left(\left(a + b\right) \cdot \left(a - b\right)\right) = -b^{2}+a^{2}$$
 ## Minimum
 
 Returns the minimum among a set of num
+
+`min(...elements)`
+
+example
+
+`min(1,2,3)=?`
+
+$$\mathrm{min}\left(1,2,3\right) = 1$$
+
+## Fibonacci
+
+Returns the Nth fibonacci number
+
+`fib(N)`
+
+example
+
+`fib(6)=~?`
+
+$\mathrm{fib}\left(6\right) = 6$
+
+## Prime Factors
+Returns the prime factors of a number (evaluating returns the initial number)
+
+`pfactor(N)`   
+
+example:
+`pfactpr(126)==?`   
+
+$$\mathrm{pfactor}\left(126\right) = \left(2\right) \cdot \left(3^{2}\right) \cdot \left(7\right)$$
+
+## Interpolating Line
+Returns the equation of a line passing between two points
+
+`line(p1, p2)`
+
+example:
+
+`line([1,2], [2,3])=?`
+
+$$line\left(\left(1 , 2\right) , \left(2 , 3\right)\right) = x+1$$
+
+## Continued Fraction
+Returns the number as a continued fraction.
+First number is the sign, the other number represents the continued fraction. 
+
+`continued_fraction(N)`
+
+example:
+
+`continued_fraction(1.234)=?`
+
+$$\mathrm{continued\_fraction}\left(1.234\right) = [1, 1, \left[4 ,\,3 ,\,1 ,\,1 ,\,1 ,\,10 \right]]$$
+
 
 # Trigonometry
 Trigonometric functions works in radians and will try to return known values when possible. 

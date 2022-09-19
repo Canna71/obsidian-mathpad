@@ -272,7 +272,7 @@ export class NerdamerWrapper implements Engine {
         let ret = expr;
         
         try{
-            ret = nerdamer.convertToLaTeX(expr);
+            ret = (nerdamer as any).convertToLaTeX(expr, {decimals:true});
         } catch(ex) {
             const m = FNCALL_REGEX.exec(expr);
             if(m){

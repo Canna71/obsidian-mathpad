@@ -174,12 +174,16 @@ export default class PadScope {
                 } catch (ex) {
                     // probably it's a collection:
                     const tmp: ((...args: number[]) => number)[] = [];
- 
-                    if((this._expression as any).symbol?.elements?.length>0){
-                        (this._expression as any).each((element: any) => {
-                            tmp.push(engine.parse(element).buildFunction());
-                        });
+                    try {
+                        if((this._expression as any).symbol?.elements?.length>0){
+                            (this._expression as any).each((element: any) => {
+                                tmp.push(engine.parse(element).buildFunction());
+                            });
+                        }
+                    } catch(ex){
+                        console.warn(ex);
                     }
+
 
                     //
                     this._fn = tmp;
