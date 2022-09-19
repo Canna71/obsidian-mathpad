@@ -494,3 +494,72 @@ $$\int {x}\, dx = \frac{x^{2}}{2}$$
 converts to:
 
 $$\int {\mathrm{sin}\left(x\right) \cdot \mathrm{cos}\left(x\right)}\, dx = -\frac{\mathrm{cos}\left(x\right)^{2}}{2}$$
+
+## Definite Integral
+
+`defint(expression or vector, from, to, dx )`
+
+example:    
+
+`defint(log(x),0,1,x)=?`
+
+converts to:
+
+$\int\limits_{0}^{1} {\ln\left( x\right)}\, dx = -1$
+
+# Algebra
+
+## Divide
+
+Divide two polinomials
+
+`divide(p1, p2)`
+
+example:
+
+`divide(x^2+2*x+1,x+1)=?`
+
+converts to:
+
+$$\mathrm{divide}\left(x^2+2*x+1,x+1\right) = x+1$$
+
+## Factor
+
+Factor an expression
+
+`factor(expression)`
+
+example:
+
+`factor(6x^3-6x^2-12x)=?`
+
+results in:
+
+$$\mathrm{factor}\left(6*x^3-6*x^2-12*x\right) = 6 \cdot \left(x-2\right) \cdot \left(x+1\right) \cdot x$$
+
+## Partial Fraction Decomposition
+
+`partfrac(expression, variable)`
+
+example:
+
+`partfrac((x^2+a)/(x*(x-1)^3), x)=?`
+
+results in:
+
+$$partfrac\left(\frac{{x}^{2} + a}{x \cdot {\left(x - 1\right)}^{3}} , x\right) = \frac{a}{x-1}+\frac{-a+1}{\left(x-1\right)^{2}}+\frac{a+1}{\left(x-1\right)^{3}}-\frac{a}{x}$$
+
+## Least Common Multiple (LCM)
+
+Least Common Multiple of two polynomials (or two numbers)
+
+`lcm(p1, p2)`
+
+examples:
+
+`lcm(4,6)=?`
+
+results in:
+
+$$\mathrm{lcm}\left(4,6\right) = 12$$
+
