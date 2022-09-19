@@ -2,15 +2,55 @@
 
 Mathpad is heavily based on [Nerdamer](https://nerdamer.com/) so further documentation could be inferred from its own web site. For simplicity in this doc we will use the *inline code* usage, but the same goes for the sidebar tool. Just remember that in the sidebar inputs you don't have to append the "=?" prefix. 
 Note that some function could return different result depending on the "evaluation" flags (the symbolic/numeric bunnon in the sidebar or the `==?` vs `=~?` postfic): in the example it is reported explicitely in order to force evaluation in some cases. Sometimes, for clarity, only the result is displayed.
+Also the examples tends to use numeric evaluation to show actual results, but all functions also work with symbolic arguments.
+
 
 # General Math Functions
 
 
-| function | meaning           | example      | result |
-|----------|-------------------|--------------|--------|
-| `log`    | Natural Logarithm | `log(e^2)=?` | TODO   |
 
 
+| function     | meaning                    | example             | result                                                           |
+|--------------|----------------------------|---------------------|------------------------------------------------------------------|
+| `log`        | Natural Logarithm          | `log(e^2)==?`       | $\ln\left( {e}^{2}\right) = 2$                                   |
+| `log10`      | Logarithm (mase 10)        | `log10(100)=~?`     | $\log_{10}\left( 100\right) = 2$                                 |
+| `min`        | Mininum                    | `min(1,2,3)=?`      | $\mathrm{min}\left(1,2,3\right) = 1$                             |
+| `max`        | Maximum                    | `max(1,2,3)=?`      | $\mathrm{max}\left(1,2,3\right) = 3$                             |
+| `abs`        | Absolute Value             | `abs(-1)=?`         | $\left\|- 1\right\| = 1$                                         |
+| `floor`      | Floor                      | `floor(3/2)=~?`     | $\left \lfloor{\frac{3}{2}}\right \rfloor = 1$                   |
+| `ceil`       | Ceiling                    | `ceil(3/2)=~?`      | $\left \lceil{\frac{3}{2}}\right \rceil = 2$                     |
+| `Si`         | Sine Integral              | `Si(5)=~?`          | $\mathrm{Si}\left(5\right) = 1.5499312449446738$                 |
+| `Ci`         | Cosine Integral            | `Ci(5)=~?`          | $\mathrm{Ci}\left(5\right) = -0.19002974965664432$               |
+| `Ei`         | Exponential Integral       | `Ei(0)=~?`          | $\mathrm{Ei}\left(0\right) = -\infty$                            |
+| `rect`       | Rectangular Function       | `rect(0)=~?`        | $\mathrm{rect}\left(0\right) = 1$                                |
+| `step`       | Heaviside Step Function    | `step(0)=~?`        | $\mathrm{step}\left(0\right) = 0.5$                              |
+| `sinc`       | Cardinal Sine              | `sinc(0)=~?`        | $\mathrm{sinc}\left(0\right) = 1$                                |
+| `Shi`        | Hyperbolic Sine Integral   | `Shi(0)=~?`         | $\mathrm{Shi}\left(0\right) = 0$                                 |
+| `Chi`        | Hyperbolic Cosine Integral | `Chi(0)=~?`         | $\mathrm{Chi}\left(0\right) = -\infty$                           |
+| `fact`       | Factorial                  | `fact(5)=~?`        | $\mathrm{fact}\left(5\right) = 120$                              |
+| `factorial`  | Factorial                  | `factorial(1/2)==?` | $\frac{1}{2}! = \frac{\sqrt{\pi}}{2}$                            |
+| `!`          | Factorial                  | `5! =~?`            | $5 != 120$                                                       |
+| `dfactorial` | Double Factorial           | `dfactorial(5)=~?`  | $5!! = 15$                                                       |
+| `!!`         | Double Factorial           | `5!!=~?`            | $5!! = 15$                                                       |
+| `exp`        | Exponential                | `diff(exp(x))=?`    | $\frac{d}{d x}\left({\mathrm{exp}\left(x\right)}\right) = e^{x}$ |
+| `mod` | Modulus | `mod(7,4)=?`
+
+## Simplification
+Attempts to simplify an expression
+
+`simplify(expression)
+
+example:
+
+`simplify((x^2-9)/(x+3))=?`
+
+will convert to
+
+$$ simplify\left(\frac{{x}^{2} - 9}{x + 3}\right) =  x-3$$
+
+## Minimum
+
+Returns the minimum among a set of num
 
 # Trigonometry
 Trigonometric functions works in radians and will try to return known values when possible. 

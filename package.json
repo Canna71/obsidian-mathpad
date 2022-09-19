@@ -29,7 +29,7 @@
 	},
 	"dependencies": {
 		"function-plot": "^1.22.9-0",
-		"nerdamer": "^1.1.13",
+        "nerdamer": "~/Projects/nerdamer",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0"
 	}
