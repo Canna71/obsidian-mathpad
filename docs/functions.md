@@ -413,3 +413,84 @@ example:
 
 will convert to:
 $$\left|\frac{\sqrt{2}}{2} + i \cdot \frac{\sqrt{2}}{2}\right| = 1$$
+
+# Calculus
+
+## Summation
+
+Sum an expression from a lower to an upper limit
+
+`sum(expression,index, lower, upper)`
+
+example:
+
+`sum(x+1, x, 1, 5)=?`
+
+converts to
+
+$$\sum_{x = 1}^{5}{x + 1} = 20$$
+
+## Product
+
+Calculates the product of an expression from a lower to an upper limit
+
+`product(expression, index, lower, upper)`
+
+example:
+
+`product(x+y, x, 1, 5)=?`
+
+converts to:
+
+$$\prod_{x = 1}^{5}{x + y} = \left(y+1\right) \cdot \left(y+2\right) \cdot \left(y+3\right) \cdot \left(y+4\right) \cdot \left(y+5\right)$$
+
+## Differentiation (derivate)
+
+Calculate the derivative of a function
+
+`diff(expression or vector, variable?, order?)`
+
+example:
+
+`diff(sin(x))=?`
+
+converts to:
+
+$$\frac{d}{d x}\left({\mathrm{sin}\left(x\right)}\right) = \mathrm{cos}\left(x\right)$$
+
+
+`diff(x*y^2,y)=?`
+
+converts to:
+
+$$\frac{d}{d y}\left({x \cdot {y}^{2}}\right) = 2 \cdot y \cdot x$$
+
+`diff(3x^4+2x^2,x,2)=?`
+
+coonverts to:
+
+$$\frac{d^{2}}{d x^{2}}\left({3 \cdot {x}^{4} + 2 \cdot {x}^{2}}\right) = 36 \cdot x^{2}+4$$
+
+`diff([x^2, cos(x), 1], x, 2)=?`
+
+converts to:
+
+$$\frac{d^{2}}{d x^{2}}\left({\left({x}^{2} , \mathrm{cos}\left(x\right) , 1\right)}\right) = [2, -\mathrm{cos}\left(x\right), 0]$$
+
+## Integration
+
+`integrate(expression or vector, dx)`
+
+example:
+
+`integrate(x,x)=?`
+
+converts to:
+
+$$\int {x}\, dx = \frac{x^{2}}{2}$$
+
+`integrate(sin(x)*cos(x),x)=?`
+
+converts to:
+
+$$\int {\mathrm{sin}\left(x\right) \cdot \mathrm{cos}\left(x\right)}\, dx = -\frac{\mathrm{cos}\left(x\right)^{2}}{2}$$
