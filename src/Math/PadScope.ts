@@ -157,13 +157,13 @@ export default class PadScope {
                 }
                 
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                if (true || !(this._expression as any).isFraction()) {
+                // if (true || !(this._expression as any).isFraction()) {
                     // this will return the symbol itself, not the Expression
                     // this._expression = (this._expression as any).simplify();
                     if (parseResult.evaluate) {
                         this._expression = this._expression.evaluate();
                     }
-                }
+                // }
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 // this._resultTex = (this._expression as any).toTeX(
                 //     parseResult.evaluate ? "decimal" : undefined
