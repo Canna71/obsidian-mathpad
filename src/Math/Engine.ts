@@ -9,19 +9,16 @@ require("nerdamer/Solve");
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (global as any).nerdamer = nerdamer;
 
-// const NERDAMER_INITIAL_FUNCS = Object.keys(nerdamer.getCore().PARSER.functions);
 
 const MY_VALIDATION_REGEX =
     /^[a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*$/i;
 
 const FNCALL_REGEX = /([a-z]*)\((.*)\)/i;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 (nerdamer as any).set("VALIDATION_REGEX", MY_VALIDATION_REGEX);
 nerdamer.set('PARSE2NUMBER', false);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function solve(expr: any, variable?: any): any {
-    // console.log(a);
     const vars = nerdamer(expr).variables();
     if (!variable && vars.length === 1) {
         variable = vars[0];
@@ -29,9 +26,7 @@ function solve(expr: any, variable?: any): any {
     return nerdamer.getCore().Solve.solve(expr, variable);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function markAsToPlot(...args: any[]) {
-    // console.log(a);
     let fns = [];
     let i = 0;
     let ret;
@@ -131,20 +126,6 @@ export interface Engine {
         };
     };
 
-    // tryParseFunc: (text: string) =>
-    //     | {
-    //           name: string;
-    //           params: string[];
-    //           def: string;
-    //       }
-    //     | undefined;
-
-    // tryParseVar: (text: string) =>
-    //     | {
-    //           name: string;
-    //           def: string;
-    //       }
-    //     | undefined;
 
     toLatex: (expr: string) => string;
     clone: () => Engine;
@@ -245,29 +226,6 @@ export class NerdamerWrapper implements Engine {
         Object.assign(nerdamer.getCore().PARSER.functions, this.scope.funcs);
     }
 
-    // tryParseFunc = (text: string) => {
-    //     const fnDec = funRegex.exec(text);
-    //     if (fnDec) {
-    //         const name = fnDec[1];
-    //         const params = fnDec[2].split(",").map((p) => p.trim());
-    //         const def = fnDec[3];
-
-    //         this.setFunction(name, params, def);
-
-    //         return { name, params, def };
-    //     }
-    // };
-
-    // tryParseVar = (text: string) => {
-    //     const varDec = varRegex.exec(text);
-    //     if (varDec) {
-    //         const name = varDec[1];
-    //         const def = varDec[2];
-    //         this.setVar(name, def);
-
-    //         return { name, def };
-    //     }
-    // };
 
     tolatexInternal = (expr: string) => {
         let ret = expr;
@@ -320,11 +278,8 @@ const prepare_expression = function (e: string) {
      * a side-by-side close and open parenthesis
      */
     e = String(e);
-    //apply preprocessors
-    // for(var i = 0; i <  preprocessors.actions.length; i++)
-    //     e = preprocessors.actions[i].call(this, e);
-
-    //e = e.split(' ').join('');//strip empty spaces
+    
+    
     //replace multiple spaces with one space
     e = e.replace(/\s+/g, " ");
 
@@ -347,10 +302,7 @@ const prepare_expression = function (e: string) {
                     group2: string,
                     start: number
                 ) {
-                    // const str = arguments[4],
-                    //         group1 = arguments[1],
-                    //         group2 = arguments[2],
-                    //         start = arguments[3],
+                   
                     const first = str.charAt(start);
                     let before = "",
                         d = "*";
@@ -372,7 +324,7 @@ const prepare_expression = function (e: string) {
             })
             //allow omission of multiplication sign between brackets
             .replace(/\)\(/g, ")*(") || "0";
-    //replace x(x+a) with x*(x+a)
+    
     // eslint-disable-next-line no-constant-condition
     while (true) {
         const e_org = e; //store the original
