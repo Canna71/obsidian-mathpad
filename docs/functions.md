@@ -718,6 +718,7 @@ Calculates the z-score for a value
 example:
 
 `x:=[3,1,2,6]`
+
 `zscore(2, mean(x), stdev(x))==?`
 
 will results in: $-\frac{\sqrt{2}}{\sqrt{7}}$
@@ -740,4 +741,44 @@ example:
 will convert to:
 
 $$\lim_{x\to 0} {\frac{\mathrm{sin}\left(x\right)}{x}} = 1$$
+
+## Sample Variance
+
+Calculates the sample variance of a set of numbers.
+
+`smpvar(...expressions or numbers)`
+
+example:
+
+`smpvar(4,2,4,5)==?`
+
+will restults in: $\frac{19}{12}$
+
+`smpvar([4,2,4,5])=~?`
+
+will results in: $1.58333333333333333333$
+
+## Variace
+
+Calculate the population variance of a set of numbers
+
+`variance(...expresions or numbers)`
+
+example:
+
+`variance(4,2,5,4)==?`
+
+will restuls in $\frac{19}{16}$
+
+## Sample Standard Deviation
+
+Calculates the sample standard deviation of a set of numbers.
+
+`smpstdev(...expressions or numbers)`
+
+example:
+
+`smpstdev(4,2,4,5)=~?`
+
+will results in $1.25830573921179190689$
 

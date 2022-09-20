@@ -155,9 +155,9 @@ export default class PadScope {
                 if ((this._expression as any).symbol?._plotme) {
                     this._plot = (this._expression as any).symbol?._plotme;
                 }
-
+                
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                if (!(this._expression as any).isFraction()) {
+                if (true || !(this._expression as any).isFraction()) {
                     // this will return the symbol itself, not the Expression
                     // this._expression = (this._expression as any).simplify();
                     if (parseResult.evaluate) {
