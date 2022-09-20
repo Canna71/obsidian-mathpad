@@ -653,3 +653,91 @@ will results in:
 
 $\left[\left[x, 3\right], \left[y, 5\right], \left[z, -3\right]\right]$
 
+# Other functions
+
+## Laplace transform
+
+Calculate the Laplace transform of a funcion
+
+`laplace(expression, time, variable)`
+
+example:
+
+`laplace(t^6, t, s)==?`
+
+will results in: $\frac{6!}{s^{7}}$
+
+`laplace(cos(w*t)*t, t,x)=?`
+
+will results in:
+
+$\frac{1}{\left(\frac{w^{2}}{x^{2}}+1\right)^{2} \cdot x^{2}}-\frac{w^{2}}{\left(\frac{w^{2}}{x^{2}}+1\right)^{2} \cdot x^{4}}$
+
+## Mean
+
+Calculates the mean of a set of numbers
+
+`mean(...numbers of expressions)`
+
+example:
+
+`mean(3,4,6,1,2,4)==?`
+
+will results in $\frac{10}{3}$
+
+## Mode
+
+Calculates the mode of a set of numbers. Returns a symbolic function if mode cannot be calculated.
+
+`mode(...numbers)`
+
+example:
+
+`mode(4,2,5,4)=?`
+
+will results $4$
+
+## Median
+
+Returns the mediam of a set of numbers
+
+`median(...numbers)`
+
+example:
+
+`median(11,12,13,14)==?`
+
+will results in: $\frac{25}{2}$
+
+## Z-Score
+
+Calculates the z-score for a value
+
+`zscore(x, mean, stdev)`
+
+example:
+
+`x:=[3,1,2,6]`
+`zscore(2, mean(x), stdev(x))==?`
+
+will results in: $-\frac{\sqrt{2}}{\sqrt{7}}$
+
+`zscore(2, mean(x), stdev(x))=~?`
+
+will results in: $-0.53452248382484878790$
+
+
+## Limit
+
+Tries to calculate the limit of an expression
+
+`limit(expression, variable, limit)`
+
+example:
+
+`limit(sin(x)/x,x,0)=?`
+
+will convert to:
+
+$$\lim_{x\to 0} {\frac{\mathrm{sin}\left(x\right)}{x}} = 1$$
+
