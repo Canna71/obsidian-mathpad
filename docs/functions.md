@@ -66,17 +66,6 @@ example:
 will concert to:
 
 $$expand\left(\left(a + b\right) \cdot \left(a - b\right)\right) = -b^{2}+a^{2}$$
-## Minimum
-
-Returns the minimum among a set of num
-
-`min(...elements)`
-
-example
-
-`min(1,2,3)=?`
-
-$$\mathrm{min}\left(1,2,3\right) = 1$$
 
 ## Fibonacci
 
@@ -655,6 +644,20 @@ $\left[\left[x, 3\right], \left[y, 5\right], \left[z, -3\right]\right]$
 
 # Other functions
 
+## Limit
+
+Tries to calculate the limit of an expression
+
+`limit(expression, variable, limit)`
+
+example:
+
+`limit(sin(x)/x,x,0)=?`
+
+will convert to:
+
+$$\lim_{x\to 0} {\frac{\mathrm{sin}\left(x\right)}{x}} = 1$$
+
 ## Laplace transform
 
 Calculate the Laplace transform of a funcion
@@ -727,21 +730,6 @@ will results in: $-\frac{\sqrt{2}}{\sqrt{7}}$
 
 will results in: $-0.53452248382484878790$
 
-
-## Limit
-
-Tries to calculate the limit of an expression
-
-`limit(expression, variable, limit)`
-
-example:
-
-`limit(sin(x)/x,x,0)=?`
-
-will convert to:
-
-$$\lim_{x\to 0} {\frac{\mathrm{sin}\left(x\right)}{x}} = 1$$
-
 ## Sample Variance
 
 Calculates the sample variance of a set of numbers.
@@ -781,4 +769,16 @@ example:
 `smpstdev(4,2,4,5)=~?`
 
 will results in $1.25830573921179190689$
+
+## Standard Deviation
+
+Calculates the population standard deviation of a set of numbers
+
+`stddev(...expressions or numbers)`
+
+example:
+
+`stdev(4,2,5,4)=~?`
+
+will result in: $1.08972473588516841053$
 
