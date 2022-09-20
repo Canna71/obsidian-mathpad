@@ -17,6 +17,7 @@ const MY_VALIDATION_REGEX =
 const FNCALL_REGEX = /([a-z]*)\((.*)\)/i;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (nerdamer as any).set("VALIDATION_REGEX", MY_VALIDATION_REGEX);
+nerdamer.set('PARSE2NUMBER', false);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function solve(expr: any, variable?: any): any {

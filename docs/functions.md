@@ -96,7 +96,7 @@ Returns the prime factors of a number (evaluating returns the initial number)
 `pfactor(N)`   
 
 example:
-`pfactpr(126)==?`   
+`pfactor(126)==?`   
 
 $$\mathrm{pfactor}\left(126\right) = \left(2\right) \cdot \left(3^{2}\right) \cdot \left(7\right)$$
 
@@ -489,7 +489,7 @@ converts to:
 
 $$\int {x}\, dx = \frac{x^{2}}{2}$$
 
-`integrate(sin(x)*cos(x),x)=?`
+`integrate(sin(x)*cos(x),x)==?`
 
 converts to:
 
@@ -562,4 +562,94 @@ examples:
 results in:
 
 $$\mathrm{lcm}\left(4,6\right) = 12$$
+
+## Greatest Common Divisor
+
+Greatest Common Divisor of two polynomials oe to numbers
+
+`gcd(p1, p2)`
+
+example:
+
+`gcd(x^2+2*x+1, x^2+6*x+5)=?`
+
+converts to:
+
+$$\mathrm{gcd}\left(x^2+2*x+1,x^2+6*x+5\right) = x+1$$
+
+## Roots
+
+Returns the roots of a single variable expression
+
+`roots(expression)`
+
+example:
+
+`roots(x^2-3*x-10)=?`
+
+results in $[2, -2]$
+
+## Coefficients
+
+Returns the coefficient of a polynomial
+
+`coeffs(polynomial, variable)`
+
+example:
+
+`coeffs(x^2-2x+10, x)=?`
+
+results in $[10, -2, 1]$
+
+## Degree
+
+Returns the degree of a plynomial
+
+`deg(polynomial, variable)`
+
+example:
+
+`deg(x^2-2x+10, x)=?`
+
+results in $2$
+
+## Complete The Square
+
+Attempts to rewrite to polynomial to complete the square.
+
+`sqcop(polynomial, variable)`
+
+example:
+
+`sqcomp(9*x^2-18*x+17)=?`
+
+Results in $\left(3 \cdot x-3\right)^{2}+8$
+
+# Solve
+
+## Solve for a variable
+
+Solve an equation, symbolically if possible
+
+`solve(equation, variable?)`
+
+example:
+
+`solve(a*x^2+b*x=y, x)=?`
+
+will results in $[\frac{0.5 \cdot \sqrt{4 \cdot a \cdot y+b^{2}}-b}{a}, \frac{0.5 \cdot -\sqrt{4 \cdot a \cdot y+b^{2}}-b}{a}]$
+
+`solve(x^4=1)=?`
+ 
+ will results in $[1, -1, i, -i]$
+
+## System of linear equations
+
+Solves a system of linear equations
+
+`solveEquations([2*x^2*z-y=-59, 0.5*y^3-z=65.5, x^2+y^3-5*z^2=89])==?`
+
+will results in:
+
+$\left[\left[x, 3\right], \left[y, 5\right], \left[z, -3\right]\right]$
 
