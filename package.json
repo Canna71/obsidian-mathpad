@@ -1,7 +1,7 @@
 {
-	"name": "obsidian-chronologyn",
+	"name": "mathpad",
 	"version": "1.0.0",
-	"description": "Enables to have a calendat and a timeline of the activities",
+	"description": "A Computer Algebra System for Obsidian.md",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
