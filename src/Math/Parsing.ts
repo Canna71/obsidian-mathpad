@@ -21,7 +21,7 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
     // just a text to further parse?
     // let retText=text;
     let evaluate = settings.evaluate;
-    let latex = settings.preferBlock;
+    let block = settings.preferBlock;
     let isVarDec = false;
     let isFnDec = false;
     let isEval = false;
@@ -31,12 +31,16 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
     let hide = false;
     text = text.trim();
 
-    if(text.endsWith(settings.inlinePostfix)){
-        latex = false;
-        text = text.slice(0, -settings.inlinePostfix.length).trimEnd();
+    if(text.startsWith(settings.hidePrefix)){
+        text = text.slice(settings.hidePrefix.length).trimEnd();
         hide = true;
+    }
+
+    if(text.endsWith(settings.inlinePostfix)){
+        block = false;
+        text = text.slice(0, -settings.inlinePostfix.length).trimEnd();
     } else if (text.endsWith(settings.latexPostfix)) {
-        latex = true;
+        block = true;
         text = text.slice(0, -settings.latexPostfix.length).trimEnd();
     }
 
@@ -109,7 +113,7 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
     return {
         text: text.trim(),
         evaluate,
-        block: latex,
+        block: block,
         isVarDec,
         isFnDec,
         isEval,

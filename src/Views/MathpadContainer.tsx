@@ -2,26 +2,11 @@ import { Input } from './Input';
 
 import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
-
-
-
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// import Algebra from "nerdamer/Algebra";
-// import Calculus from "nerdamer/Calculus";
-
-// import Latex from "./Latex";
 import PadSlotView from "./PadSlotView";
 import PadSlot from "src/Math/PadSlot";
 import {  getNewStack, SlotStack,  } from "src/Math/PadStack";
 import { MathpadSettings } from 'src/MathpadSettings';
-// import { registerHelper } from "codemirror";
-// import codemirror from "codemirror";
-// window.codemirror = codemirror;
-// import CodeMirror from "codemirror";
 
-// const codemirror = require("codemirror")
-// window.codemirror = codemirror;
 export interface MathpadContainerProps {
     nothing: string
 }
@@ -61,7 +46,7 @@ export const MathpadContainer = ({onCopySlot, settings}:
 
     const [state, setState] = useState({ ...DEFAULTSTATE });
 
-    const { input, stack, options: { evaluate }, selected, history } = state;
+    const { input, stack, options: { evaluate }, selected } = state;
     
 
     useEffect(() => { 
@@ -105,7 +90,7 @@ export const MathpadContainer = ({onCopySlot, settings}:
                     ix = Math.clamp(ix+delta,0,state.stack.items.length-1);
                     history = state.stack.getSLotByIndex(ix).id;
                 }
-                const input = state.stack.getSlotById(history)?.input;
+                const input = state.stack.getSlotById(history)?.input || "";
                 return ({...state, history, input});
             });
         } 
