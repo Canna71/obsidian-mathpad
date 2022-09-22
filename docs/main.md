@@ -68,7 +68,58 @@ To specify a range also for y:
 
 `plot(sin(x),[-3.14, 3.14], [-1, 1])`
 
+## Sidebar commands
+
+On the top of the sidebar there are commands that help manipulating the expressions already inserted in some slot: *derivate*, *integrate*, *solve*, *expand*, *simplify*
+On each Slot there are four buttons, the first will delete the slot.
+The second will copy the expression of the slot (and all the variables in scope) to a code block in the active view. This works also for plots and it will retain the zoon and panning.
+The third and fourth will copy the input or the result respectively as LaTeX in the active view. If the active view is not editable it will be copied to the clipboard.
+Clicking on the result will copy it in the input.
+
 # Code Block
+
+Mathpad code blocks are created the usual way:
+
+    ```mathpah
+    ```
+
+inside it you can put the same commands you would put in the sidebar.
+When mathpad expressions are evaluated and rendered,they obay to some defaults found in the settings:
+
+`Evaluate Results` will defaults to evaluatig expressions to numeric, when possible
+`Prefers Block Latex` will defaults to rendering LaTeX as block
+
+You can force some particular expression to be be kept more symbolic even if the defaults is to evaluate by using the following syntax:
+
+`x+2/3==?`
+
+You can force it to be evaluated to numeric with the following one:
+
+`x+2/3=~?`
+
+    ```mathpad
+    x+4/6==?
+    x+2/3=~?
+    ```
+will render as:
+
+<img src="code_block_1.png" width="324" >
+
+You can end an expression with only `=?`, this is needed in inline blocks (see later) but not in code blocks. It will use the default evaluation as specified in the settings.
+
+To force a block rendering, regardless of the default, use a leading `$` sign, to force an inline rendering use a `-` sign:
+
+    ```mathpad
+    sin(pi)=?$
+    cos(pi)=?-
+    ```
+
+will be rendered as follows:
+
+<img src="code_block_2.png" width="600" >
+
+To hide an expression from the rendering prefix it with a `%` sign (this only works with code blocks)
+
 
 # Inline Block
 
