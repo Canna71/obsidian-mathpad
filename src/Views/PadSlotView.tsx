@@ -78,6 +78,12 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied, onClicked, select
         onCopied(padSlot, e.currentTarget.dataset.copy || "code")
     }, [padSlot])
 
+    const onCopyOutputAsText = useCallback((e: React.MouseEvent<HTMLElement>) => {
+        if(!padSlot.error){
+            onCopied(padSlot, "text");
+        }
+    }, [padSlot])
+
     const handlePlotScaleChanhed = useCallback((opts: FunctionPlotOptions) => {
         padSlot.plot.xDomain = opts.xAxis?.domain?.map(n => n.toPrecision(3));
         padSlot.plot.yDomain = opts.yAxis?.domain?.map(n => n.toPrecision(3));
@@ -97,7 +103,7 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied, onClicked, select
                     onKeyDown={onKeyDown} onBlur={onBlur}
                     input={padSlot.input} inputLaTeX={padSlot.inputLaTeX}
                 />
-                <div className="slot-result">
+                <div className="slot-result" onClick={onCopyOutputAsText}>
                     {
                         padSlot.error ?
                             <div className="slot-error">{padSlot.error}</div>

@@ -125,7 +125,14 @@ export const MathpadContainer = ({onCopySlot, settings}:
     }, []);
 
     const onSlotCopied = useCallback((slot: PadSlot, what: string) => {
-        slot && setTimeout(()=>onCopySlot(slot, what),0);
+        if(what!=="text"){
+            slot && setTimeout(()=>onCopySlot(slot, what),0);
+        } else {
+            setState(state=>({
+                ...state,
+                input: slot.text
+            }))
+        }
     }, [onCopySlot]);
 
     const applyFn = (fn:string) => useCallback(()=>{
