@@ -119,6 +119,22 @@ export class SlotStack {
         return this.items.find((slot) => slot.id === id);
     }
 
+    getSlotIndexById(id: number) {
+        const item = this.items.find((slot) => slot.id === id);
+        if(item)
+            return this.items.indexOf(item);
+        else 
+            return -1;
+    }
+
+    getSLotByIndex(i: number) {
+        return this.items[i];
+    }
+
+    isEmpty() {
+        return this.items.length === 0;
+    }
+
     static getSlotVariableName(id: number) {
         return `${SLOT_VARIABLE_PREFIX}${id}`;
     }

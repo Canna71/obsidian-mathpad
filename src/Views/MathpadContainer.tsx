@@ -38,6 +38,7 @@ interface MathPadState {
     stack?: SlotStack;
     options: MathPadOptions;
     selected?: number;
+    history?: number;
 }
 
 const DEFAULTSTATE: MathPadState = {
@@ -60,7 +61,7 @@ export const MathpadContainer = ({onCopySlot, settings}:
 
     const [state, setState] = useState({ ...DEFAULTSTATE });
 
-    const { input, stack, options: { evaluate }, selected } = state;
+    const { input, stack, options: { evaluate }, selected, history } = state;
     
 
     useEffect(() => { 
@@ -78,7 +79,8 @@ export const MathpadContainer = ({onCopySlot, settings}:
                 ({
                 ...state,
                 stack: state.stack?.addSlot(state.input, settings, { evaluate: state.options.evaluate }),
-                input: ""
+                input: "",
+                history: undefined
                 })
                 :
                 state
@@ -90,6 +92,23 @@ export const MathpadContainer = ({onCopySlot, settings}:
             e.preventDefault();
             processInput();
         }
+        else if(e.code === "ArrowUp" || e.code === "ArrowDown") {
+            const delta = e.code === "ArrowUp" ? -1 : 1;
+            setState(state=>{
+                if(!state.stack || state.stack.isEmpty()) return state;
+                let history = state.history;
+                if(!history){
+                    if(delta<0) history = state.stack?.getSLotByIndex(state.stack.items.length-1).id
+                    else history = state.stack?.getSLotByIndex(0).id
+                } else { 
+                    let ix = state.stack?.getSlotIndexById(history);
+                    ix = Math.clamp(ix+delta,0,state.stack.items.length-1);
+                    history = state.stack.getSLotByIndex(ix).id;
+                }
+                const input = state.stack.getSlotById(history)?.input;
+                return ({...state, history, input});
+            });
+        } 
     }, [processInput]);
 
     const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
