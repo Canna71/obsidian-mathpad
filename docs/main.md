@@ -66,6 +66,8 @@ To specify a range also for y:
 
 `plot(sin(x),[-3.14, 3.14], [-1, 1])`
 
+<img src="plot_with_domain.png" width="400" >
+
 ## Sidebar commands
 
 On the top of the sidebar there are commands that help manipulating the expressions already inserted in some slot: *derivate*, *integrate*, *solve*, *expand*, *simplify*
