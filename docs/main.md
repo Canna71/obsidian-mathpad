@@ -170,6 +170,11 @@ On the other way, if you have `Prefer Block LaTeX` on and you want to force inli
 
 It will render the same as above.
 
+You an also generate plots using inline code:
+
+    `plot(x^2-2)=?`
+
+Note that they will be rendered as block elements regardless of settings.
 
 # Settings
 
