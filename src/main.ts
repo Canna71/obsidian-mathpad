@@ -133,9 +133,6 @@ export default class MathpadPlugin extends Plugin {
     }
 
     async registerPostProcessor() {
-        console.log("registerPostProcessor");
-        // await loadMathJax();
-        // await finishRenderMath();
         this.registerMarkdownPostProcessor(getPostPrcessor(this.settings));
     }
 
