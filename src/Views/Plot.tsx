@@ -47,20 +47,25 @@ export const Plot: React.FC<FunctionPlotProps> =
 
 export default Plot;
 
+export function getPlotOptions(width: number, settings:MathpadSettings, padScope: PadScope) : FunctionPlotOptions {
+    return ({
+        width: width,
+        grid: settings.plotGrid,
+        data: padScope.fn.map(fn => ({
+            graphType: 'polyline',
+            fn: (scope: any) => fn(scope.x)
+        })),
+        xAxis: padScope.plot.xDomain && padScope.plot.xDomain.length == 2 && { domain: padScope.plot.xDomain },
+        yAxis: padScope.plot.yDomain && padScope.plot.yDomain.length == 2 && { domain: padScope.plot.yDomain },
+        target: "", // just to make tslint happy
+        
+    });
+}
+
 export function makePlot(cxt: any, padScope: PadScope, settings: MathpadSettings, handlePlotScaleChanhed?: (opts: FunctionPlotOptions) => void): React.ReactNode {
     return <div className="mathpad-plot">
-        <Plot options={{
-            width: cxt.width - 20,
-            grid: settings.plotGrid,
-            data: padScope.fn.map(fn => ({
-                graphType: 'polyline',
-                fn: (scope: any) => fn(scope.x)
-            })),
-            xAxis: padScope.plot.xDomain && padScope.plot.xDomain.length == 2 && { domain: padScope.plot.xDomain },
-            yAxis: padScope.plot.yDomain && padScope.plot.yDomain.length == 2 && { domain: padScope.plot.yDomain },
-            target: "", // just to make tslint happy
-            
-        }} 
+        <Plot 
+        options={getPlotOptions(cxt.width - 20, settings, padScope)}
         onScaleChanged={handlePlotScaleChanhed}
         />
     </div>;

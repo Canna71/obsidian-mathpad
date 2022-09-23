@@ -1,9 +1,12 @@
+import { getMathpadSettings } from 'src/main';
 import { ParseResult } from './../Math/Parsing';
 // import { Input } from './../Views/Input';
 import PadScope from "src/Math/PadScope";
 import { EditorView, WidgetType } from "@codemirror/view";
 import { finishRenderMath, renderMath } from "obsidian";
 import { isNumber } from 'util';
+import { getPlotOptions } from 'src/Views/Plot';
+import functionPlot from 'function-plot';
 // import getSettings from "src/MathpadSettings";
 
 export class ResultWidget extends WidgetType {
@@ -30,13 +33,22 @@ export class ResultWidget extends WidgetType {
         let el: HTMLElement;
         if(this.padScope.isValid) {
 
-            el = renderMath(
-                this.onlyResult?this.padScope.laTeX:this.padScope.noteLatex,
-                this.parseResult.block
-            );
-            
-            finishRenderMath();
-            el.addClasses(["mathpad-inline"]);
+            if(this.padScope.plot){
+                const div = document.createElement("div");
+                const options = getPlotOptions(600,getMathpadSettings(),this.padScope);
+                options.target = div;
+                functionPlot(options);
+                el = div;
+            } else {
+                el = renderMath(
+                    this.onlyResult?this.padScope.laTeX:this.padScope.noteLatex,
+                    this.parseResult.block
+                );
+                
+                finishRenderMath();
+                el.addClasses(["mathpad-inline"]);
+            }
+
         } else {
             const div = document.createElement("div");
             div.setText(this.padScope.error||"");
