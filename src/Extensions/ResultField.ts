@@ -130,7 +130,6 @@ function addDecoration(
                       widget: new ResultWidget(
                           res,
                           parseResult,
-                          false,
                           node.from
                       ),
                       block: true,
@@ -141,7 +140,6 @@ function addDecoration(
                       widget: new ResultWidget(
                           res,
                           parseResult,
-                          false,
                           node.from
                       ),
                       block: true,
@@ -159,7 +157,6 @@ function addDecoration(
                     widget: new ResultWidget(
                         res,
                         parseResult,
-                        false,
                         node.from
                     ),
                     block: false,

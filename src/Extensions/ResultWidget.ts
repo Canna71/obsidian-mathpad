@@ -15,21 +15,21 @@ export class ResultWidget extends WidgetType {
     padScope: PadScope;
     parseResult: ParseResult;
     pos?: number;
-    onlyResult: boolean;
+    // onlyResult: boolean;
     /**
      *
      */
     constructor(
         padScope: PadScope,
         parseResult: ParseResult,
-        onlyResult: boolean,
+        // onlyResult: boolean,
         pos?: number
     ) {
         super();
         this.padScope = padScope;
         this.parseResult = parseResult;
         this.pos = pos;
-        this.onlyResult = onlyResult;
+        // this.onlyResult = onlyResult;
         // this.isLatex = isLatex;÷
     }
 
@@ -38,37 +38,13 @@ export class ResultWidget extends WidgetType {
         let el: HTMLElement;
         if (this.padScope.isValid) {
             if (this.padScope.plot) {
-                const div = document.createElement("div");
-                div.addClass("mathpad-plot");
-                let cw = view.contentDOM.offsetWidth;
-                let e = view.contentDOM;
-                while (cw === 0 && e.parentElement) {
-                    e = e.parentElement;
-                    cw = e.offsetWidth;
-                }
-                const containerWidth = Math.clamp(cw, 200, 700);
-                const width =
-                    getMathpadSettings().plotWidth > 0
-                        ? getMathpadSettings().plotWidth
-                        : containerWidth;
-                const options = getPlotOptions(
-                    width,
-                    getMathpadSettings(),
-                    this.padScope
-                );
-                options.target = div;
-                functionPlot(options);
-                el = div;
+                const wrapper = document.createElement("div");
+                wrapper.appendChild(this.makeLatex(this.padScope.laTeX))
+                wrapper.appendChild(this.makePlotDiv(view));
+                
+                el = wrapper;
             } else {
-                el = renderMath(
-                    this.onlyResult
-                        ? this.padScope.laTeX
-                        : this.padScope.noteLatex,
-                    this.parseResult.block
-                );
-
-                finishRenderMath();
-                el.addClasses(["mathpad-inline"]);
+                el = this.makeLatex();
             }
         } else {
             const div = document.createElement("div");
@@ -84,6 +60,46 @@ export class ResultWidget extends WidgetType {
         }
 
         return el;
+    }
+
+    private makeLatex(latex?: string) {
+
+        const el = renderMath(
+            latex || this.padScope.noteLatex,
+            this.parseResult.block
+        );
+
+        finishRenderMath();
+        el.addClasses(["mathpad-inline"]);
+        return el;
+    }
+
+    private makePlotDiv(view: EditorView) {
+        const div = document.createElement("div");
+        div.addClass("mathpad-plot");
+        const cw = this.getContainerWidth(view);
+        const containerWidth = Math.clamp(cw, 200, 700);
+        const width = getMathpadSettings().plotWidth > 0
+            ? getMathpadSettings().plotWidth
+            : containerWidth;
+        const options = getPlotOptions(
+            width,
+            getMathpadSettings(),
+            this.padScope
+        );
+        options.target = div;
+        functionPlot(options);
+        return div;
+    }
+
+    private getContainerWidth(view: EditorView) {
+        let cw = view.contentDOM.offsetWidth;
+        let e = view.contentDOM;
+        while (cw === 0 && e.parentElement) {
+            e = e.parentElement;
+            cw = e.offsetWidth;
+        }
+        return cw;
     }
 }
 

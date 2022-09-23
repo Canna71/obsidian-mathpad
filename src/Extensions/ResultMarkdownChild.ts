@@ -24,12 +24,11 @@ export class MathResult extends MarkdownRenderChild {
 
     onload() {
         if (!this.padScope.plot) {
-            const mathEl = renderMath(this.padScope.noteLatex, this.isLatex);
-
-            finishRenderMath();
-            mathEl.dataset.mathpadInput = this.padScope.input + "=?";
+            const mathEl = this.makeLatex();
             this.containerEl.replaceWith(mathEl);
         } else {
+            const wrapper = document.createElement("div");
+            wrapper.appendChild(this.makeLatex(this.padScope.laTeX));
             const plotEl = document.createElement("div");
             plotEl.addClass("mathpad-plot");
 
@@ -40,7 +39,16 @@ export class MathResult extends MarkdownRenderChild {
             );
             options.target = plotEl;
             functionPlot(options);
-            this.containerEl.replaceWith(plotEl);
+            wrapper.appendChild(plotEl);
+            this.containerEl.replaceWith(wrapper);
         }
+    }
+
+    private makeLatex(latex?: string) {
+        const mathEl = renderMath(latex || this.padScope.noteLatex, this.isLatex);
+
+        finishRenderMath();
+        mathEl.dataset.mathpadInput = this.padScope.input + "=?";
+        return mathEl;
     }
 }
