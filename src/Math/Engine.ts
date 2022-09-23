@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import nerdamer from "nerdamer";
 require("nerdamer/Algebra");
 require("nerdamer/Calculus");
@@ -6,7 +5,6 @@ require("nerdamer/Extra");
 require("nerdamer/Solve");
 
 // for debugging purposes
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (global as any).nerdamer = nerdamer;
 
 

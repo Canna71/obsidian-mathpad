@@ -57,13 +57,11 @@ export const MathInput: React.FC<React.DetailedHTMLProps<React.InputHTMLAttribut
             }
         }
 
-        // deleteContentBackward, deleteContentForward
         if (inputType === "deleteContentBackward" || inputType === "deleteContentForward") {
             const removedChar = (props.value as string)?.at(pos);
             if (removedChar) {
                 const closeChar = closeChars.get(removedChar)
                 if (closeChar) {
-                    // const nextChar = el.value[pos];
                     if (isCloseChar.get(nextchar)) {
                         val.splice(pos, 1);
                         el.value = val.join("");

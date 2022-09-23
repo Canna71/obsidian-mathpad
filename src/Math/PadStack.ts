@@ -1,5 +1,4 @@
 import { MathpadSettings } from "src/MathpadSettings";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { createEngine, Engine } from "./Engine";
 import PadSlot from "./PadSlot";
@@ -47,8 +46,6 @@ export class SlotStack {
             settings,
             opts
         );
-        // const pad = new PadSlot(nextId(stack), input).process(scope, opts);
-        // this.stack = [...this.stack, slot];
         const newEngine = this.engine.clone();
 
         if (!slot.error && slot.isValid) {

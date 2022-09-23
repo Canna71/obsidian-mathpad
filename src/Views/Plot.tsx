@@ -19,7 +19,6 @@ export const Plot: React.FC<FunctionPlotProps> =
             onScaleChanged: (options: FunctionPlotOptions) => void
         }) => {
         const rootEl = useRef<HTMLDivElement>(null);
-        // const chartRef = useRef<Chart>(null);
 
         const [state] = useState(options);
 
@@ -33,10 +32,8 @@ export const Plot: React.FC<FunctionPlotProps> =
                     Object.assign(state, options);
                     state.target = rootEl.current;
 
-                    // functionPlot({...options, target: rootEl.current });
                     const chart: Chart = functionPlot(state);
                     chart.on("all:zoom", (_event) => {
-                        // console.log(w);
                         handleScaleChanged(chart.options);
                     });
                 }
@@ -57,7 +54,6 @@ export function makePlot(cxt: any, padScope: PadScope, settings: MathpadSettings
             grid: settings.plotGrid,
             data: padScope.fn.map(fn => ({
                 graphType: 'polyline',
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 fn: (scope: any) => fn(scope.x)
             })),
             xAxis: padScope.plot.xDomain && padScope.plot.xDomain.length == 2 && { domain: padScope.plot.xDomain },

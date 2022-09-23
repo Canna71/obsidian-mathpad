@@ -12,7 +12,6 @@ import Question from "../icons/question.svg";
 import { SlotStack } from "src/Math/PadStack";
 import { FunctionPlotOptions } from "function-plot/dist/types";
 
-// import { FunctionPlotOptions } from "function-plot/dist/types";
 interface PadSlotViewState {
     edit: boolean;
 }

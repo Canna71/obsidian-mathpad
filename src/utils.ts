@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export function groupBy<T>(items: T[], selector: (item:T)=>any ){
     return items.reduce((acc: {[key: string]:T[]},item:T)=>{

@@ -71,9 +71,7 @@ export class MathpadView extends ItemView {
         const str = slot.getCodeBlock(this.settings);
         const leaf = this.app.workspace.getMostRecentLeaf();
         if (!leaf) return;
-        // if (leaf.view instanceof MarkdownView) {
-        //     const editor = leaf.view.editor;
-        //     if (editor) {
+        
                 switch (what) {
                     case "input":
                             copyContent(leaf.view, slot.inputLaTeX, this.settings.preferBlock);
@@ -90,12 +88,6 @@ ${str}
                         break;
                 }
 
-
-        //     }
-        // } else {
-        //     console.warn('Mathpad: Unable to determine current editor.');
-        //     return;
-        // }
 
 
     }

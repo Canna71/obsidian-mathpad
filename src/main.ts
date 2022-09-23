@@ -1,25 +1,19 @@
 import { DEFAULT_SETTINGS, MathpadSettings } from "src/MathpadSettings";
 import { addIcon, MarkdownView } from "obsidian";
-// import { createEngine } from 'src/Math/Engine';
 import {
     mathpadConfigField,
     resultField,
     setConfig,
 } from "./Extensions/ResultField";
-// import { MathResult } from './Extensions/ResultMarkdownChild';
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { MathpadView, MATHPAD_VIEW } from "./Views/MathpadView";
 import {
-    App,
     finishRenderMath,
     loadMathJax,
-    Modal,
     Plugin,
     WorkspaceLeaf,
 } from "obsidian";
 import { MathpadSettingsTab } from "src/MathpadSettingTab";
 import { processCodeBlock } from "./Views/DocView";
-import PadScope from "./Math/PadScope";
 import { getPostPrcessor } from "./Extensions/PostProcessor";
 
 const sigma = `<path stroke="currentColor" fill="none" d="M78.6067 22.8905L78.6067 7.71171L17.8914 7.71171L48.2491 48.1886L17.8914 88.6654L78.6067 88.6654L78.6067 73.4866" opacity="1"  stroke-linecap="round" stroke-linejoin="round" stroke-width="6" />

@@ -1,4 +1,4 @@
-import { MathpadSettings } from 'src/MathpadSettings';
+import { MathpadSettings } from "src/MathpadSettings";
 import parse, { ParseResult, SLOT_VARIABLE_PREFIX } from "./Parsing";
 import { createEngine } from "src/Math/Engine";
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -36,7 +36,6 @@ export default class PadScope {
     public get subs(): any {
         return this._subs;
     }
-
 
     public get scope(): {
         vars: { [x: string]: string };
@@ -100,7 +99,11 @@ export default class PadScope {
     }
 
     public get noteText(): any {
-        if(this.parseResult.isFnDec || this.parseResult.isVarDec || (this._input.trim()===this._text.trim())){
+        if (
+            this.parseResult.isFnDec ||
+            this.parseResult.isVarDec ||
+            this._input.trim() === this._text.trim()
+        ) {
             return this._input;
         } else {
             return this._input + " = " + this._text;
@@ -108,7 +111,11 @@ export default class PadScope {
     }
 
     public get noteLatex(): any {
-        if(this.parseResult.isFnDec || this.parseResult.isVarDec || (this._input.trim()===this._text.trim())){
+        if (
+            this.parseResult.isFnDec ||
+            this.parseResult.isVarDec ||
+            this._input.trim() === this._text.trim()
+        ) {
             return this._inputLatex;
         } else {
             return this._inputLatex + " = " + this._resultTex;
@@ -149,20 +156,20 @@ export default class PadScope {
                 this._expression = engine.parse(parseResult.text);
                 //TODO: sometimpes this._expression.symbol is null because of errors
                 // we should throw
-                if((this._expression as any).symbol === null){
-                    throw new Error("Unable to evaluate expression.")
+                if ((this._expression as any).symbol === null) {
+                    throw new Error("Unable to evaluate expression.");
                 }
                 if ((this._expression as any).symbol?._plotme) {
                     this._plot = (this._expression as any).symbol?._plotme;
                 }
-                
+
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 // if (true || !(this._expression as any).isFraction()) {
-                    // this will return the symbol itself, not the Expression
-                    // this._expression = (this._expression as any).simplify();
-                    if (parseResult.evaluate) {
-                        this._expression = this._expression.evaluate();
-                    }
+                // this will return the symbol itself, not the Expression
+                // this._expression = (this._expression as any).simplify();
+                if (parseResult.evaluate) {
+                    this._expression = this._expression.evaluate();
+                }
                 // }
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 // this._resultTex = (this._expression as any).toTeX(
@@ -175,15 +182,17 @@ export default class PadScope {
                     // probably it's a collection:
                     const tmp: ((...args: number[]) => number)[] = [];
                     try {
-                        if((this._expression as any).symbol?.elements?.length>0){
+                        if (
+                            (this._expression as any).symbol?.elements?.length >
+                            0
+                        ) {
                             (this._expression as any).each((element: any) => {
                                 tmp.push(engine.parse(element).buildFunction());
                             });
                         }
-                    } catch(ex){
+                    } catch (ex) {
                         console.warn(ex);
                     }
-
 
                     //
                     this._fn = tmp;
@@ -193,12 +202,11 @@ export default class PadScope {
             this._resultTex = (this._expression as any).toTeX(
                 parseResult.evaluate ? "decimal" : undefined
             );
-
         } catch (e) {
             this._error = e.toString();
             console.warn(e, this.input);
         }
-        
+
         let inputText = this.input;
         if (this.plot) {
             const m = PLOT_PARSE.exec(inputText);
@@ -207,61 +215,75 @@ export default class PadScope {
                 this._inputLatex = "plot(" + engine.toLatex(inputText) + ")";
             }
         } else {
-            try{
-                if(!(this.parseResult.isFnDec || this.parseResult.isVarDec)){
-                    this._input= this.parseResult.text; 
+            try {
+                if (!(this.parseResult.isFnDec || this.parseResult.isVarDec)) {
+                    this._input = this.parseResult.text;
                     this._inputLatex = engine.toLatex(this.parseResult.text);
                 } else {
                     this._input = this.parseResult.name;
-                    this._inputLatex = engine.toLatex(`${this.parseResult.name}`);
-                    if(this.parseResult.isFnDec){
-                        this._input+=`(${this.parseResult.params.join(", ")})`;
-                        this._inputLatex = engine.toLatex(`${this.parseResult.name}(${this.parseResult.params.join(", ")})`)
+                    this._inputLatex = engine.toLatex(
+                        `${this.parseResult.name}`
+                    );
+                    if (this.parseResult.isFnDec) {
+                        this._input += `(${this.parseResult.params.join(
+                            ", "
+                        )})`;
+                        this._inputLatex = engine.toLatex(
+                            `${
+                                this.parseResult.name
+                            }(${this.parseResult.params.join(", ")})`
+                        );
                     }
                     this._input += ":=" + this.parseResult.def;
-                    this._inputLatex += " \\coloneqq " + engine.toLatex(this.parseResult.def);
+                    this._inputLatex +=
+                        " \\coloneqq " + engine.toLatex(this.parseResult.def);
                 }
-            } catch(ex){
+            } catch (ex) {
                 console.warn(ex);
             }
         }
         if (this._expression) {
-            try{
+            try {
                 const expr = this._expression.text(
                     parseResult.evaluate ? "decimals" : "fractions"
                 );
-    
+
                 if (parseResult.isFnDec || parseResult.isVarDec) {
                     this._ident = parseResult.def === expr;
                 } else {
                     this._ident = expr === this.input;
                 }
                 this._text = expr;
-            } catch(ex) {
-                console.warn(ex)
+            } catch (ex) {
+                console.warn(ex);
             }
-
         }
 
-        return this;  
+        return this;
     }
 
     getCodeBlock(settings: MathpadSettings) {
-
         const lines: string[] = [];
         for (const v in this.scope.vars) {
-            const postfix = v.startsWith(SLOT_VARIABLE_PREFIX)?settings.inlinePostfix:"";
-            lines.push(`${v}${settings.declarationStr}${this.scope.vars[v]}${postfix}`);
+            const postfix = v.startsWith(SLOT_VARIABLE_PREFIX)
+                ? settings.inlinePostfix
+                : "";
+            lines.push(
+                `${v}${settings.declarationStr}${this.scope.vars[v]}${postfix}`
+            );
         }
         for (const f in this.scope.funcs) {
             // console.log(f,this.scope.funcs[f])
             const def = this.scope.funcs[f][2];
-            lines.push(`${def.name}(${def.params.join(",")})${settings.declarationStr}${def.body}`);
+            lines.push(
+                `${def.name}(${def.params.join(",")})${
+                    settings.declarationStr
+                }${def.body}`
+            );
         }
         let str = this.input;
-        
-        if (this.plot) {
 
+        if (this.plot) {
             let m;
             if ((m = PLOT_PARSE.exec(this.input)) !== null) {
                 const parList = m[1];
@@ -280,42 +302,46 @@ export default class PadScope {
                 } else {
                     params = params.filter((p) => !p.startsWith("["));
                 }
-                this.plot.xDomain && params.push(`[${this.plot.xDomain?.toString()}]`);
+                this.plot.xDomain &&
+                    params.push(`[${this.plot.xDomain?.toString()}]`);
 
-                this.plot.xDomain && this.plot.yDomain && params.push(`[${this.plot.yDomain?.toString()}]`);
+                this.plot.xDomain &&
+                    this.plot.yDomain &&
+                    params.push(`[${this.plot.yDomain?.toString()}]`);
 
                 str = `plot(${params.join(", ")})`;
             }
         }
 
-        
-        if(!this.parseResult.isFnDec && !this.parseResult.isVarDec){
-            lines.push(`${str}${this.parseResult.evaluate ? settings.evaluateNumericStr : settings.evaluateSymbolicStr}`);
+        if (!this.parseResult.isFnDec && !this.parseResult.isVarDec) {
+            lines.push(
+                `${str}${
+                    this.parseResult.evaluate
+                        ? settings.evaluateNumericStr
+                        : settings.evaluateSymbolicStr
+                }`
+            );
         }
         return lines.join("\n");
     }
 
-    static parseCodeBlock(source: string, settings: MathpadSettings): PadScope[] | undefined {
+    static parseCodeBlock(
+        source: string,
+        settings: MathpadSettings
+    ): PadScope[] | undefined {
         const lines = source.split("\n");
         const engine = createEngine();
         const ret: PadScope[] = [];
-        lines.filter(line=>line.trim().length>0).forEach((line) => {
+        lines
+            .filter((line) => line.trim().length > 0)
+            .forEach((line) => {
+                const pr = parse(line, settings);
 
-            const pr = parse(line, settings);
-
-            // if(pr.isValid){
-                // if(!(pr.isVarDec || pr.isFnDec)){
-                    if(!pr.hide){
-                        ret.push(new PadScope().process(engine,pr))
-                    } else {
-                        new PadScope().process(engine,pr)
-                    }
-                // } else {
-                    // new PadScope().process(engine,pr)
-                // }
-            // }
-            
-        });
+                const padScope = new PadScope().process(engine, pr);
+                if (!pr.hide) {
+                    ret.push(padScope);
+                }
+            });
 
         return ret;
     }
