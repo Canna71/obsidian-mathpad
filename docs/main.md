@@ -123,4 +123,48 @@ To hide an expression from the rendering prefix it with a `%` sign (this only wo
 
 # Inline Block
 
+Using inline blocks allows to use Obsidian as a "smart calculator", by inserting expressions inide any note. Expressions will be evaulated also while in edit mode and you can have the result rendered in LaTeX inlinr or in block mode, according to preferences.
+
+Declaration are inserted as usual:
+
+    `a:=42`
+    `f(x):=x+2`
+
+Evaluation of expression must instead use one either `=?` or `=~?` or `===?`:
+
+    `f(a)==?`
+
+`=?` will evaluate the expressions according to the default setting. `=~?` will force an evaluation while `==?` will force a symbolic/fractional result.
+
+In the settings you can decide whether you prefer an inline rendering or a block rendering by default. You can however force it one way or another using the same syntax seen before for code blocks.
+For example the following text will render in the follwing ways, according to what is the default.
+
+    Since a dozen eggs price is `dozen:=1.5`  and I need `num:=17` eggs, it should cost `num*(dozen/12)=?`
+
+If `prefer latex as block` is on:
+<img src="./inline-code-01.png" width="400" >
+
+If it's off:
+
+<img src="./inline-code-02.png" width="600" >
+
+Note that the rendering above was also the result of having `Evaluate Results` off.
+In order to force evaluation use the `=~?` syntax instead of `=?`
+
+
+    Since a dozen eggs price is `dozen:=1.5`  and I need `num:=17` eggs, it should cost `num*(dozen/12)=~?`
+
+<img src="./inline-code-03.png" width="600" >
+
+If you have inline rendering on, and you want to render something as a block, end the expression with a `$` sign:
+
+    Since a dozen eggs price is `dozen:=1.5`  and I need `num:=17` eggs, it should cost `num*(dozen/12)=~?$`
+
+<img src="./inline-code-04.png" width="600" >
+
+On the other way, if you have `Prefer Block LaTeX` on and you want to force inline rendering, ends the inline code with a `-` sign.
+
+    Since a dozen eggs price is `dozen:=1.5-`  and I need `num:=17-` eggs, it should cost `num*(dozen/12)=~?`
+
+It will render the same as above.
 # Settings
