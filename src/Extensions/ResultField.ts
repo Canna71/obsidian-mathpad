@@ -1,3 +1,4 @@
+import { getMathpadSettings } from 'src/main';
 import parse, { ParseResult } from "./../Math/Parsing";
 import { MathpadSettings } from "src/MathpadSettings";
 
@@ -24,7 +25,8 @@ export const resultField = StateField.define<DecorationSet>({
     },
 
     update(oldState: DecorationSet, transaction: Transaction): DecorationSet {
-        const settings = transaction.state.field(mathpadConfigField);
+        // const settings = transaction.state.field(mathpadConfigField);
+        const settings = getMathpadSettings();
         const builder = new RangeSetBuilder<Decoration>();
         // const doc = transaction.state.doc;
         const engine = createEngine();

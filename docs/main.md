@@ -28,9 +28,7 @@ The result of these commands will be displayed in a "stack" that keeps the histo
 
 The stack are evaluated in order, this is important for variables. Changing a slot will cause all dependant slots to be updated. This is useful when using variables to see the impact of a different value on other computations.
 
-| a:=3                 | a:=4                 |
-|----------------------|----------------------|
-| ![](variables_1.png) | ![](variables_2.png) |
+<img src="sidebar-01.gif" width="324" >
 
 
 ## Evaluation
@@ -87,7 +85,7 @@ inside it you can put the same commands you would put in the sidebar.
 When mathpad expressions are evaluated and rendered,they obay to some defaults found in the settings:
 
 `Evaluate Results` will defaults to evaluatig expressions to numeric, when possible
-`Prefers Block Latex` will defaults to rendering LaTeX as block
+`Prefer Block LaTeX` will defaults to rendering LaTeX as block
 
 You can force some particular expression to be be kept more symbolic even if the defaults is to evaluate by using the following syntax:
 
@@ -134,6 +132,10 @@ Evaluation of expression must instead use one either `=?` or `=~?` or `===?`:
 
     `f(a)==?`
 
+<img src="./inline-code-05.gif" width="400" >
+
+Note that changing something will cause an instant recalculation giving you updated results while in edit mode.
+
 `=?` will evaluate the expressions according to the default setting. `=~?` will force an evaluation while `==?` will force a symbolic/fractional result.
 
 In the settings you can decide whether you prefer an inline rendering or a block rendering by default. You can however force it one way or another using the same syntax seen before for code blocks.
@@ -167,4 +169,25 @@ On the other way, if you have `Prefer Block LaTeX` on and you want to force inli
     Since a dozen eggs price is `dozen:=1.5-`  and I need `num:=17-` eggs, it should cost `num*(dozen/12)=~?`
 
 It will render the same as above.
+
+
 # Settings
+
+Available settings are:
+
+## Add Ribbon Icon
+Will ad an icon to Obsidian ribbon bar that can be used to open the Sidebar
+
+## Show Mathpad Sidebar
+Will open the sidebar upon start
+
+## Prefer Block LaTeX
+Will render mathpad expressions as LaTeX blocks by default. If off, they will be rendered inline.
+A different rendering can be forced by ending the expression with a `$` for block rendering, or `-` for inline rendering.
+
+## Evaluate Results
+If on, the default result of mathpad when using `=?` will be to get to a numeric result, even if approximate. If off, mathpad will keep the result more symbolic (will avoid evaluating fractions and to evaluate functions that implies a numeric result).
+Either mechanism cn be forced by using `=~?` for full evaluation and `==?` for symbolic evaluation.
+
+## Plot Grid
+If on, grid lines will be shown in the plots.

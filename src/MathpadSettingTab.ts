@@ -27,7 +27,7 @@ export class MathpadSettingsTab extends PluginSettingTab {
         "showAtStartUp"
     );
 
-        this.createToggle(containerEl, "Prefers Block Latex",
+        this.createToggle(containerEl, "Prefer Block LaTeX",
             "Prefer LaTeX block to inline LaTeX",
             "preferBlock"
         );

@@ -60,9 +60,9 @@ export default class MathpadPlugin extends Plugin {
             callback: () => this.activateView(),
           });
          
-
         this.app.workspace.onLayoutReady(() => {
-            if(this.settings.showAtStartup){
+            console.log("showAtStartup",this.settings)
+            if(this.settings.showAtStartUp){
                 this.activateView();
             }
         });

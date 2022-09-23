@@ -1,6 +1,6 @@
 export interface MathpadSettings {
     addRibbonIcon: boolean;
-    showAtStartup: boolean;
+    showAtStartUp: boolean;
     preferBlock: boolean;
     evaluate: boolean;
     declarationStr: string;
@@ -17,7 +17,7 @@ export interface MathpadSettings {
 
 export const DEFAULT_SETTINGS: MathpadSettings = {
     addRibbonIcon: true,
-    showAtStartup: true,
+    showAtStartUp: true,
     preferBlock: true,
     evaluate: false,
     declarationStr: ":=",
