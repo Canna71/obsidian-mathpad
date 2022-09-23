@@ -12,6 +12,7 @@ export const getPostPrcessor = (settings: MathpadSettings):MarkdownPostProcessor
         // todo: debounce and then use context.containerEl
         const codes = (context as any).containerEl.querySelectorAll("p > code, div[data-mathpad-input]"); 
         const engine = createEngine();
+        
         // const settings = getSettings();
         for (let index = 0; index < codes.length; index++) {
             const code = codes.item(index) as HTMLElement;
@@ -31,18 +32,20 @@ function processCode(code: HTMLElement, engine: Engine, context: MarkdownPostPro
 
     const pr = parse(text, settings);
     if(pr.isValid){
-        produceResult(pr, engine, context, code);
+        const containerWidth = Math.clamp((context as any).containerEl.offsetWidth,200,700);
+        const plotWidth = settings.plotWidth>0?settings.plotWidth:containerWidth;
+        produceResult(pr, engine, context, code, plotWidth);
     }
 
 } 
 
-function produceResult(parseResult: ParseResult, engine: Engine, context: MarkdownPostProcessorContext, code: HTMLElement) {
+function produceResult(parseResult: ParseResult, engine: Engine, context: MarkdownPostProcessorContext, code: HTMLElement, plotWidth: number) {
     const res = new PadScope().process(
         engine,
         parseResult
     );
     if(res.isValid){ 
-        context.addChild(new MathResult(code, res, parseResult.block));
+        context.addChild(new MathResult(code, res, plotWidth, parseResult.block));
     }
 }
 

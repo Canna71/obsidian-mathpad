@@ -1,12 +1,12 @@
-import { getMathpadSettings } from 'src/main';
-import { ParseResult } from './../Math/Parsing';
+import { getMathpadSettings } from "src/main";
+import { ParseResult } from "./../Math/Parsing";
 // import { Input } from './../Views/Input';
 import PadScope from "src/Math/PadScope";
 import { EditorView, WidgetType } from "@codemirror/view";
 import { finishRenderMath, renderMath } from "obsidian";
-import { isNumber } from 'util';
-import { getPlotOptions } from 'src/Views/Plot';
-import functionPlot from 'function-plot';
+import { isNumber } from "util";
+import { getPlotOptions } from "src/Views/Plot";
+import functionPlot from "function-plot";
 // import getSettings from "src/MathpadSettings";
 
 export class ResultWidget extends WidgetType {
@@ -19,7 +19,12 @@ export class ResultWidget extends WidgetType {
     /**
      *
      */
-    constructor(padScope: PadScope, parseResult: ParseResult, onlyResult: boolean, pos?: number) {
+    constructor(
+        padScope: PadScope,
+        parseResult: ParseResult,
+        onlyResult: boolean,
+        pos?: number
+    ) {
         super();
         this.padScope = padScope;
         this.parseResult = parseResult;
@@ -31,33 +36,49 @@ export class ResultWidget extends WidgetType {
     toDOM(view: EditorView): HTMLElement {
         // div.addClass("eh")
         let el: HTMLElement;
-        if(this.padScope.isValid) {
-
-            if(this.padScope.plot){
+        if (this.padScope.isValid) {
+            if (this.padScope.plot) {
                 const div = document.createElement("div");
-                const options = getPlotOptions(600,getMathpadSettings(),this.padScope);
+                div.addClass("mathpad-plot");
+                let cw = view.contentDOM.offsetWidth;
+                let e = view.contentDOM;
+                while (cw === 0 && e.parentElement) {
+                    e = e.parentElement;
+                    cw = e.offsetWidth;
+                }
+                const containerWidth = Math.clamp(cw, 200, 700);
+                const width =
+                    getMathpadSettings().plotWidth > 0
+                        ? getMathpadSettings().plotWidth
+                        : containerWidth;
+                const options = getPlotOptions(
+                    width,
+                    getMathpadSettings(),
+                    this.padScope
+                );
                 options.target = div;
                 functionPlot(options);
                 el = div;
             } else {
                 el = renderMath(
-                    this.onlyResult?this.padScope.laTeX:this.padScope.noteLatex,
+                    this.onlyResult
+                        ? this.padScope.laTeX
+                        : this.padScope.noteLatex,
                     this.parseResult.block
                 );
-                
+
                 finishRenderMath();
                 el.addClasses(["mathpad-inline"]);
             }
-
         } else {
             const div = document.createElement("div");
-            div.setText(this.padScope.error||"");
+            div.setText(this.padScope.error || "");
             el = div;
         }
-        
-        if(isNumber(this.pos)){
-            el.addEventListener("click",()=>{
-                this.pos && view.dispatch({selection: {anchor: this.pos}})
+
+        if (isNumber(this.pos)) {
+            el.addEventListener("click", () => {
+                this.pos && view.dispatch({ selection: { anchor: this.pos } });
                 console.log();
             });
         }

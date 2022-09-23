@@ -27,7 +27,7 @@ export const DEFAULT_SETTINGS: MathpadSettings = {
     latexPostfix:"$",
     hidePrefix: "%",
     plotGrid: false,
-    plotWidth: 600
+    plotWidth: 0
 }
 
 // export default function getSettings() : IMathpadSettings{
