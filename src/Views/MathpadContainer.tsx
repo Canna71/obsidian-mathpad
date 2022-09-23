@@ -124,7 +124,9 @@ export const MathpadContainer = ({onCopySlot, settings}:
     const onSlotClosed = useCallback((changedId: number) => {
         setState(state => ({
             ...state,
-            stack: state.stack?.removeSlot(changedId, {}, { evaluate: state.options.evaluate })
+            stack: state.stack?.removeSlot(changedId, {}, { evaluate: state.options.evaluate }),
+            selected: state.selected===changedId?undefined:state.selected,
+            history: state.history===changedId?undefined:state.history
         }))
     }, []);
 
@@ -165,7 +167,9 @@ export const MathpadContainer = ({onCopySlot, settings}:
     const clear = useCallback(() => {
         setState(state => ({
             ...state,
-            stack: state.stack?.clear()
+            stack: state.stack?.clear(),
+            selected: undefined,
+            history: undefined
         }))
     }, []);
 
