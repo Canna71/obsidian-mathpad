@@ -13,7 +13,6 @@ export interface MathpadContainerProps {
 
 
 
-
 interface MathPadOptions {
     evaluate: boolean;
 }
