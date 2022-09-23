@@ -12,15 +12,19 @@ import { MathpadSettings } from "src/MathpadSettings";
 
 
 export function processCodeBlock(source: string, el: HTMLElement, settings: MathpadSettings, ctx: MarkdownPostProcessorContext) {
-
     
     const scopes = PadSlot.parseCodeBlock(source, settings);
+    const containerWidth =   Math.clamp((ctx as any).containerEl.offsetWidth, 200,700) ;
+    console.log("containerWidth",containerWidth);
+    const plotWidth = settings.plotWidth > 0 ? settings.plotWidth : containerWidth
 
+
+    // cm-contentContainer max-width
     const root = createRoot(el);
     root.render(
         <React.StrictMode>
             <MathpadContext.Provider value={{
-                width: settings.plotWidth,
+                width: plotWidth,
                 settings
             }}>
                 {scopes?.map((padScope, i) => <DocView key={i} padScope={padScope} />)}

@@ -55,7 +55,6 @@ export default class MathpadPlugin extends Plugin {
           });
          
         this.app.workspace.onLayoutReady(() => {
-            console.log("showAtStartup",this.settings)
             if(this.settings.showAtStartUp){
                 this.activateView();
             }
