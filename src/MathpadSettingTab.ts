@@ -40,6 +40,19 @@ export class MathpadSettingsTab extends PluginSettingTab {
             "Displays grid lines in plots",
             "plotGrid"
         );
+
+        new Setting(containerEl)
+        .setName("Plot Width")
+        .setDesc("Width of plots inside notes")
+        .addText(tc=>tc
+            .setValue(this.plugin.settings.plotWidth.toString())
+            .onChange(async (value)=>{
+                const num = Number(value) ;
+                this.plugin.settings.plotWidth = num || 0;
+                await this.plugin.saveSettings();
+                
+            })
+            )
 	}
 
     private createToggle(containerEl: HTMLElement, name: string, desc: string, prop: string) {

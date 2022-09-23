@@ -24,7 +24,7 @@ export class MathResult extends MarkdownRenderChild {
             this.containerEl.replaceWith(mathEl);
         } else {
             const plotEl = document.createElement("div");
-            const options = getPlotOptions(600,getMathpadSettings(),this.padScope);
+            const options = getPlotOptions(getMathpadSettings().plotWidth || 600,getMathpadSettings(),this.padScope);
             options.target = plotEl;
             functionPlot(options);
             this.containerEl.replaceWith(plotEl);

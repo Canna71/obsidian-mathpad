@@ -20,7 +20,7 @@ export function processCodeBlock(source: string, el: HTMLElement, settings: Math
     root.render(
         <React.StrictMode>
             <MathpadContext.Provider value={{
-                width: 600,
+                width: settings.plotWidth,
                 settings
             }}>
                 {scopes?.map((padScope, i) => <DocView key={i} padScope={padScope} />)}
