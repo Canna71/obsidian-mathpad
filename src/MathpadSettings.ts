@@ -12,6 +12,7 @@ export interface MathpadSettings {
     hidePrefix: string;
     plotGrid: boolean;
     plotWidth: number;
+    plotDerivatives: boolean;
 }   
 
 export const DEFAULT_SETTINGS: MathpadSettings = {
@@ -27,7 +28,8 @@ export const DEFAULT_SETTINGS: MathpadSettings = {
     latexPostfix:"$",
     hidePrefix: "%",
     plotGrid: false,
-    plotWidth: 0
+    plotWidth: 0,
+    plotDerivatives: false
 }
 
 // export default function getSettings() : IMathpadSettings{

@@ -52,7 +52,11 @@ export class MathpadSettingsTab extends PluginSettingTab {
                 await this.plugin.saveSettings();
                 
             })
-            )
+            );
+        this.createToggle(containerEl, "Plot Tangents",
+            "Plots tangents to functions",
+            "plotDerivatives"
+        );
 	}
 
     private createToggle(containerEl: HTMLElement, name: string, desc: string, prop: string) {

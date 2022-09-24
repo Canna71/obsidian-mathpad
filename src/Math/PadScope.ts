@@ -15,6 +15,9 @@ export default class PadScope {
     private _error?: string | undefined;
     private _plot: any = undefined;
     private _fn: ((...args: number[]) => number)[];
+
+    private _dfn: ((...args: number[]) => number)[];
+    
     private _scope: {
         vars: { [x: string]: string };
         funcs: { [x: string]: any };
@@ -50,6 +53,10 @@ export default class PadScope {
 
     public get fn(): ((...args: number[]) => number)[] {
         return this._fn;
+    }
+
+    public get dfn(): ((...args: number[]) => number)[] {
+        return this._dfn;
     }
 
     public get error(): string | undefined {
@@ -178,16 +185,24 @@ export default class PadScope {
 
                 try {
                     this._fn = [this._expression.buildFunction()];
+                    try {
+                        this._dfn = [engine.parse(`diff(${this._expression.text()})`).buildFunction()];
+                    } catch (ex){
+                        console.warn(ex);
+                    }
                 } catch (ex) {
                     // probably it's a collection:
-                    const tmp: ((...args: number[]) => number)[] = [];
+                    const tmpFn: ((...args: number[]) => number)[] = [];
+                    const tmpDFn: ((...args: number[]) => number)[] = [];
+
                     try {
                         if (
                             (this._expression as any).symbol?.elements?.length >
                             0
                         ) {
                             (this._expression as any).each((element: any) => {
-                                tmp.push(engine.parse(element).buildFunction());
+                                tmpFn.push(engine.parse(element).buildFunction());
+                                tmpDFn.push(engine.parse(`diff(${element.text()})`).buildFunction())
                             });
                         }
                     } catch (ex) {
@@ -195,7 +210,8 @@ export default class PadScope {
                     }
 
                     //
-                    this._fn = tmp;
+                    this._fn = tmpFn;
+                    this._dfn = tmpDFn;
                 }
             }
 

@@ -48,12 +48,19 @@ export const Plot: React.FC<FunctionPlotProps> =
 export default Plot;
 
 export function getPlotOptions(width: number, settings:MathpadSettings, padScope: PadScope) : FunctionPlotOptions {
+    
+    const plotDerivatives = settings.plotDerivatives && (padScope.fn.length === padScope.dfn?.length);
+    
     return ({
         width: width,
         grid: settings.plotGrid,
-        data: padScope.fn.map(fn => ({
+        data: padScope.fn.map((fn,i) => ({
             graphType: 'polyline',
-            fn: (scope: any) => fn(scope.x)
+            fn: (scope: any) => fn(scope.x),
+            derivative: plotDerivatives ? {
+                fn: (scope: any) => padScope.dfn[i](scope.x),
+                updateOnMouseMove: true
+            } : undefined
         })),
         xAxis: padScope.plot.xDomain && padScope.plot.xDomain.length == 2 && { domain: padScope.plot.xDomain },
         yAxis: padScope.plot.yDomain && padScope.plot.yDomain.length == 2 && { domain: padScope.plot.yDomain },

@@ -201,3 +201,9 @@ If on, grid lines will be shown in the plots.
 
 ## Plot Width
 Set it in order to have the plots rendered at a fixed width inside notes. Leave it at 0 in order to make it adapt to the actual view size. Plot width is limited to the 200-700 pixels range. Reading views might need to be re-opened for the size to adjust.
+
+## Plot Tangents
+If enabled, the plot will also draw the tangents to the functions where the mouse hovers:
+
+
+<img src="./plot_tangents_01.png" width="600" >
