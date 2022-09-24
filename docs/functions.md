@@ -439,6 +439,10 @@ Calculate the derivative of a function
 
 `diff(expression or vector, variable?, order?)`
 
+or
+
+`D(expression or vector, variable?, order?)`
+
 example:
 
 `diff(sin(x))=?`
@@ -448,7 +452,7 @@ converts to:
 $$\frac{d}{d x}\left({\mathrm{sin}\left(x\right)}\right) = \mathrm{cos}\left(x\right)$$
 
 
-`diff(x*y^2,y)=?`
+`D(x*y^2,y)=?`
 
 converts to:
 
@@ -460,7 +464,7 @@ coonverts to:
 
 $$\frac{d^{2}}{d x^{2}}\left({3 \cdot {x}^{4} + 2 \cdot {x}^{2}}\right) = 36 \cdot x^{2}+4$$
 
-`diff([x^2, cos(x), 1], x, 2)=?`
+`D([x^2, cos(x), 1], x, 2)=?`
 
 converts to:
 
