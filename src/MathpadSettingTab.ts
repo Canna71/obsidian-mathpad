@@ -17,10 +17,23 @@ export class MathpadSettingsTab extends PluginSettingTab {
 
 		containerEl.createEl('h2', {text: 'Mathpad Settings'});
 
-        this.createToggle(containerEl, "Add Ribbon Icon",
-            "Adds an icon to the ribbon to launch scan",
-            "addRibbonIcon"
-        );
+        new Setting(containerEl)
+			.setName("Add Ribbon Icon")
+			.setDesc("Adds an icon to the ribbon to open Mathpad sidebar")
+			.addToggle(bool => bool
+				.setValue(this.plugin.settings.addRibbonIcon)
+				.onChange(async (value) => {
+					this.plugin.settings.addRibbonIcon = value;
+					await this.plugin.saveSettings();
+                    if(value){
+                        this.plugin.addIcon();
+                    } else {
+                        this.plugin.removeIcon();
+                    }
+					this.display();
+				})
+			);
+
 
         this.createToggle(containerEl, "Show Mathpad Sidebar",
         "Opens Mathpad sidebar at startup",

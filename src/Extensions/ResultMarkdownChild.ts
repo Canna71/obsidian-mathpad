@@ -19,7 +19,6 @@ export class MathResult extends MarkdownRenderChild {
         this.padScope = padScope;
         this.isLatex = isLatex;
         this.plotWidth = plotWidth;
-        // this.containerEl = containerEl;
     }
 
     onload() {

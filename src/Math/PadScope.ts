@@ -140,8 +140,6 @@ export default class PadScope {
             this._input = parseResult.text;
             this._scope = engine.getScope();
             this._parseResult = parseResult;
-            // this._opts = opts;
-            // this._subs = subs;
 
             this._error = undefined;
 
@@ -152,16 +150,13 @@ export default class PadScope {
                     parseResult.def
                 );
                 this._expression = engine.parse(parseResult.def);
-                // this._resultTex = engine.parse(parseResult.def).toTeX();
             } else if (parseResult.isVarDec) {
                 engine.setVar(parseResult.name, parseResult.def);
                 this._expression = engine.parse(parseResult.def);
-                // this._resultTex = engine.parse(parseResult.def).toTeX();
 
-                // return this;
             } else {
                 this._expression = engine.parse(parseResult.text);
-                //TODO: sometimpes this._expression.symbol is null because of errors
+                // sometimpes this._expression.symbol is null because of errors
                 // we should throw
                 if ((this._expression as any).symbol === null) {
                     throw new Error("Unable to evaluate expression.");
@@ -170,18 +165,10 @@ export default class PadScope {
                     this._plot = (this._expression as any).symbol?._plotme;
                 }
 
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                // if (true || !(this._expression as any).isFraction()) {
-                // this will return the symbol itself, not the Expression
-                // this._expression = (this._expression as any).simplify();
                 if (parseResult.evaluate) {
                     this._expression = this._expression.evaluate();
                 }
-                // }
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                // this._resultTex = (this._expression as any).toTeX(
-                //     parseResult.evaluate ? "decimal" : undefined
-                // );
+                
 
                 try {
                     this._fn = [this._expression.buildFunction()];

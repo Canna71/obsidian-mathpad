@@ -17,7 +17,6 @@ import {
 import { Decoration, DecorationSet, EditorView } from "@codemirror/view";
 import PadScope from "../Math/PadScope";
 
-// import { Text } from "@codemirror/state";
 
 export const resultField = StateField.define<DecorationSet>({
     create(state): DecorationSet {
@@ -25,10 +24,8 @@ export const resultField = StateField.define<DecorationSet>({
     },
 
     update(oldState: DecorationSet, transaction: Transaction): DecorationSet {
-        // const settings = transaction.state.field(mathpadConfigField);
         const settings = getMathpadSettings();
         const builder = new RangeSetBuilder<Decoration>();
-        // const doc = transaction.state.doc;
         const engine = createEngine();
         const tree = syntaxTree(transaction.state);
         const caretPos = transaction.state.selection.ranges[0].from;

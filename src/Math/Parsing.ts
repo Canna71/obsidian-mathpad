@@ -69,7 +69,6 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
     } else {
         // maybe declaration
         const fnDecRegEx = new RegExp("([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\\(([a-z_,\\s]*)\\)\\s*(" 
-        // + settings.declarationNumeric + "|" + settings.declarationSymbolic + "|" 
         + settings.declarationStr +
         ")\\s*(.+)","i");
     
@@ -78,33 +77,24 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
         if (fnDec) {
             name = fnDec[1];
             params = fnDec[2].split(",").map((p) => p.trim());
-            // assign = fnDec[3];
             def = fnDec[4];
             isFnDec = true;
             
-            // this.setVar(name, def);
-            // console.log(fnDec, name, def);
         } else {
     
             const varDecRegEx = new RegExp("([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\\s*(" 
-            // + settings.declarationNumeric + "|" + settings.declarationSymbolic + "|" 
             + settings.declarationStr +
             ")\\s*(.+)","i");
         
             const varDec = varDecRegEx.exec(text);
             if(varDec){
                 name=varDec[1];
-                // assign=varDec[2];
                 def=varDec[3];
                 isVarDec = true;
             }
         }
 
-        // if(assign === settings.declarationNumeric) {
-        //     evaluate = true;
-        // } else if (assign === (settings.declarationSymbolic)){
-        //     evaluate = false;
-        // }
+       
     }
 
     

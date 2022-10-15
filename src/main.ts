@@ -26,6 +26,7 @@ let gSettings: MathpadSettings;
 export function getMathpadSettings() { return gSettings; }
 export default class MathpadPlugin extends Plugin {
     settings: MathpadSettings;
+    ribbonIconEl: HTMLElement;
  
     async onload() {
         await this.loadSettings();
@@ -37,15 +38,7 @@ export default class MathpadPlugin extends Plugin {
 
         if (this.settings.addRibbonIcon) {
             // This creates an icon in the left ribbon.
-            const ribbonIconEl = this.addRibbonIcon(
-                "sigma",
-                "Open Mathpad",
-                (evt: MouseEvent) => {
-                    this.activateView();
-                }
-            );
-            // Perform additional things with the ribbon
-            ribbonIconEl.addClass("mathpad-ribbon-class");
+            this.addIcon();
         }
 
         this.addCommand({
@@ -88,8 +81,27 @@ export default class MathpadPlugin extends Plugin {
         this.addSettingTab(new MathpadSettingsTab(this.app, this));
     }
 
+    addIcon() {
+        this.removeIcon();
+        this.ribbonIconEl = this.addRibbonIcon(
+            "sigma",
+            "Open Mathpad",
+            (evt: MouseEvent) => {
+                this.activateView();
+            }
+        );
+        // Perform additional things with the ribbon
+        this.ribbonIconEl.addClass("mathpad-ribbon-class");
+    }
+
+    removeIcon(){
+        if(this.ribbonIconEl){
+            this.ribbonIconEl.remove();
+        }
+    }
+
     onunload() {
-        this.app.workspace.detachLeavesOfType(MATHPAD_VIEW);
+        // this.app.workspace.detachLeavesOfType(MATHPAD_VIEW);
     }
 
     async loadSettings() {
@@ -106,17 +118,19 @@ export default class MathpadPlugin extends Plugin {
     }
 
     async activateView() {
-        this.app.workspace.detachLeavesOfType(MATHPAD_VIEW);
+        // this.app.workspace.detachLeavesOfType(MATHPAD_VIEW);
 
-        await this.app.workspace.getRightLeaf(false).setViewState(
-            {
+        let leaf = this.app.workspace.getLeavesOfType(MATHPAD_VIEW)[0];
+        if (!leaf) {
+            await this.app.workspace.getRightLeaf(false).setViewState({
                 type: MATHPAD_VIEW,
-                active: true,
-            },
-            { settings: this.settings }
-        );
+                active: true
+            });
+            leaf = this.app.workspace.getLeavesOfType(MATHPAD_VIEW)[0];
+        }
 
-        this.app.workspace.revealLeaf(
+
+        leaf && this.app.workspace.revealLeaf(
             this.app.workspace.getLeavesOfType(MATHPAD_VIEW)[0]
         );
     }

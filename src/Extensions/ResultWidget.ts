@@ -12,9 +12,8 @@ export class ResultWidget extends WidgetType {
     padScope: PadScope;
     parseResult: ParseResult;
     pos?: number;
-    /**
-     *
-     */
+    
+    
     constructor(
         padScope: PadScope,
         parseResult: ParseResult,

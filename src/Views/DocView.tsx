@@ -19,7 +19,6 @@ export function processCodeBlock(source: string, el: HTMLElement, settings: Math
     const plotWidth = settings.plotWidth > 0 ? settings.plotWidth : containerWidth
 
 
-    // cm-contentContainer max-width
     const root = createRoot(el);
     root.render(
         <React.StrictMode>

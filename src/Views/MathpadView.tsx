@@ -40,7 +40,6 @@ export class MathpadView extends ItemView {
 
     constructor(leaf: WorkspaceLeaf) {
         super(leaf);
-        // this.settings = (this.app as any).plugins.plugins["obsidian-mathpad"].settings as MathpadSettings;
         this.settings = getMathpadSettings();
         this.state = {
 
