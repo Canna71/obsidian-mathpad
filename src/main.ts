@@ -60,7 +60,6 @@ export default class MathpadPlugin extends Plugin {
         this.app.workspace.on(
             "active-leaf-change",
             (leaf: WorkspaceLeaf | null) => {
-                // console.log("active-leaf-change", leaf);
                 if (leaf?.view instanceof MarkdownView) {
                     // @ts-expect-error, not typed
                     const editorView = leaf.view.editor.cm as EditorView;
@@ -73,7 +72,6 @@ export default class MathpadPlugin extends Plugin {
         this.app.workspace.on(
             "codemirror",
             (cm: CodeMirror.Editor) => {
-                console.log("codemirror", cm);
             },
             this
         );

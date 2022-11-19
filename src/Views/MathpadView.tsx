@@ -111,18 +111,13 @@ ${str}
 
     async onOpen() {
         const { contentEl } = this;
-        // contentEl.setText('Woah!');
-        // this.titleEl.setText("Obsidian Janitor")	
+
 
         this.root = createRoot(contentEl/*.children[1]*/);
         await loadMathJax();
         await finishRenderMath();
         this.render();
-        // const e = nerdamer('x^2+2*(cos(x)+x*x)');
-        // const latex = e.toTeX();
-        // console.log(latex);
-        // const mathEl = renderMath(latex, true);
-        // contentEl.appendChild(mathEl);
+        
     }
 
     async onClose() {

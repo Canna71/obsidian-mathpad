@@ -143,7 +143,6 @@ export class SlotStack {
     private nextId() {
         if (!this.items.length) return 1;
         const maxId = Math.max(...this.items.map((slot) => slot.id));
-        // console.log(maxId);
         return maxId + 1;
     }
 }

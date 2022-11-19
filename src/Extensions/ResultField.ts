@@ -73,7 +73,7 @@ export const resultField = StateField.define<DecorationSet>({
                     if (!transaction.docChanged) {
                         previousRes = oldDec?.value?.spec?.res;
                     } else {
-                        //  console.log("doc changed!")
+                        // doc changed
                     }
                     const parseResult = parse(text, settings);
 

@@ -60,7 +60,6 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied, onClicked, select
     }, []);
 
     const onBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
-        // console.log("blur")
 
         finishEdit(e.currentTarget.value);
     }, [finishEdit]);

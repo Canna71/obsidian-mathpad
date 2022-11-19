@@ -276,7 +276,6 @@ export default class PadScope {
             );
         }
         for (const f in this.scope.funcs) {
-            // console.log(f,this.scope.funcs[f])
             const def = this.scope.funcs[f][2];
             lines.push(
                 `${def.name}(${def.params.join(",")})${
