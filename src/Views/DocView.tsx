@@ -15,7 +15,6 @@ export function processCodeBlock(source: string, el: HTMLElement, settings: Math
     
     const scopes = PadSlot.parseCodeBlock(source, settings);
     const containerWidth =   Math.clamp((ctx as any).containerEl.offsetWidth, 200,700) ;
-    console.log("containerWidth",containerWidth);
     const plotWidth = settings.plotWidth > 0 ? settings.plotWidth : containerWidth
 
 
