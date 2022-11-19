@@ -267,7 +267,6 @@ export function createEngine(): Engine {
     return new NerdamerWrapper();
 }
 
-(window as any).createEngine = createEngine;
 
 const prepare_expression = function (e: string) {
     /*
