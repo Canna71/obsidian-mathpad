@@ -21,5 +21,5 @@ Also plotting:
 
 <img src="docs/plot_tangents_01.png" width="600" >
 
-Please red the [Documentation](docs/main.md) for a full description.
+Please read the [Documentation](docs/main.md) for a full description.
 
