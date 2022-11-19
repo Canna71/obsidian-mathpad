@@ -130,9 +130,7 @@ export default class MathpadPlugin extends Plugin {
         }
 
 
-        leaf && this.app.workspace.revealLeaf(
-            this.app.workspace.getLeavesOfType(MATHPAD_VIEW)[0]
-        );
+        leaf && this.app.workspace.revealLeaf(leaf);
     }
 
     async registerCodeBlock() {
