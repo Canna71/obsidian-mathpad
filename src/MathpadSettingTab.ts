@@ -1,7 +1,6 @@
 import MathpadPlugin from "src/main";
 import { App, PluginSettingTab, Setting } from "obsidian";
 import { setPrecision } from "./Math/Engine";
-import { takeCoverage } from "v8";
 
 
 export class MathpadSettingsTab extends PluginSettingTab {
