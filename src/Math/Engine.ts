@@ -1,3 +1,4 @@
+import { getMathpadSettings } from 'src/main';
 import nerdamer from "nerdamer";
 require("nerdamer/Algebra");
 require("nerdamer/Calculus");
@@ -15,6 +16,10 @@ const FNCALL_REGEX = /([a-z]*)\((.*)\)/i;
 
 (nerdamer as any).set("VALIDATION_REGEX", MY_VALIDATION_REGEX);
 nerdamer.set('PARSE2NUMBER', false);
+
+export function setPrecision(precision: number){
+    (nerdamer as any).set("PRECISION", Math.round(precision || 20));
+}
 
 function solve(expr: any, variable?: any): any {
     const vars = nerdamer(expr).variables();

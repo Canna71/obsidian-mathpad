@@ -15,6 +15,7 @@ export interface MathpadSettings {
     plotGrid: boolean;
     plotWidth: number;
     plotDerivatives: boolean;
+    precision: number;
 }   
 
 export const DEFAULT_SETTINGS: MathpadSettings = {
@@ -33,7 +34,8 @@ export const DEFAULT_SETTINGS: MathpadSettings = {
     hidePrefix: "%",
     plotGrid: false,
     plotWidth: 0,
-    plotDerivatives: false
+    plotDerivatives: false,
+    precision: 20
 }
 
 // export default function getSettings() : IMathpadSettings{
