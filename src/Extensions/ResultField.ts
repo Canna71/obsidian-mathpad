@@ -116,8 +116,9 @@ function addDecoration(
     node: SyntaxNodeRef,
     previousRes?: PadScope
 ) {
+    const settings = getMathpadSettings();
     const res = previousRes || new PadScope().process(engine, parseResult);
-    if (parseResult.block && res) {
+    if ((parseResult.block || settings.preferBlockForInline) && res) {
         builder.add(
             caret ? node.to : node.from,
 

@@ -2,6 +2,8 @@ export interface MathpadSettings {
     addRibbonIcon: boolean;
     showAtStartUp: boolean;
     preferBlock: boolean;
+    preferBlockForInline: boolean;
+    preferBlockForCodeblock: boolean;
     evaluate: boolean;
     declarationStr: string;
     evaluateStr: string;
@@ -18,7 +20,9 @@ export interface MathpadSettings {
 export const DEFAULT_SETTINGS: MathpadSettings = {
     addRibbonIcon: true,
     showAtStartUp: true,
-    preferBlock: true,
+    preferBlock: false,
+    preferBlockForInline: false,
+    preferBlockForCodeblock: true,
     evaluate: false,
     declarationStr: ":=",
     evaluateStr: "=?",

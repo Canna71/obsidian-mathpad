@@ -9,6 +9,7 @@ import { MarkdownPostProcessorContext } from "obsidian";
 import { createRoot } from "react-dom/client";
 import PadScope from "src/Math/PadScope";
 import { MathpadSettings } from "src/MathpadSettings";
+import { getMathpadSettings } from "src/main";
 
 
 export function processCodeBlock(source: string, el: HTMLElement, settings: MathpadSettings, ctx: MarkdownPostProcessorContext) {
@@ -55,7 +56,7 @@ const DocView = ({ padScope }:
                 }
                 {
                     !padScope.plot &&
-                    <Latex latex={padScope.noteLatex} block={padScope.parseResult.block} />
+                    <Latex latex={padScope.noteLatex} block={padScope.parseResult.block || getMathpadSettings().preferBlockForCodeblock} />
                 }
                 {
                     padScope.plot &&

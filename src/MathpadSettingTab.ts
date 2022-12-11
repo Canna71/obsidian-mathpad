@@ -40,10 +40,21 @@ export class MathpadSettingsTab extends PluginSettingTab {
         "showAtStartUp"
     );
 
-        this.createToggle(containerEl, "Prefer Block LaTeX",
-            "Prefer LaTeX block to inline LaTeX",
+        this.createToggle(containerEl, "Copy as Block LaTeX",
+            "Prefer LaTeX blocks when copying from sidebar",
             "preferBlock"
         );
+
+        this.createToggle(containerEl, "Prefer Block LaTeX for inline",
+            "Prefer LaTeX blocks when rendering inline mathpad code",
+            "preferBlockForInline"
+        );
+
+        this.createToggle(containerEl, "Prefer Block LaTeX for code blocks",
+            "Prefer LaTeX blocks when rendering mathpad code blocks",
+            "preferBlockForCodeblock"
+        );
+
         this.createToggle(containerEl, "Evaluate Results",
             "Evaluates expressions in order to obtain a numeric result",
             "evaluate"
