@@ -214,3 +214,6 @@ If enabled, the plot will also draw the tangents to the functions where the mous
 
 
 <img src="./plot_tangents_01.png" width="600" >
+
+## Precision
+Precision for displaying results as decimal
