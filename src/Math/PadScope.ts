@@ -268,11 +268,11 @@ export default class PadScope {
     getCodeBlock(settings: MathpadSettings) {
         const lines: string[] = [];
         for (const v in this.scope.vars) {
-            const postfix = v.startsWith(SLOT_VARIABLE_PREFIX)
-                ? settings.inlinePostfix
+            const prefix = v.startsWith(SLOT_VARIABLE_PREFIX)
+                ? settings.hidePrefix
                 : "";
             lines.push(
-                `${v}${settings.declarationStr}${this.scope.vars[v]}${postfix}`
+                `${prefix}${v}${settings.declarationStr}${this.scope.vars[v]}`
             );
         }
         for (const f in this.scope.funcs) {
@@ -338,7 +338,7 @@ export default class PadScope {
             .filter((line) => line.trim().length > 0)
             .forEach((line) => {
                 const pr = parse(line, settings);
-
+                console.log(pr)
                 const padScope = new PadScope().process(engine, pr);
                 if (!pr.hide) {
                     ret.push(padScope);

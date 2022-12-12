@@ -188,8 +188,15 @@ Will ad an icon to Obsidian ribbon bar that can be used to open the Sidebar
 ## Show Mathpad Sidebar
 Will open the sidebar upon start
 
-## Prefer Block LaTeX
-Will render mathpad expressions as LaTeX blocks by default. If off, they will be rendered inline.
+## Copy as Block LaTeX
+When copying from the sidebar either the input or the result, they will rendered as inline LaTeX or inline LaTeX accordingly.
+
+## Prefer Block LaTeX for inline
+Default render mode for inline mathpad.
+A different rendering can be forced by ending the expression with a `$` for block rendering, or `-` for inline rendering.
+
+## Prefer Block LaTeX for code blocks
+Default render mode for mathpad code blocks.
 A different rendering can be forced by ending the expression with a `$` for block rendering, or `-` for inline rendering.
 
 ## Evaluate Results
@@ -207,3 +214,6 @@ If enabled, the plot will also draw the tangents to the functions where the mous
 
 
 <img src="./plot_tangents_01.png" width="600" >
+
+## Precision
+Precision for displaying results as decimal

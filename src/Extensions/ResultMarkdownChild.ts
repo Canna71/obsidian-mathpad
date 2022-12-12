@@ -6,18 +6,18 @@ import { finishRenderMath, MarkdownRenderChild, renderMath } from "obsidian";
 
 export class MathResult extends MarkdownRenderChild {
     padScope: PadScope;
-    isLatex: boolean;
+    block: boolean;
     plotWidth: number;
 
     constructor(
         containerEl: HTMLElement,
         padScope: PadScope,
         plotWidth: number,
-        isLatex = true
+        block = true
     ) {
         super(containerEl);
         this.padScope = padScope;
-        this.isLatex = isLatex;
+        this.block = block;
         this.plotWidth = plotWidth;
     }
 
@@ -44,7 +44,7 @@ export class MathResult extends MarkdownRenderChild {
     }
 
     private makeLatex(latex?: string) {
-        const mathEl = renderMath(latex || this.padScope.noteLatex, this.isLatex);
+        const mathEl = renderMath(latex || this.padScope.noteLatex, this.block);
 
         finishRenderMath();
         mathEl.dataset.mathpadInput = this.padScope.input + "=?";

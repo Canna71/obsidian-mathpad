@@ -1,5 +1,6 @@
 import MathpadPlugin from "src/main";
 import { App, PluginSettingTab, Setting } from "obsidian";
+import { setPrecision } from "./Math/Engine";
 
 
 export class MathpadSettingsTab extends PluginSettingTab {
@@ -40,10 +41,21 @@ export class MathpadSettingsTab extends PluginSettingTab {
         "showAtStartUp"
     );
 
-        this.createToggle(containerEl, "Prefer Block LaTeX",
-            "Prefer LaTeX block to inline LaTeX",
+        this.createToggle(containerEl, "Copy as Block LaTeX",
+            "Prefer LaTeX blocks when copying from sidebar",
             "preferBlock"
         );
+
+        this.createToggle(containerEl, "Prefer Block LaTeX for inline",
+            "Prefer LaTeX blocks when rendering inline mathpad code",
+            "preferBlockForInline"
+        );
+
+        this.createToggle(containerEl, "Prefer Block LaTeX for code blocks",
+            "Prefer LaTeX blocks when rendering mathpad code blocks",
+            "preferBlockForCodeblock"
+        );
+
         this.createToggle(containerEl, "Evaluate Results",
             "Evaluates expressions in order to obtain a numeric result",
             "evaluate"
@@ -65,11 +77,26 @@ export class MathpadSettingsTab extends PluginSettingTab {
                 await this.plugin.saveSettings();
                 
             })
+            .inputEl.type="number"
             );
         this.createToggle(containerEl, "Plot Tangents",
             "Plots tangents to functions",
             "plotDerivatives"
         );
+
+        new Setting(containerEl)
+        .setName("Precision")
+        .setDesc("Number of decimals in numeric results")
+        .addText(tc=>tc
+            .setValue(this.plugin.settings.precision.toString())
+            .onChange(async (value)=>{
+                const num = Number(value) ;
+                this.plugin.settings.precision = num || 20;
+                await this.plugin.saveSettings();
+                setPrecision(num);
+            })
+            .inputEl.type="number"
+            );
 	}
 
     private createToggle(containerEl: HTMLElement, name: string, desc: string, prop: string) {

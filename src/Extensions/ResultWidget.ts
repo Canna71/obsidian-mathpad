@@ -56,7 +56,7 @@ export class ResultWidget extends WidgetType {
 
         const el = renderMath(
             latex || this.padScope.noteLatex,
-            this.parseResult.block
+            this.parseResult.block || getMathpadSettings().preferBlockForInline
         );
 
         finishRenderMath();

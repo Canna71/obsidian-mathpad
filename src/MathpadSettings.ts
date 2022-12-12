@@ -2,6 +2,8 @@ export interface MathpadSettings {
     addRibbonIcon: boolean;
     showAtStartUp: boolean;
     preferBlock: boolean;
+    preferBlockForInline: boolean;
+    preferBlockForCodeblock: boolean;
     evaluate: boolean;
     declarationStr: string;
     evaluateStr: string;
@@ -13,12 +15,15 @@ export interface MathpadSettings {
     plotGrid: boolean;
     plotWidth: number;
     plotDerivatives: boolean;
+    precision: number;
 }   
 
 export const DEFAULT_SETTINGS: MathpadSettings = {
     addRibbonIcon: true,
     showAtStartUp: true,
-    preferBlock: true,
+    preferBlock: false,
+    preferBlockForInline: false,
+    preferBlockForCodeblock: true,
     evaluate: false,
     declarationStr: ":=",
     evaluateStr: "=?",
@@ -29,7 +34,8 @@ export const DEFAULT_SETTINGS: MathpadSettings = {
     hidePrefix: "%",
     plotGrid: false,
     plotWidth: 0,
-    plotDerivatives: false
+    plotDerivatives: false,
+    precision: 21
 }
 
 // export default function getSettings() : IMathpadSettings{

@@ -1,3 +1,4 @@
+import { getMathpadSettings } from 'src/main';
 import { ParseResult } from './../Math/Parsing';
 import { MathpadSettings } from 'src/MathpadSettings';
 import { debounce, MarkdownPostProcessor, MarkdownPostProcessorContext } from "obsidian";
@@ -45,7 +46,7 @@ function produceResult(parseResult: ParseResult, engine: Engine, context: Markdo
         parseResult
     );
     if(res.isValid){ 
-        context.addChild(new MathResult(code, res, plotWidth, parseResult.block));
+        context.addChild(new MathResult(code, res, plotWidth, parseResult.block || getMathpadSettings().preferBlockForInline));
     }
 }
 
