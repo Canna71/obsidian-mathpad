@@ -101,6 +101,17 @@ nerdamer.register({
     },
 });
 
+nerdamer.register({
+    name: "slider",
+    visible: true,
+    numargs: [2,3],
+    build: () => function (min:any, max:any) {
+        const ret = min;
+        ret._range = [min, max];
+        return ret;
+    }
+})
+
 const NERDAMER_INITIAL_FUNCS = { ...nerdamer.getCore().PARSER.functions };
 
 export interface Engine {

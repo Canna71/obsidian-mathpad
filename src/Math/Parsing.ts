@@ -16,6 +16,8 @@ export interface ParseResult {
 
 export const SLOT_VARIABLE_PREFIX = "$";
 
+const VALID_NAME_REGEX = "([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)";
+
 export default function parse(text: string, settings: MathpadSettings) : ParseResult {
     // from text it should return a PadScope?
     // just a text to further parse?
@@ -70,7 +72,7 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
     
     } else {
         // maybe declaration
-        const fnDecRegEx = new RegExp("([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\\(([a-z_,\\s]*)\\)\\s*(" 
+        const fnDecRegEx = new RegExp(VALID_NAME_REGEX + "\\(([a-z_,\\s]*)\\)\\s*(" 
         + settings.declarationStr +
         ")\\s*(.+)","i");
     
@@ -84,7 +86,7 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
             
         } else {
     
-            const varDecRegEx = new RegExp("([a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ∞$][0-9a-z_αAβBγΓδΔϵEζZηHθΘιIκKλΛμMνNξΞoOπΠρPσΣτTυϒϕΦχXψΨωΩ$]*)\\s*(" 
+            const varDecRegEx = new RegExp(VALID_NAME_REGEX + "\\s*(" 
             + settings.declarationStr +
             ")\\s*(.+)","i");
         
