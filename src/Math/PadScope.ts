@@ -160,11 +160,7 @@ export default class PadScope {
                 this._expression = engine.parse(parseResult.def);
 
                 this._range = (this._expression as any).symbol?._range;
-                if(this._range) {
-                    console.log("got variable with range: ", this._range)
-                    // this._range[0].valueOf()
-
-                }
+                
             } else {
                 this._expression = engine.parse(parseResult.text);
                 // sometimpes this._expression.symbol is null because of errors

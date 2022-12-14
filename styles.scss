@@ -107,6 +107,13 @@
                         }
                     }
 
+                    .mathpad-slider {
+                        margin-right: 20px;
+                        input[type='range'] {
+                            width: 100%;
+                        }
+                    }
+
                     .slot-result {
                         overflow-y: auto;
                         .slot-error {
@@ -156,6 +163,9 @@
         padding: 4px;
         width: 100%;
         font-family: monospace;
+
+
+
     }
 }
 

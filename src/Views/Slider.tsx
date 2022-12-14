@@ -28,7 +28,7 @@ const Slider = ({ value, onChange, min=0,max=100,step="any", disabled=false }: S
         return () => { if (el.current?.firstChild) el.current.removeChild(el.current.firstChild) }
     }, [disabled, min, max, step, onChange])
 
-    return <span className="stationery-toolboc-slider" ref={el} ></span>
+    return <span className="mathpad-slider" ref={el} ></span>
 
 }
 
