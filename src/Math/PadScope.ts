@@ -28,6 +28,7 @@ export default class PadScope {
     private _subs: any;
     private _ident: boolean;
     private _parseResult: ParseResult;
+    private _range: any;
     public get parseResult(): ParseResult {
         return this._parseResult;
     }
@@ -49,6 +50,10 @@ export default class PadScope {
 
     public get plot() {
         return this._plot;
+    }
+
+    public get range() {
+        return this._range;
     }
 
     public get fn(): ((...args: number[]) => number)[] {
@@ -154,6 +159,12 @@ export default class PadScope {
                 engine.setVar(parseResult.name, parseResult.def);
                 this._expression = engine.parse(parseResult.def);
 
+                this._range = (this._expression as any).symbol?._range;
+                if(this._range) {
+                    console.log("got variable with range: ", this._range)
+                    // this._range[0].valueOf()
+
+                }
             } else {
                 this._expression = engine.parse(parseResult.text);
                 // sometimpes this._expression.symbol is null because of errors

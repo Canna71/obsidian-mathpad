@@ -11,6 +11,8 @@ import Input from "../icons/input.svg";
 import Question from "../icons/question.svg";
 import { SlotStack } from "src/Math/PadStack";
 import { FunctionPlotOptions } from "function-plot/dist/types";
+import Slider from "./Slider";
+import { getMathpadSettings } from "src/main";
 
 interface PadSlotViewState {
     edit: boolean;
@@ -77,7 +79,7 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied, onClicked, select
     }, [padSlot])
 
     const onCopyOutputAsText = useCallback((e: React.MouseEvent<HTMLElement>) => {
-        if(!padSlot.error){
+        if (!padSlot.error) {
             onCopied(padSlot, "text");
         }
     }, [padSlot])
@@ -86,6 +88,12 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied, onClicked, select
         padSlot.plot.xDomain = opts.xAxis?.domain?.map(n => n.toPrecision(3));
         padSlot.plot.yDomain = opts.yAxis?.domain?.map(n => n.toPrecision(3));
     }, []);
+
+    const onSliderChange = useCallback((value:number)=>{
+        const newValue = `${padSlot.parseResult.name}${getMathpadSettings().declarationStr}slider(${value}, ${padSlot.range[0].valueOf()}, ${padSlot.range[1].valueOf()})`
+        setState(state => ({ ...state, edit: false }))
+        onChanged(padSlot.id, newValue);
+    },[padSlot.id , onChanged])
 
     const anchorClassNames = ["slot-anchor"];
     if (selected) {
@@ -97,10 +105,21 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied, onClicked, select
                 <div className="slot-name" >{SlotStack.getSlotVariableName(padSlot.id)}</div>
             </div>
             <div className="slot-content">
+
                 <SlotInput onMouseDown={onMouseDown} edit={edit}
                     onKeyDown={onKeyDown} onBlur={onBlur}
                     input={padSlot.input} inputLaTeX={padSlot.inputLaTeX}
                 />
+                {
+                    padSlot.range &&
+                    <Slider 
+                        value={padSlot.range[0].valueOf()} 
+                        min={padSlot.range[0].valueOf()} 
+                        max={padSlot.range[1].valueOf()} 
+                        onChange={onSliderChange}
+                    />
+                }
+
                 <div className="slot-result" onClick={onCopyOutputAsText}>
                     {
                         padSlot.error ?

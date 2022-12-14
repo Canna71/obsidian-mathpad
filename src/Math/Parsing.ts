@@ -57,7 +57,7 @@ export default function parse(text: string, settings: MathpadSettings) : ParseRe
     || text.endsWith(settings.evaluateStr)
     ) {
         // evaluation
-        isEval = true;
+    isEval = true;
 
 
         if (text.endsWith(settings.evaluateNumericStr)) {

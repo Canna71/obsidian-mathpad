@@ -105,9 +105,9 @@ nerdamer.register({
     name: "slider",
     visible: true,
     numargs: [2,3],
-    build: () => function (min:any, max:any) {
-        const ret = min;
-        ret._range = [min, max];
+    build: () => function (min_or_val:any, min_or_max:any, max:any) {
+        const ret = min_or_val;
+        ret._range = max ? [min_or_max, max] : [min_or_val, min_or_max];
         return ret;
     }
 })
