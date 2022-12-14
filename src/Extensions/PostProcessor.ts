@@ -11,7 +11,7 @@ import parse from 'src/Math/Parsing';
 export const getPostPrcessor = (settings: MathpadSettings):MarkdownPostProcessor => {
     return debounce((element: HTMLElement, context: MarkdownPostProcessorContext) => {
         // todo: debounce and then use context.containerEl
-        const codes = (context as any).containerEl.querySelectorAll("p > code, div[data-mathpad-input]"); 
+        const codes = (context as any).containerEl.querySelectorAll("code, div[data-mathpad-input]"); 
         const engine = createEngine();
         
         // const settings = getSettings();

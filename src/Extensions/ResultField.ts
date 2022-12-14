@@ -32,11 +32,16 @@ export const resultField = StateField.define<DecorationSet>({
 
         const nodeA = tree.resolve(caretPos, 1);
         const nodeB = tree.resolve(caretPos, -1);
-
+        // formatting_formatting-code_inline-code_list-1
+        // inline-code_list-1
         // we try to avoid recomputing if editing outside inline-code
         if (
-            nodeA.name !== "inline-code" && nodeA.name !==  "formatting_formatting-code_inline-code" &&
-            nodeB.name !== "inline-code" && nodeB.name !==  "formatting_formatting-code_inline-code" &&
+            // nodeA.name !== "inline-code" && nodeA.name !==  "formatting_formatting-code_inline-code" &&
+            // nodeB.name !== "inline-code" && nodeB.name !==  "formatting_formatting-code_inline-code" &&
+            !nodeA.name.startsWith("inline-code") &&
+            !nodeA.name.startsWith("formatting_formatting-code_inline-code") &&
+            !nodeB.name.startsWith("inline-code") &&
+            !nodeB.name.startsWith("formatting_formatting-code_inline-code") &&
             transaction.docChanged
         ) {
             return oldState.map(transaction.changes);
@@ -62,7 +67,7 @@ export const resultField = StateField.define<DecorationSet>({
         }
         tree.iterate({
             enter: (node: SyntaxNodeRef) => {
-                if (node.name === "inline-code") {
+                if (node.name.startsWith("inline-code")) {
                     const text = transaction.state.doc.sliceString(
                         node.from,
                         node.to
