@@ -3,7 +3,7 @@
 	"name": "Mathpad",
 	"version": "0.8.8",
 	"minAppVersion": "0.15.0",
-	"description": "Computer Algebra System and Calculator for Onsidian",
+	"description": "Computer Algebra System and Calculator for Obsidian",
 	"author": "Gabriele Cannata",
 	"authorUrl": "https://github.com/Canna71",
 	"isDesktopOnly": true
