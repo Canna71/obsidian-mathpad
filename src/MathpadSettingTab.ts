@@ -1,6 +1,5 @@
 import MathpadPlugin from "src/main";
 import { App, PluginSettingTab, Setting } from "obsidian";
-import { setPrecision } from "./Math/Engine";
 
 
 export class MathpadSettingsTab extends PluginSettingTab {
@@ -91,12 +90,16 @@ export class MathpadSettingsTab extends PluginSettingTab {
             .setValue(this.plugin.settings.precision.toString())
             .onChange(async (value)=>{
                 const num = Number(value) ;
-                this.plugin.settings.precision = num || 20;
+                this.plugin.settings.precision = num || 21;
                 await this.plugin.saveSettings();
-                setPrecision(num);
             })
             .inputEl.type="number"
             );
+
+        this.createToggle(containerEl, "Scientific Notation",
+            "Represents numbers in scientific notation",
+            "scientific"
+        );
 	}
 
     private createToggle(containerEl: HTMLElement, name: string, desc: string, prop: string) {

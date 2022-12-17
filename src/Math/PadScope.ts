@@ -1,4 +1,4 @@
-import { getMathpadSettings } from 'src/main';
+import { getMathpadSettings } from "src/main";
 import { MathpadSettings } from "src/MathpadSettings";
 import parse, { ParseResult, SLOT_VARIABLE_PREFIX } from "./Parsing";
 import { createEngine } from "src/Math/Engine";
@@ -9,28 +9,45 @@ import { Engine } from "./Engine";
 const PLOT_PARSE = /plot\((.*)\)/m;
 const PARAMS_RE = / *(\[[^\]].*\])| *([^[,]+) */gm;
 
-// credit: 
-function toScientificNotation(num: number, precision=21) {
+// credit:
+function toLaTeX(num: number, scientific = false, precision = 21) {
     // Check if the number is zero
     if (num === 0) return "0";
-  
-    // Get the absolute value of the number
-    const absNum = Math.abs(num);
-  
-    // Get the exponent by finding the number of places the decimal point needs to be moved
-    const exponent = Math.floor(Math.log10(absNum));
-  
-    // Divide the number by 10 raised to the exponent to get the coefficient
-    let coefficient = absNum / Math.pow(10, exponent);
-  
-    // If the number is negative, add a negative sign to the coefficient
-    if (num < 0) coefficient = -coefficient;
+    let numDecimals = num.toString().split(".")[1]?.length || 0;
 
+    if (scientific) {
+        // Get the absolute value of the number
+        const absNum = Math.abs(num);
 
-    // Return the number in scientific notation
-    return `${coefficient.toFixed(precision)} \\times 10^{${exponent}}`;
-  }
-  
+        // Get the exponent by finding the number of places the decimal point needs to be moved
+        const exponent = Math.floor(Math.log10(absNum));
+
+        // Divide the number by 10 raised to the exponent to get the coefficient
+        let coefficient = absNum / Math.pow(10, exponent);
+
+        numDecimals = coefficient.toString().split(".")[1]?.length || 0;
+
+        // If the number is negative, add a negative sign to the coefficient
+        if (num < 0) coefficient = -coefficient;
+
+        const coeffStr =
+            numDecimals > precision
+                ? coefficient.toFixed(precision)
+                : coefficient.toString();
+
+        // Return the number in scientific notation
+        if (exponent !== 0) {
+            return `${coeffStr} \\times 10^{${exponent}}`;
+        } else {
+            return `${coeffStr}`;
+        }
+    } else {
+       const numStr = (numDecimals > precision)
+        ? num.toFixed(precision)
+        : num.toString()
+        return numStr;
+    }
+}
 
 export default class PadScope {
     private _input: string;
@@ -41,7 +58,7 @@ export default class PadScope {
     private _fn: ((...args: number[]) => number)[];
 
     private _dfn: ((...args: number[]) => number)[];
-    
+
     private _scope: {
         vars: { [x: string]: string };
         funcs: { [x: string]: any };
@@ -185,7 +202,6 @@ export default class PadScope {
                 this._expression = engine.parse(parseResult.def);
 
                 this._range = (this._expression as any).symbol?._range;
-                
             } else {
                 this._expression = engine.parse(parseResult.text);
                 // sometimpes this._expression.symbol is null because of errors
@@ -200,13 +216,16 @@ export default class PadScope {
                 if (parseResult.evaluate) {
                     this._expression = this._expression.evaluate();
                 }
-                
 
                 try {
                     this._fn = [this._expression.buildFunction()];
                     try {
-                        this._dfn = [engine.parse(`diff(${this._expression.text()})`).buildFunction()];
-                    } catch (ex){
+                        this._dfn = [
+                            engine
+                                .parse(`diff(${this._expression.text()})`)
+                                .buildFunction(),
+                        ];
+                    } catch (ex) {
                         console.warn(ex);
                     }
                 } catch (ex) {
@@ -220,8 +239,14 @@ export default class PadScope {
                             0
                         ) {
                             (this._expression as any).each((element: any) => {
-                                tmpFn.push(engine.parse(element).buildFunction());
-                                tmpDFn.push(engine.parse(`diff(${element.text()})`).buildFunction())
+                                tmpFn.push(
+                                    engine.parse(element).buildFunction()
+                                );
+                                tmpDFn.push(
+                                    engine
+                                        .parse(`diff(${element.text()})`)
+                                        .buildFunction()
+                                );
                             });
                         }
                     } catch (ex) {
@@ -239,9 +264,13 @@ export default class PadScope {
             );
             // test:this._expression.isNumber()
             // this._expression.isFraction()
-            if(this._expression.isNumber() && parseResult.evaluate && getMathpadSettings().scientific){
-                const num : number = this._expression.valueOf() as number;
-                this._resultTex = toScientificNotation(num, getMathpadSettings().precision || 21);
+            if (this._expression.isNumber() && parseResult.evaluate) {
+                const num: number = this._expression.valueOf() as number;
+                this._resultTex = toLaTeX(
+                    num,
+                    getMathpadSettings().scientific,
+                    getMathpadSettings().precision || 21
+                );
             }
         } catch (e) {
             this._error = e.toString();
@@ -378,7 +407,7 @@ export default class PadScope {
             .filter((line) => line.trim().length > 0)
             .forEach((line) => {
                 const pr = parse(line, settings);
-                console.log(pr)
+                console.log(pr);
                 const padScope = new PadScope().process(engine, pr);
                 if (!pr.hide) {
                     ret.push(padScope);

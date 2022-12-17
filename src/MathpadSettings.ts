@@ -37,7 +37,7 @@ export const DEFAULT_SETTINGS: MathpadSettings = {
     plotWidth: 0,
     plotDerivatives: false,
     precision: 21,
-    scientific: false
+    scientific: true 
 }
 
 // export default function getSettings() : IMathpadSettings{
