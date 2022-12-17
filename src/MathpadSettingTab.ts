@@ -99,7 +99,7 @@ export class MathpadSettingsTab extends PluginSettingTab {
         this.createToggle(containerEl, "Scientific Notation",
             "Represents numbers in scientific notation if appropriate",
             "scientific"
-        );
+        ); 
 	}
 
     private createToggle(containerEl: HTMLElement, name: string, desc: string, prop: string) {

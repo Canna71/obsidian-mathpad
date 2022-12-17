@@ -9,6 +9,13 @@ import { Engine } from "./Engine";
 const PLOT_PARSE = /plot\((.*)\)/m;
 const PARAMS_RE = / *(\[[^\]].*\])| *([^[,]+) */gm;
 
+function removeTrailingZeroes(num:string){
+    if(!num.contains(".")) return num;
+    while(num.endsWith("0")) num = num.substring(0,num.length-1);
+    if(num.endsWith(".")) num = num.substring(0,num.length-1);
+    return num;
+}
+
 // credit:
 function toLaTeX(num: number, scientific = false, precision = 21) {
     // Check if the number is zero
@@ -38,11 +45,11 @@ function toLaTeX(num: number, scientific = false, precision = 21) {
 
         const coeffStr =
             numDecimals > precision
-                ? coefficient.toFixed(precision)
+                ? removeTrailingZeroes(coefficient.toFixed(precision))
                 : coefficient.toString();
 
         // Return the number in scientific notation
-        if (exponent !== 0 && numStr.length > coeffStr.length+2) {
+        if (exponent !== 0 && Math.abs(exponent)>3 || (precision+exponent+1 < numDecimals) ) {
             return `${coeffStr} \\times 10^{${exponent}}`;
         } else {
             return numStr;
