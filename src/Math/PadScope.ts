@@ -14,6 +14,9 @@ function toLaTeX(num: number, scientific = false, precision = 21) {
     // Check if the number is zero
     if (num === 0) return "0";
     let numDecimals = num.toString().split(".")[1]?.length || 0;
+    const numStr = (numDecimals > precision)
+    ? num.toFixed(precision)
+    : num.toString()
 
     if (scientific) {
         // Get the absolute value of the number
@@ -23,7 +26,10 @@ function toLaTeX(num: number, scientific = false, precision = 21) {
         const exponent = Math.floor(Math.log10(absNum));
 
         // Divide the number by 10 raised to the exponent to get the coefficient
-        let coefficient = absNum / Math.pow(10, exponent);
+
+        let coefficient = exponent > 0 
+            ? absNum / Math.pow(10, exponent)
+            : absNum * Math.pow(10, -exponent) ;
 
         numDecimals = coefficient.toString().split(".")[1]?.length || 0;
 
@@ -36,15 +42,13 @@ function toLaTeX(num: number, scientific = false, precision = 21) {
                 : coefficient.toString();
 
         // Return the number in scientific notation
-        if (exponent !== 0) {
+        if (exponent !== 0 && numStr.length > coeffStr.length+2) {
             return `${coeffStr} \\times 10^{${exponent}}`;
         } else {
-            return `${coeffStr}`;
+            return numStr;
         }
     } else {
-       const numStr = (numDecimals > precision)
-        ? num.toFixed(precision)
-        : num.toString()
+       
         return numStr;
     }
 }
