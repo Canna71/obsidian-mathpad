@@ -97,7 +97,7 @@ export class MathpadSettingsTab extends PluginSettingTab {
             );
 
         this.createToggle(containerEl, "Scientific Notation",
-            "Represents numbers in scientific notation",
+            "Represents numbers in scientific notation if appropriate",
             "scientific"
         );
 	}
