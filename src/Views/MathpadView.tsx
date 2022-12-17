@@ -8,8 +8,9 @@ import { MathpadContainer } from "./MathpadContainer";
 
 import { loadMathJax } from "obsidian";
 import PadSlot from "src/Math/PadSlot";
+// import { MathpadSettings } from "src/MathpadSettings";
+import MathpadPlugin from "src/main";
 import { MathpadSettings } from "src/MathpadSettings";
-import { getMathpadSettings } from "src/main";
 export const MATHPAD_VIEW = "mathpad-view";
 
 export const MathpadContext = React.createContext<any>({});
@@ -30,22 +31,26 @@ function copyContent(view: View, content: string, block?: boolean) {
 }
 
 export class MathpadView extends ItemView {
-    settings: MathpadSettings;
+    // settings: MathpadSettings;
     root: Root;
     state = {
 
     };
+    private _plugin: MathpadPlugin;
+    
 
 
 
-    constructor(leaf: WorkspaceLeaf) {
+    constructor(leaf: WorkspaceLeaf, plugin: MathpadPlugin) {
         super(leaf);
-        this.settings = getMathpadSettings();
+        // this.settings = getMathpadSettings();
         this.state = {
 
         };
         this.icon = "sigma";
         this.onCopySlot = this.onCopySlot.bind(this);
+        this._plugin = plugin;
+        this.onChangeEvaluate = this.onChangeEvaluate.bind(this);
     }
 
     getViewType() {
@@ -54,6 +59,10 @@ export class MathpadView extends ItemView {
 
     getDisplayText() {
         return "Mathpad";
+    }
+
+    public get settings(): MathpadSettings {
+        return this._plugin.settings;
     }
 
     override onResize(): void {
@@ -99,7 +108,9 @@ ${str}
                     width: this.contentEl.innerWidth,
                     settings: this.settings
                 }}>
-                    <MathpadContainer  {...this.state} onCopySlot={this.onCopySlot}
+                    <MathpadContainer  {...this.state} 
+                        onCopySlot={this.onCopySlot}
+                        onChangeEvaluate={this.onChangeEvaluate}
                         settings={this.settings}
                     />
                 </MathpadContext.Provider>
@@ -123,5 +134,10 @@ ${str}
     async onClose() {
 
         this.root.unmount();
+    }
+
+    onChangeEvaluate(value: boolean) {
+        this.settings.evaluate = value;
+        this._plugin.saveSettings();
     }
 }

@@ -17,7 +17,7 @@ const FNCALL_REGEX = /([a-z]*)\((.*)\)/i;
 nerdamer.set('PARSE2NUMBER', false);
 
 export function setPrecision(precision: number){
-    (nerdamer as any).set("PRECISION", Math.round(precision || 21));
+    (nerdamer as any).set("PRECISION", Math.round(precision || 20)+1);
 }
 
 function solve(expr: any, variable?: any): any {

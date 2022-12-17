@@ -1,3 +1,4 @@
+import { getMathpadSettings } from 'src/main';
 import { MathpadSettings } from "src/MathpadSettings";
 import parse, { ParseResult, SLOT_VARIABLE_PREFIX } from "./Parsing";
 import { createEngine } from "src/Math/Engine";
@@ -7,6 +8,29 @@ import { Engine } from "./Engine";
 
 const PLOT_PARSE = /plot\((.*)\)/m;
 const PARAMS_RE = / *(\[[^\]].*\])| *([^[,]+) */gm;
+
+// credit: 
+function toScientificNotation(num: number, precision=21) {
+    // Check if the number is zero
+    if (num === 0) return "0";
+  
+    // Get the absolute value of the number
+    const absNum = Math.abs(num);
+  
+    // Get the exponent by finding the number of places the decimal point needs to be moved
+    const exponent = Math.floor(Math.log10(absNum));
+  
+    // Divide the number by 10 raised to the exponent to get the coefficient
+    let coefficient = absNum / Math.pow(10, exponent);
+  
+    // If the number is negative, add a negative sign to the coefficient
+    if (num < 0) coefficient = -coefficient;
+
+
+    // Return the number in scientific notation
+    return `${coefficient.toFixed(precision)} \\times 10^{${exponent}}`;
+  }
+  
 
 export default class PadScope {
     private _input: string;
@@ -213,6 +237,12 @@ export default class PadScope {
             this._resultTex = (this._expression as any).toTeX(
                 parseResult.evaluate ? "decimal" : undefined
             );
+            // test:this._expression.isNumber()
+            // this._expression.isFraction()
+            if(this._expression.isNumber() && parseResult.evaluate && getMathpadSettings().scientific){
+                const num : number = this._expression.valueOf() as number;
+                this._resultTex = toScientificNotation(num, getMathpadSettings().precision || 21);
+            }
         } catch (e) {
             this._error = e.toString();
             console.warn(e, this.input);
@@ -256,7 +286,9 @@ export default class PadScope {
         if (this._expression) {
             try {
                 const expr = this._expression.text(
-                    parseResult.evaluate ? "decimals" : "fractions"
+                    parseResult.evaluate ? "decimals" : "fractions",
+                    //@ts-ignore
+                    getMathpadSettings().precision
                 );
 
                 if (parseResult.isFnDec || parseResult.isVarDec) {

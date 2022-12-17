@@ -32,7 +32,7 @@ export default class MathpadPlugin extends Plugin {
     async onload() {
         await this.loadSettings();
 
-        this.registerView(MATHPAD_VIEW, (leaf) => new MathpadView(leaf));
+        this.registerView(MATHPAD_VIEW, (leaf) => new MathpadView(leaf, this));
 
         addIcon("sigma",sigma); 
 

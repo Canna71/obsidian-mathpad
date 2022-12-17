@@ -4,7 +4,7 @@ import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
 import PadSlotView from "./PadSlotView";
 import PadSlot from "src/Math/PadSlot";
-import {  getNewStack, SlotStack,  } from "src/Math/PadStack";
+import { getNewStack, SlotStack, } from "src/Math/PadStack";
 import { MathpadSettings } from 'src/MathpadSettings';
 
 export interface MathpadContainerProps {
@@ -33,42 +33,45 @@ const DEFAULTSTATE: MathPadState = {
     }
 }
 
-function applyFnStr(fn:string, input:string){
+function applyFnStr(fn: string, input: string) {
     return `${fn}(${input})`;
 }
 
 
-export const MathpadContainer = ({onCopySlot, settings}:
-    {onCopySlot:(slot:PadSlot, what:string)=>void, settings: MathpadSettings}
-    
-    ) => {
+export const MathpadContainer = ({ onCopySlot, onChangeEvaluate, settings,  }:
+    { onCopySlot: (slot: PadSlot, what: string) => void, 
+        onChangeEvaluate: (value: boolean) => void,
+        settings: MathpadSettings }
+
+) => {
 
     const [state, setState] = useState({ ...DEFAULTSTATE });
 
     const { input, stack, options: { evaluate }, selected } = state;
-    
 
-    useEffect(() => { 
-        setState(state=>({...state, stack: getNewStack(), options:
-        {
-            ...state.options,
-            evaluate: settings.evaluate
-        }
+
+    useEffect(() => {
+        setState(state => ({
+            ...state, stack: getNewStack(), options:
+            {
+                ...state.options,
+                evaluate: settings.evaluate
+            }
         }))
     }, []);
 
     const processInput = useCallback(() => {
-            setState(state => 
-                state.input.trim().length>0 ?
+        setState(state =>
+            state.input.trim().length > 0 ?
                 ({
-                ...state,
-                stack: state.stack?.addSlot(state.input, settings, { evaluate: state.options.evaluate }),
-                input: "",
-                history: undefined
+                    ...state,
+                    stack: state.stack?.addSlot(state.input, settings, { evaluate: state.options.evaluate }),
+                    input: "",
+                    history: undefined
                 })
                 :
                 state
-            )
+        )
     }, []);
 
     const onKeyDown = useCallback((e: React.KeyboardEvent) => {
@@ -76,23 +79,23 @@ export const MathpadContainer = ({onCopySlot, settings}:
             e.preventDefault();
             processInput();
         }
-        else if(e.code === "ArrowUp" || e.code === "ArrowDown") {
+        else if (e.code === "ArrowUp" || e.code === "ArrowDown") {
             const delta = e.code === "ArrowUp" ? -1 : 1;
-            setState(state=>{
-                if(!state.stack || state.stack.isEmpty()) return state;
+            setState(state => {
+                if (!state.stack || state.stack.isEmpty()) return state;
                 let history = state.history;
-                if(!history){
-                    if(delta<0) history = state.stack?.getSLotByIndex(state.stack.items.length-1).id
+                if (!history) {
+                    if (delta < 0) history = state.stack?.getSLotByIndex(state.stack.items.length - 1).id
                     else history = state.stack?.getSLotByIndex(0).id
-                } else { 
+                } else {
                     let ix = state.stack?.getSlotIndexById(history);
-                    ix = Math.clamp(ix+delta,0,state.stack.items.length-1);
+                    ix = Math.clamp(ix + delta, 0, state.stack.items.length - 1);
                     history = state.stack.getSLotByIndex(ix).id;
                 }
                 const input = state.stack.getSlotById(history)?.input || "";
-                return ({...state, history, input});
+                return ({ ...state, history, input });
             });
-        } 
+        }
     }, [processInput]);
 
     const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,14 +103,17 @@ export const MathpadContainer = ({onCopySlot, settings}:
     }, [])
 
     const onToggleEvaluate = useCallback(() => {
-        setState(state => ({
-            ...state,
-            options: {
-                ...state.options,
-                evaluate: !state.options.evaluate
-            }
-        }));
-    }, []);
+        setState(state => {
+            onChangeEvaluate(!state.options.evaluate);
+            return ({
+                ...state,
+                options: {
+                    ...state.options,
+                    evaluate: !state.options.evaluate
+                }
+            })
+        });
+    }, [onChangeEvaluate]);
 
     const onSlotChanged =
         useCallback((changedId: number, value: string) => {
@@ -124,42 +130,42 @@ export const MathpadContainer = ({onCopySlot, settings}:
         setState(state => ({
             ...state,
             stack: state.stack?.removeSlot(changedId, {}, { evaluate: state.options.evaluate }),
-            selected: state.selected===changedId?undefined:state.selected,
-            history: state.history===changedId?undefined:state.history
+            selected: state.selected === changedId ? undefined : state.selected,
+            history: state.history === changedId ? undefined : state.history
         }))
     }, []);
 
     const onSlotCopied = useCallback((slot: PadSlot, what: string) => {
-        if(what!=="text"){
-            slot && setTimeout(()=>onCopySlot(slot, what),0);
+        if (what !== "text") {
+            slot && setTimeout(() => onCopySlot(slot, what), 0);
         } else {
-            setState(state=>({
+            setState(state => ({
                 ...state,
                 input: slot.text
             }))
         }
     }, [onCopySlot]);
 
-    const applyFn = (fn:string) => useCallback(()=>{
+    const applyFn = (fn: string) => useCallback(() => {
 
-        setState(state=>{
-            if(!state.selected) return state;
+        setState(state => {
+            if (!state.selected) return state;
             const slot = state.stack?.getSlotById(state.selected);
-            if(!slot) return state;
+            if (!slot) return state;
             const input = slot?.input;
-            const newInput = applyFnStr(fn,input);
+            const newInput = applyFnStr(fn, input);
             return ({
                 ...state,
                 stack: state.stack?.addSlot(newInput, settings, { evaluate: state.options.evaluate })
             })
         })
-    },[fn])
+    }, [fn])
 
     const onSlotClicked = useCallback((changedId: number) => {
         setState(state => ({
             ...state,
-            
-            selected:changedId
+
+            selected: changedId
         }))
     }, []);
 
@@ -177,7 +183,7 @@ export const MathpadContainer = ({onCopySlot, settings}:
         <div className="mathpad-container">
             <div className="toolbar">
                 <button onClick={onToggleEvaluate} title={evaluate ? "numeric" : "symbolic"} >{evaluate ? "3" : "⒳"}</button>
-                
+
                 <button onClick={applyFn("diff")} title="derivate" disabled={!selected} >𝑓′</button>
                 <button onClick={applyFn("integrate")} title="integrate" disabled={!selected}>∫</button>
                 <button onClick={applyFn("solve")} title="solve" disabled={!selected}>𝒙=</button>
