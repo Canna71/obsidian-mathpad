@@ -11,10 +11,9 @@ import parse from 'src/Math/Parsing';
 export const getPostPrcessor = (settings: MathpadSettings):MarkdownPostProcessor => {
     return debounce((element: HTMLElement, context: MarkdownPostProcessorContext) => {
         // todo: debounce and then use context.containerEl
-        const codes = (context as any).containerEl.querySelectorAll("code, div[data-mathpad-input]"); 
+        const codes = (context as any).containerEl.querySelectorAll("code, div[data-mathpad-input], mjx-container[data-mathpad-input]"); 
         const engine = createEngine();
-        
-        // const settings = getSettings();
+        // console.log(codes);
         for (let index = 0; index < codes.length; index++) {
             const code = codes.item(index) as HTMLElement;
             processCode(code, engine, context, settings);
@@ -30,8 +29,10 @@ function processCode(code: HTMLElement, engine: Engine, context: MarkdownPostPro
     } else {
         text = code.dataset.mathpadInput;
     }
-
+    
+    // console.log("processCode " + text)
     const pr = parse(text, settings);
+    
     if(pr.isValid){
         const containerWidth = Math.clamp((context as any).containerEl.offsetWidth,200,700);
         const plotWidth = settings.plotWidth>0?settings.plotWidth:containerWidth;

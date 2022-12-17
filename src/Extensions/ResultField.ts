@@ -32,7 +32,7 @@ export const resultField = StateField.define<DecorationSet>({
 
         const nodeA = tree.resolve(caretPos, 1);
         const nodeB = tree.resolve(caretPos, -1);
-        console.log(nodeA.name, nodeB.name);
+        // console.log(nodeA.name, nodeB.name);
         // formatting_formatting-code_inline-code_list-1
         // inline-code_list-1
         // we try to avoid recomputing if editing outside inline-code

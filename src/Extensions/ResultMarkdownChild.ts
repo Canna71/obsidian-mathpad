@@ -47,7 +47,8 @@ export class MathResult extends MarkdownRenderChild {
         const mathEl = renderMath(latex || this.padScope.noteLatex, this.block);
 
         finishRenderMath();
-        mathEl.dataset.mathpadInput = this.padScope.input + "=?";
+        mathEl.dataset.mathpadInput = this.padScope.input + 
+            ((this.padScope.parseResult.isVarDec || this.padScope.parseResult.isFnDec) ? "" : "=?");
         return mathEl;
     }
 }

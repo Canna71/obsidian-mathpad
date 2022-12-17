@@ -141,6 +141,7 @@ export default class PadScope {
 
     process(engine: Engine, parseResult: ParseResult): PadScope {
         try {
+            // console.log("processing:", parseResult)
             // save processing options and scope
             this._input = parseResult.text;
             this._scope = engine.getScope();
