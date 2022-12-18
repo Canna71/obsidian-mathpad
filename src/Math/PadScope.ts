@@ -275,6 +275,7 @@ export default class PadScope {
             );
             // test:this._expression.isNumber()
             // this._expression.isFraction()
+            /*
             if (this._expression.isNumber() && parseResult.evaluate) {
                 const num: number = this._expression.valueOf() as number;
                 this._resultTex = toLaTeX(
@@ -283,6 +284,7 @@ export default class PadScope {
                     getMathpadSettings().precision || 21
                 );
             }
+            */
         } catch (e) {
             this._error = e.toString();
             console.warn(e, this.input);

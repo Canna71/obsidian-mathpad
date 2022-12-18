@@ -15,6 +15,7 @@ import {
 import { MathpadSettingsTab } from "src/MathpadSettingTab";
 import { processCodeBlock } from "./Views/DocView";
 import { getPostPrcessor } from "./Extensions/PostProcessor";
+import { setPrecision, setScientific } from "./Math/Engine";
 
 const sigma = `<path stroke="currentColor" fill="none" d="M78.6067 22.8905L78.6067 7.71171L17.8914 7.71171L48.2491 48.1886L17.8914 88.6654L78.6067 88.6654L78.6067 73.4866" opacity="1"  stroke-linecap="round" stroke-linejoin="round" stroke-width="6" />
 `;
@@ -107,7 +108,10 @@ export default class MathpadPlugin extends Plugin {
             {},
             DEFAULT_SETTINGS,
             await this.loadData()
+            
         );
+        setPrecision(this.settings.precision);
+        setScientific(this.settings.scientific);
         gSettings = this.settings;
     }
 

@@ -1,6 +1,6 @@
 {
 	"name": "mathpad",
-	"version": "0.8.10",
+	"version": "0.8.11",
 	"description": "Computer Algebra System and Calculator for Obsidian",
 	"main": "main.js",
 	"scripts": {
