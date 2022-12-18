@@ -16,7 +16,8 @@ function removeTrailingZeroes(num:string){
     return num;
 }
 
-// credit:
+// credit: chatGPT
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function toLaTeX(num: number, scientific = false, precision = 21) {
     // Check if the number is zero
     if (num === 0) return "0";
@@ -237,7 +238,7 @@ export default class PadScope {
                                 .buildFunction(),
                         ];
                     } catch (ex) {
-                        console.warn(ex);
+                        console.warn(ex); 
                     }
                 } catch (ex) {
                     // probably it's a collection:
@@ -420,7 +421,6 @@ export default class PadScope {
             .filter((line) => line.trim().length > 0)
             .forEach((line) => {
                 const pr = parse(line, settings);
-                console.log(pr);
                 const padScope = new PadScope().process(engine, pr);
                 if (!pr.hide) {
                     ret.push(padScope);
