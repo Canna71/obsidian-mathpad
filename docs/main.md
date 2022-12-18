@@ -68,6 +68,23 @@ To specify a range also for y:
 
 <img src="plot_with_domain.png" width="400" >
 
+## Sliders
+
+In the sidebar is possible to define a variable and then modify it by using a slider.
+For example:
+
+`a := slider(1,10)`
+
+will define a variable `a` with inital value `1` ranging from `1` to `10`
+
+<img src="slider-simple.png" width="200" >
+
+`a := slider(5,1,10)`
+
+will define a variable `a` with inital value  `5` ranging from `1` to `10`
+
+
+
 ## Sidebar commands
 
 On the top of the sidebar there are commands that help manipulating the expressions already inserted in some slot: *derivate*, *integrate*, *solve*, *expand*, *simplify*
@@ -217,3 +234,6 @@ If enabled, the plot will also draw the tangents to the functions where the mous
 
 ## Precision
 Precision for displaying results as decimal
+
+## Scientific Notation
+When enabled numeric values will automatically displayed in scientific notation, when appropriate
