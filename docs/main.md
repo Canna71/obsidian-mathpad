@@ -83,7 +83,9 @@ will define a variable `a` with inital value `1` ranging from `1` to `10`
 
 will define a variable `a` with inital value  `5` ranging from `1` to `10`
 
+<img src="slider-initial.png" width="200" >
 
+Tweaking the slider will assign a different value to the variable, affecting subsequent calculations and plots.
 
 ## Sidebar commands
 

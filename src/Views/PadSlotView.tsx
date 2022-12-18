@@ -113,7 +113,7 @@ const PadSlotView = ({ padSlot, onChanged, onClosed, onCopied, onClicked, select
                 {
                     padSlot.range &&
                     <Slider 
-                        value={padSlot.range[0].valueOf()} 
+                        value={padSlot.value} 
                         min={padSlot.range[0].valueOf()} 
                         max={padSlot.range[1].valueOf()} 
                         onChange={onSliderChange}
