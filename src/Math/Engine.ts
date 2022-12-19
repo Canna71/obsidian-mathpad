@@ -44,9 +44,9 @@ function markAsToPlot(...args: any[]) {
         // we have an array of functions to plot as first parameter
         fns = args[i];
     } else {
-        while (args[i] && !utils.isVector(args[i])) {
+        while (args[i] && (!utils.isVector(args[i]) || utils.isVector(args[i].elements[0])) ) {
             fns.push(args[i]);
-            i++;
+            i++; 
         }
         fns = utils.convertToVector(fns);
     }

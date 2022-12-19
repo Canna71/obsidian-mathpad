@@ -1,19 +1,19 @@
-import { nerdamer } from 'nerdamer';
 import { getMathpadSettings } from "src/main";
 import { MathpadSettings } from "src/MathpadSettings";
 import parse, { ParseResult, SLOT_VARIABLE_PREFIX } from "./Parsing";
 import { createEngine } from "src/Math/Engine";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Engine } from "./Engine";
+import nerdamer from "nerdamer";
 // import { ProcessOptions } from "./PadStack";s
 
 const PLOT_PARSE = /plot\((.*)\)/m;
 const PARAMS_RE = / *(\[[^\]].*\])| *([^[,]+) */gm;
 
-function removeTrailingZeroes(num:string){
-    if(!num.contains(".")) return num;
-    while(num.endsWith("0")) num = num.substring(0,num.length-1);
-    if(num.endsWith(".")) num = num.substring(0,num.length-1);
+function removeTrailingZeroes(num: string) {
+    if (!num.contains(".")) return num;
+    while (num.endsWith("0")) num = num.substring(0, num.length - 1);
+    if (num.endsWith(".")) num = num.substring(0, num.length - 1);
     return num;
 }
 
@@ -23,9 +23,8 @@ function toLaTeX(num: number, scientific = false, precision = 21) {
     // Check if the number is zero
     if (num === 0) return "0";
     let numDecimals = num.toString().split(".")[1]?.length || 0;
-    const numStr = (numDecimals > precision)
-    ? num.toFixed(precision)
-    : num.toString()
+    const numStr =
+        numDecimals > precision ? num.toFixed(precision) : num.toString();
 
     if (scientific) {
         // Get the absolute value of the number
@@ -36,9 +35,10 @@ function toLaTeX(num: number, scientific = false, precision = 21) {
 
         // Divide the number by 10 raised to the exponent to get the coefficient
 
-        let coefficient = exponent > 0 
-            ? absNum / Math.pow(10, exponent)
-            : absNum * Math.pow(10, -exponent) ;
+        let coefficient =
+            exponent > 0
+                ? absNum / Math.pow(10, exponent)
+                : absNum * Math.pow(10, -exponent);
 
         numDecimals = coefficient.toString().split(".")[1]?.length || 0;
 
@@ -51,13 +51,15 @@ function toLaTeX(num: number, scientific = false, precision = 21) {
                 : coefficient.toString();
 
         // Return the number in scientific notation
-        if (exponent !== 0 && Math.abs(exponent)>3 || (precision+exponent+1 < numDecimals) ) {
+        if (
+            (exponent !== 0 && Math.abs(exponent) > 3) ||
+            precision + exponent + 1 < numDecimals
+        ) {
             return `${coeffStr} \\times 10^{${exponent}}`;
         } else {
             return numStr;
         }
     } else {
-       
         return numStr;
     }
 }
@@ -121,16 +123,6 @@ export default class PadScope {
     public get error(): string | undefined {
         return this._error;
     }
-
-    // public get id(): number {
-    //     return this._id;
-    // }
-
-    //TODO: make it configurable
-    // cfr: nerdamer.getCore().Settings.VALIDATION_REGEX
-    // public get name(): string {
-    //     return `S${this._id}`;
-    // }
 
     public get inputLaTeX(): string {
         return this._inputLatex;
@@ -311,21 +303,19 @@ export default class PadScope {
     }
 
     private handlePlotFunctions(engine: Engine) {
-        const utils = (global as any).nerdamer.getCore().Utils;
+        const utils = nerdamer.getCore().Utils;
         const fnsToPlot = [];
-        
+
         // @ts-ignore
-        if(!utils.isVector(this._expression.symbol)){
-            fnsToPlot.push(this._expression)
+        if (!utils.isVector(this._expression.symbol)) {
+            fnsToPlot.push(this._expression);
             // we have ust one function to plot
-            
         } else {
-            if ((this._expression as any).symbol?.elements?.length >
-                    0) {
-                    (this._expression as any).each((element: any) => {
-                        fnsToPlot.push(engine.parse(element))
-                    });
-                }
+            if ((this._expression as any).symbol?.elements?.length > 0) {
+                (this._expression as any).each((element: any) => {
+                    fnsToPlot.push(engine.parse(element));
+                });
+            }
         }
 
         // process fnsToPlot
@@ -333,45 +323,43 @@ export default class PadScope {
             const tmpFn: ((...args: number[]) => number)[] = [];
             const tmpDFn: ((...args: number[]) => number)[] = [];
 
-            const fnsToPlotInternal:any[] = []
+            const fnsToPlotInternal: any[] = [];
 
-            fnsToPlot.forEach(fn=>{
+            fnsToPlot.forEach((fn) => {
+                // @ts-ignore
+                if (nerdamer.getCore().Utils.isVector(fn.symbol)) {
+                    // @ts-ignore
+                    fnsToPlotInternal.push(fn.symbol);
+                }
+
                 const vars = fn.variables();
                 // @ts-ignore
-                if(fn.symbol.LHS && fn.symbol.RHS) {
-                    
-                    if(vars.length==2){
-                        const fns = fn.solveFor(vars[1])
+                if (fn.symbol.LHS && fn.symbol.RHS) {
+                    if (vars.length == 2) {
+                        const fns = fn.solveFor(vars[1]);
+                        // @ts-ignore
                         fnsToPlotInternal.push(...fns);
                     }
                 } else {
-                    if(vars.length==1){
-                        fnsToPlotInternal.push(fn)
+                    if (vars.length == 1) {
+                        fnsToPlotInternal.push(fn);
                     }
                 }
+            });
 
+            fnsToPlotInternal.forEach((fn) => {
+                // TODO: if fn is vector, extract values into arrays
 
-                
-            })
+                tmpFn.push(fn.buildFunction());
+                tmpDFn.push(engine.parse(`diff(${fn.text()})`).buildFunction());
+            });
 
-            fnsToPlotInternal.forEach(fn=>{
-                tmpFn.push(
-                    fn.buildFunction()
-                );
-                tmpDFn.push(
-                    engine
-                        .parse(`diff(${fn.text()})`)
-                        .buildFunction()
-                );
-            })
-             
             //
             this._fn = tmpFn;
             this._dfn = tmpDFn;
-        } catch(ex){
+        } catch (ex) {
             console.log(ex);
         }
-
     }
 
     getCodeBlock(settings: MathpadSettings) {
