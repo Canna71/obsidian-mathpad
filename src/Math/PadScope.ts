@@ -1,3 +1,4 @@
+import { nerdamer } from 'nerdamer';
 import { getMathpadSettings } from "src/main";
 import { MathpadSettings } from "src/MathpadSettings";
 import parse, { ParseResult, SLOT_VARIABLE_PREFIX } from "./Parsing";
@@ -229,46 +230,7 @@ export default class PadScope {
                     this._expression = this._expression.evaluate();
                 }
 
-                try {
-                    this._fn = [this._expression.buildFunction()];
-                    try {
-                        this._dfn = [
-                            engine
-                                .parse(`diff(${this._expression.text()})`)
-                                .buildFunction(),
-                        ];
-                    } catch (ex) {
-                        console.warn(ex); 
-                    }
-                } catch (ex) {
-                    // probably it's a collection:
-                    const tmpFn: ((...args: number[]) => number)[] = [];
-                    const tmpDFn: ((...args: number[]) => number)[] = [];
-
-                    try {
-                        if (
-                            (this._expression as any).symbol?.elements?.length >
-                            0
-                        ) {
-                            (this._expression as any).each((element: any) => {
-                                tmpFn.push(
-                                    engine.parse(element).buildFunction()
-                                );
-                                tmpDFn.push(
-                                    engine
-                                        .parse(`diff(${element.text()})`)
-                                        .buildFunction()
-                                );
-                            });
-                        }
-                    } catch (ex) {
-                        console.warn(ex);
-                    }
-
-                    //
-                    this._fn = tmpFn;
-                    this._dfn = tmpDFn;
-                }
+                this.handlePlotFunctions(engine);
             }
 
             this._resultTex = (this._expression as any).toTeX(
@@ -346,6 +308,70 @@ export default class PadScope {
         }
 
         return this;
+    }
+
+    private handlePlotFunctions(engine: Engine) {
+        const utils = (global as any).nerdamer.getCore().Utils;
+        const fnsToPlot = [];
+        
+        // @ts-ignore
+        if(!utils.isVector(this._expression.symbol)){
+            fnsToPlot.push(this._expression)
+            // we have ust one function to plot
+            
+        } else {
+            if ((this._expression as any).symbol?.elements?.length >
+                    0) {
+                    (this._expression as any).each((element: any) => {
+                        fnsToPlot.push(engine.parse(element))
+                    });
+                }
+        }
+
+        // process fnsToPlot
+        try {
+            const tmpFn: ((...args: number[]) => number)[] = [];
+            const tmpDFn: ((...args: number[]) => number)[] = [];
+
+            const fnsToPlotInternal:any[] = []
+
+            fnsToPlot.forEach(fn=>{
+                const vars = fn.variables();
+                // @ts-ignore
+                if(fn.symbol.LHS && fn.symbol.RHS) {
+                    
+                    if(vars.length==2){
+                        const fns = fn.solveFor(vars[1])
+                        fnsToPlotInternal.push(...fns);
+                    }
+                } else {
+                    if(vars.length==1){
+                        fnsToPlotInternal.push(fn)
+                    }
+                }
+
+
+                
+            })
+
+            fnsToPlotInternal.forEach(fn=>{
+                tmpFn.push(
+                    fn.buildFunction()
+                );
+                tmpDFn.push(
+                    engine
+                        .parse(`diff(${fn.text()})`)
+                        .buildFunction()
+                );
+            })
+             
+            //
+            this._fn = tmpFn;
+            this._dfn = tmpDFn;
+        } catch(ex){
+            console.log(ex);
+        }
+
     }
 
     getCodeBlock(settings: MathpadSettings) {
