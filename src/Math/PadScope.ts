@@ -64,6 +64,14 @@ function toLaTeX(num: number, scientific = false, precision = 21) {
     }
 }
 
+function vectorToArray(v: any){
+    if(v.elements) {
+        return v.elements.map(vectorToArray)
+    } else {
+        return v.valueOf()
+    }
+}
+
 export default class PadScope {
     private _input: string;
     private _inputLatex: string;
@@ -73,6 +81,7 @@ export default class PadScope {
     private _fn: ((...args: number[]) => number)[];
 
     private _dfn: ((...args: number[]) => number)[];
+    private _points: number[][][];
 
     private _scope: {
         vars: { [x: string]: string };
@@ -118,6 +127,10 @@ export default class PadScope {
 
     public get dfn(): ((...args: number[]) => number)[] {
         return this._dfn;
+    }
+
+    public get points(): number[][][] {
+        return this._points;
     }
 
     public get error(): string | undefined {
@@ -302,6 +315,8 @@ export default class PadScope {
         return this;
     }
 
+
+
     private handlePlotFunctions(engine: Engine) {
         const utils = nerdamer.getCore().Utils;
         const fnsToPlot = [];
@@ -322,36 +337,44 @@ export default class PadScope {
         try {
             const tmpFn: ((...args: number[]) => number)[] = [];
             const tmpDFn: ((...args: number[]) => number)[] = [];
-
+            this._points = [];            
             const fnsToPlotInternal: any[] = [];
 
             fnsToPlot.forEach((fn) => {
                 // @ts-ignore
                 if (nerdamer.getCore().Utils.isVector(fn.symbol)) {
                     // @ts-ignore
-                    fnsToPlotInternal.push(fn.symbol);
+                    const arr = vectorToArray(fn.symbol)
+                    // @ts-ignore
+                    fnsToPlotInternal.push(arr);
+                } else {
+                    const vars = fn.variables();
+                    // @ts-ignore
+                    if (fn.symbol.LHS && fn.symbol.RHS) {
+                        if (vars.length == 2) {
+                            const fns = fn.solveFor(vars[1]);
+                            // @ts-ignore 
+                            fnsToPlotInternal.push(...fns);
+                        }
+                    } else {
+                        if (vars.length == 1) {
+                            fnsToPlotInternal.push(fn);
+                        }
+                    }
                 }
 
-                const vars = fn.variables();
-                // @ts-ignore
-                if (fn.symbol.LHS && fn.symbol.RHS) {
-                    if (vars.length == 2) {
-                        const fns = fn.solveFor(vars[1]);
-                        // @ts-ignore
-                        fnsToPlotInternal.push(...fns);
-                    }
-                } else {
-                    if (vars.length == 1) {
-                        fnsToPlotInternal.push(fn);
-                    }
-                }
+                
             });
 
             fnsToPlotInternal.forEach((fn) => {
                 // TODO: if fn is vector, extract values into arrays
+                if(Array.isArray(fn)){
+                    this._points.push(fn);
+                } else {
+                    tmpFn.push(fn.buildFunction());
+                    tmpDFn.push(engine.parse(`diff(${fn.text()})`).buildFunction());
+                }
 
-                tmpFn.push(fn.buildFunction());
-                tmpDFn.push(engine.parse(`diff(${fn.text()})`).buildFunction());
             });
 
             //

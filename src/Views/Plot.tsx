@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import functionPlot, { Chart } from 'function-plot'
-import { FunctionPlotOptions } from 'function-plot/dist/types';
+import { FunctionPlotOptions, FunctionPlotDatum } from 'function-plot/dist/types';
 import { debounce } from 'obsidian';
 import PadScope from 'src/Math/PadScope';
 import { MathpadSettings } from 'src/MathpadSettings';
@@ -51,17 +51,27 @@ export function getPlotOptions(width: number, settings:MathpadSettings, padScope
     
     const plotDerivatives = settings.plotDerivatives && (padScope.fn.length === padScope.dfn?.length);
     
+    const data:FunctionPlotDatum[] = padScope.fn.map((fn,i) => ({
+        graphType: 'polyline',
+        fn: (scope: any) => fn(scope.x),
+        derivative: plotDerivatives ? {
+            fn: (scope: any) => padScope.dfn[i](scope.x),
+            updateOnMouseMove: true
+        } : undefined
+    }))
+    const dataPoints: FunctionPlotDatum[] = padScope.points.map((serie,i)=>(
+        {
+            graphType: 'scatter',
+            fnType: 'points',
+            points: serie
+        }
+    ))
+
+
     return ({
         width: width,
         grid: settings.plotGrid,
-        data: padScope.fn.map((fn,i) => ({
-            graphType: 'polyline',
-            fn: (scope: any) => fn(scope.x),
-            derivative: plotDerivatives ? {
-                fn: (scope: any) => padScope.dfn[i](scope.x),
-                updateOnMouseMove: true
-            } : undefined
-        })),
+        data: data.concat(dataPoints),
         xAxis: padScope.plot.xDomain && padScope.plot.xDomain.length == 2 && { domain: padScope.plot.xDomain },
         yAxis: padScope.plot.yDomain && padScope.plot.yDomain.length == 2 && { domain: padScope.plot.yDomain },
         target: "", // just to make tslint happy
