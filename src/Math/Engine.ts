@@ -35,21 +35,22 @@ function solve(expr: any, variable?: any): any {
 function markAsToPlot(...args: any[]) {
     let fns = [];
     let i = 0;
-    let ret;
+    // let ret;
     let xDomain = undefined;
     let yDomain = undefined;
 
     const utils = nerdamer.getCore().Utils;
-    if (utils.isVector(args[i])) {
-        // we have an array of functions to plot as first parameter
-        fns = args[i];
-    } else {
+    // if (utils.isVector(args[i])) {
+    //     // we have an array of functions to plot as first parameter
+    //     fns = args[i];
+    // } else {
         while (args[i] && (!utils.isVector(args[i]) || utils.isVector(args[i].elements[0])) ) {
             fns.push(args[i]);
             i++; 
         }
+        // TODO: this will turn any list of points as first argument into
         fns = utils.convertToVector(fns);
-    }
+    // }
 
     if (utils.isVector(args[i])) {
         // user provided xrange
@@ -61,11 +62,11 @@ function markAsToPlot(...args: any[]) {
         }
     }
 
-    if (fns.dimensions() === 1) {
-        ret = fns.elements[0];
-    } else {
-        ret = fns;
-    }
+    // if (fns.dimensions() === 1) {
+    //     ret = fns.elements[0];
+    // } else {
+        const ret = fns;
+    // }
     ret._plotme = {
         xDomain,
         yDomain,

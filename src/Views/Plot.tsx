@@ -54,6 +54,7 @@ export function getPlotOptions(width: number, settings:MathpadSettings, padScope
     const data:FunctionPlotDatum[] = padScope.fn.map((fn,i) => ({
         graphType: 'polyline',
         fn: (scope: any) => fn(scope.x),
+        // nSamples: 4096, 
         derivative: plotDerivatives ? {
             fn: (scope: any) => padScope.dfn[i](scope.x),
             updateOnMouseMove: true
