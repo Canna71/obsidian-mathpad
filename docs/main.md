@@ -99,7 +99,7 @@ Clicking on the result will copy it in the input.
 
 Mathpad code blocks are created the usual way:
 
-    ```mathpah
+    ```mathpad
     ```
 
 inside it you can put the same commands you would put in the sidebar.
