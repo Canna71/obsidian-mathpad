@@ -43,7 +43,8 @@ export class ResultWidget extends WidgetType {
             el = div;
         }
 
-        if (isNumber(this.pos)) {
+        // if (isNumber(this.pos)) {
+        if (typeof this.pos === "number") {
             el.addEventListener("click", () => {
                 this.pos && view.dispatch({ selection: { anchor: this.pos } });
             });
